@@ -1,0 +1,3492 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    CTE_CHAR
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+Rule 2     bloque -> O_CBRACKET bloque_prime C_CBRACKET
+Rule 3     bloque_prime -> estatuto bloque_prime
+Rule 4     bloque_prime -> epsilon
+Rule 5     declaracion -> declaracion_base
+Rule 6     declaracion -> declaracion_base declaracion
+Rule 7     declaracion_base -> LET declaracion_prime COLON tipo SEMICOLON
+Rule 8     declaracion_prime -> variable
+Rule 9     declaracion_prime -> variable COMMA declaracion_prime
+Rule 10    tipo -> INT
+Rule 11    tipo -> FLOAT
+Rule 12    tipo -> CHAR
+Rule 13    tipo -> STRING
+Rule 14    funcion -> funcion_base
+Rule 15    funcion -> funcion_base funcion
+Rule 16    funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+Rule 17    funcion_prime -> tipo ID
+Rule 18    funcion_prime -> tipo ID COMMA funcion_prime
+Rule 19    funcion_tipo -> VOID
+Rule 20    funcion_tipo -> tipo
+Rule 21    variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+Rule 22    variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+Rule 23    variable -> ID O_ABRACKET variable_tipo C_ABRACKET
+Rule 24    variable -> ID
+Rule 25    variable_tipo -> CTE_INT
+Rule 26    variable_tipo -> exp
+Rule 27    estatuto -> asignacion SEMICOLON
+Rule 28    estatuto -> llamada SEMICOLON
+Rule 29    estatuto -> retorno SEMICOLON
+Rule 30    estatuto -> lectura SEMICOLON
+Rule 31    estatuto -> escritura SEMICOLON
+Rule 32    estatuto -> decision
+Rule 33    estatuto -> while
+Rule 34    estatuto -> for
+Rule 35    estatuto -> expr SEMICOLON
+Rule 36    asignacion -> variable ASSIGN expr
+Rule 37    llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+Rule 38    llamada_prime -> exp
+Rule 39    llamada_prime -> exp COMMA llamada_prime
+Rule 40    retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS
+Rule 41    lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS
+Rule 42    lectura_prime -> variable
+Rule 43    lectura_prime -> variable COMMA lectura_prime
+Rule 44    escritura -> WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS
+Rule 45    escritura_prime -> expr
+Rule 46    escritura_prime -> CTE_STRING
+Rule 47    escritura_prime -> expr COMMA escritura_prime
+Rule 48    escritura_prime -> CTE_STRING COMMA escritura_prime
+Rule 49    decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else
+Rule 50    else -> ELSE bloque
+Rule 51    else -> epsilon
+Rule 52    while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque
+Rule 53    for -> FOR variable ASSIGN exp TO exp bloque
+Rule 54    expr -> or
+Rule 55    or -> and
+Rule 56    or -> and OR or
+Rule 57    and -> equal
+Rule 58    and -> equal AND and
+Rule 59    equal -> compare
+Rule 60    equal -> compare EQUAL compare
+Rule 61    equal -> compare NOT_EQUAL compare
+Rule 62    compare -> exp
+Rule 63    compare -> exp GREATER exp
+Rule 64    compare -> exp LESSER exp
+Rule 65    compare -> exp GREATER_EQUAL exp
+Rule 66    compare -> exp LESSER_EQUAL exp
+Rule 67    exp -> termino
+Rule 68    exp -> termino PLUS exp
+Rule 69    exp -> termino MINUS exp
+Rule 70    termino -> factor
+Rule 71    termino -> factor TIMES termino
+Rule 72    termino -> factor DIVIDE termino
+Rule 73    termino -> factor MODULE termino
+Rule 74    factor -> variable
+Rule 75    factor -> O_PARENTHESIS expr C_PARENTHESIS
+Rule 76    factor -> llamada
+Rule 77    factor -> cte
+Rule 78    factor -> PLUS cte
+Rule 79    factor -> MINUS cte
+Rule 80    cte -> CTE_INT
+Rule 81    cte -> CTE_FLOAT
+Rule 82    epsilon -> <empty>
+
+Terminals, with rules where they appear
+
+AND                  : 58
+ASSIGN               : 36 53
+CHAR                 : 12
+COLON                : 7
+COMMA                : 9 18 39 43 47 48
+CTE_CHAR             : 
+CTE_FLOAT            : 81
+CTE_INT              : 25 80
+CTE_STRING           : 46 48
+C_ABRACKET           : 21 21 21 22 22 23
+C_CBRACKET           : 2
+C_PARENTHESIS        : 1 16 37 40 41 44 49 52 75
+DIVIDE               : 72
+ELSE                 : 50
+EQUAL                : 60
+FLOAT                : 11
+FOR                  : 53
+FUNCTION             : 16
+GREATER              : 63
+GREATER_EQUAL        : 65
+ID                   : 1 16 17 18 21 22 23 24 37
+IF                   : 49
+INT                  : 10
+LESSER               : 64
+LESSER_EQUAL         : 66
+LET                  : 7
+MAIN                 : 1
+MINUS                : 69 79
+MODULE               : 73
+NOT_EQUAL            : 61
+OR                   : 56
+O_ABRACKET           : 21 21 21 22 22 23
+O_CBRACKET           : 2
+O_PARENTHESIS        : 1 16 37 40 41 44 49 52 75
+PLUS                 : 68 78
+PROGRAM              : 1
+READ                 : 41
+RETURN               : 40
+SEMICOLON            : 1 7 27 28 29 30 31 35
+STRING               : 13
+TIMES                : 71
+TO                   : 53
+VOID                 : 19
+WHILE                : 52
+WRITE                : 44
+error                : 
+
+Nonterminals, with rules where they appear
+
+and                  : 55 56 58
+asignacion           : 27
+bloque               : 1 16 49 50 52 53
+bloque_prime         : 2 3
+compare              : 59 60 60 61 61
+cte                  : 77 78 79
+decision             : 32
+declaracion          : 1 6 16
+declaracion_base     : 5 6
+declaracion_prime    : 7 9
+else                 : 49
+epsilon              : 4 51
+equal                : 57 58
+escritura            : 31
+escritura_prime      : 44 47 48
+estatuto             : 3
+exp                  : 26 38 39 53 53 62 63 63 64 64 65 65 66 66 68 69
+expr                 : 35 36 40 45 47 49 52 75
+factor               : 70 71 72 73
+for                  : 34
+funcion              : 1 15
+funcion_base         : 14 15
+funcion_prime        : 16 18
+funcion_tipo         : 16
+lectura              : 30
+lectura_prime        : 41 43
+llamada              : 28 76
+llamada_prime        : 37 39
+or                   : 54 56
+programa             : 0
+retorno              : 29
+termino              : 67 68 69 71 72 73
+tipo                 : 7 17 18 20
+variable             : 8 9 36 42 43 53 74
+variable_tipo        : 21 21 21 22 22 23
+while                : 33
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+
+    PROGRAM         shift and go to state 2
+
+    programa                       shift and go to state 1
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> PROGRAM . ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) programa -> PROGRAM ID . SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) programa -> PROGRAM ID SEMICOLON . declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+    (5) declaracion -> . declaracion_base
+    (6) declaracion -> . declaracion_base declaracion
+    (7) declaracion_base -> . LET declaracion_prime COLON tipo SEMICOLON
+
+    LET             shift and go to state 7
+
+    declaracion                    shift and go to state 5
+    declaracion_base               shift and go to state 6
+
+state 5
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion . funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+    (14) funcion -> . funcion_base
+    (15) funcion -> . funcion_base funcion
+    (16) funcion_base -> . FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+
+    FUNCTION        shift and go to state 10
+
+    funcion                        shift and go to state 8
+    funcion_base                   shift and go to state 9
+
+state 6
+
+    (5) declaracion -> declaracion_base .
+    (6) declaracion -> declaracion_base . declaracion
+    (5) declaracion -> . declaracion_base
+    (6) declaracion -> . declaracion_base declaracion
+    (7) declaracion_base -> . LET declaracion_prime COLON tipo SEMICOLON
+
+    FUNCTION        reduce using rule 5 (declaracion -> declaracion_base .)
+    O_CBRACKET      reduce using rule 5 (declaracion -> declaracion_base .)
+    LET             shift and go to state 7
+
+    declaracion_base               shift and go to state 6
+    declaracion                    shift and go to state 11
+
+state 7
+
+    (7) declaracion_base -> LET . declaracion_prime COLON tipo SEMICOLON
+    (8) declaracion_prime -> . variable
+    (9) declaracion_prime -> . variable COMMA declaracion_prime
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+
+    ID              shift and go to state 14
+
+    declaracion_prime              shift and go to state 12
+    variable                       shift and go to state 13
+
+state 8
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion funcion . MAIN O_PARENTHESIS C_PARENTHESIS bloque
+
+    MAIN            shift and go to state 15
+
+
+state 9
+
+    (14) funcion -> funcion_base .
+    (15) funcion -> funcion_base . funcion
+    (14) funcion -> . funcion_base
+    (15) funcion -> . funcion_base funcion
+    (16) funcion_base -> . FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+
+    MAIN            reduce using rule 14 (funcion -> funcion_base .)
+    FUNCTION        shift and go to state 10
+
+    funcion_base                   shift and go to state 9
+    funcion                        shift and go to state 16
+
+state 10
+
+    (16) funcion_base -> FUNCTION . funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+    (19) funcion_tipo -> . VOID
+    (20) funcion_tipo -> . tipo
+    (10) tipo -> . INT
+    (11) tipo -> . FLOAT
+    (12) tipo -> . CHAR
+    (13) tipo -> . STRING
+
+    VOID            shift and go to state 18
+    INT             shift and go to state 20
+    FLOAT           shift and go to state 21
+    CHAR            shift and go to state 22
+    STRING          shift and go to state 23
+
+    funcion_tipo                   shift and go to state 17
+    tipo                           shift and go to state 19
+
+state 11
+
+    (6) declaracion -> declaracion_base declaracion .
+
+    FUNCTION        reduce using rule 6 (declaracion -> declaracion_base declaracion .)
+    O_CBRACKET      reduce using rule 6 (declaracion -> declaracion_base declaracion .)
+
+
+state 12
+
+    (7) declaracion_base -> LET declaracion_prime . COLON tipo SEMICOLON
+
+    COLON           shift and go to state 24
+
+
+state 13
+
+    (8) declaracion_prime -> variable .
+    (9) declaracion_prime -> variable . COMMA declaracion_prime
+
+    COLON           reduce using rule 8 (declaracion_prime -> variable .)
+    COMMA           shift and go to state 25
+
+
+state 14
+
+    (21) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> ID .
+
+    O_ABRACKET      shift and go to state 26
+    COMMA           reduce using rule 24 (variable -> ID .)
+    COLON           reduce using rule 24 (variable -> ID .)
+    ASSIGN          reduce using rule 24 (variable -> ID .)
+    C_PARENTHESIS   reduce using rule 24 (variable -> ID .)
+
+
+state 15
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN . O_PARENTHESIS C_PARENTHESIS bloque
+
+    O_PARENTHESIS   shift and go to state 27
+
+
+state 16
+
+    (15) funcion -> funcion_base funcion .
+
+    MAIN            reduce using rule 15 (funcion -> funcion_base funcion .)
+
+
+state 17
+
+    (16) funcion_base -> FUNCTION funcion_tipo . ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+
+    ID              shift and go to state 28
+
+
+state 18
+
+    (19) funcion_tipo -> VOID .
+
+    ID              reduce using rule 19 (funcion_tipo -> VOID .)
+
+
+state 19
+
+    (20) funcion_tipo -> tipo .
+
+    ID              reduce using rule 20 (funcion_tipo -> tipo .)
+
+
+state 20
+
+    (10) tipo -> INT .
+
+    ID              reduce using rule 10 (tipo -> INT .)
+    SEMICOLON       reduce using rule 10 (tipo -> INT .)
+
+
+state 21
+
+    (11) tipo -> FLOAT .
+
+    ID              reduce using rule 11 (tipo -> FLOAT .)
+    SEMICOLON       reduce using rule 11 (tipo -> FLOAT .)
+
+
+state 22
+
+    (12) tipo -> CHAR .
+
+    ID              reduce using rule 12 (tipo -> CHAR .)
+    SEMICOLON       reduce using rule 12 (tipo -> CHAR .)
+
+
+state 23
+
+    (13) tipo -> STRING .
+
+    ID              reduce using rule 13 (tipo -> STRING .)
+    SEMICOLON       reduce using rule 13 (tipo -> STRING .)
+
+
+state 24
+
+    (7) declaracion_base -> LET declaracion_prime COLON . tipo SEMICOLON
+    (10) tipo -> . INT
+    (11) tipo -> . FLOAT
+    (12) tipo -> . CHAR
+    (13) tipo -> . STRING
+
+    INT             shift and go to state 20
+    FLOAT           shift and go to state 21
+    CHAR            shift and go to state 22
+    STRING          shift and go to state 23
+
+    tipo                           shift and go to state 29
+
+state 25
+
+    (9) declaracion_prime -> variable COMMA . declaracion_prime
+    (8) declaracion_prime -> . variable
+    (9) declaracion_prime -> . variable COMMA declaracion_prime
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+
+    ID              shift and go to state 14
+
+    variable                       shift and go to state 13
+    declaracion_prime              shift and go to state 30
+
+state 26
+
+    (21) variable -> ID O_ABRACKET . variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET . variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID O_ABRACKET . variable_tipo C_ABRACKET
+    (25) variable_tipo -> . CTE_INT
+    (26) variable_tipo -> . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 33
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_FLOAT       shift and go to state 43
+
+    variable_tipo                  shift and go to state 32
+    exp                            shift and go to state 34
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 27
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS . C_PARENTHESIS bloque
+
+    C_PARENTHESIS   shift and go to state 44
+
+
+state 28
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID . O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+
+    O_PARENTHESIS   shift and go to state 45
+
+
+state 29
+
+    (7) declaracion_base -> LET declaracion_prime COLON tipo . SEMICOLON
+
+    SEMICOLON       shift and go to state 46
+
+
+state 30
+
+    (9) declaracion_prime -> variable COMMA declaracion_prime .
+
+    COLON           reduce using rule 9 (declaracion_prime -> variable COMMA declaracion_prime .)
+
+
+state 31
+
+    (21) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> ID .
+    (37) llamada -> ID . O_PARENTHESIS llamada_prime C_PARENTHESIS
+
+    O_ABRACKET      shift and go to state 26
+    TIMES           reduce using rule 24 (variable -> ID .)
+    DIVIDE          reduce using rule 24 (variable -> ID .)
+    MODULE          reduce using rule 24 (variable -> ID .)
+    PLUS            reduce using rule 24 (variable -> ID .)
+    MINUS           reduce using rule 24 (variable -> ID .)
+    C_ABRACKET      reduce using rule 24 (variable -> ID .)
+    GREATER         reduce using rule 24 (variable -> ID .)
+    LESSER          reduce using rule 24 (variable -> ID .)
+    GREATER_EQUAL   reduce using rule 24 (variable -> ID .)
+    LESSER_EQUAL    reduce using rule 24 (variable -> ID .)
+    EQUAL           reduce using rule 24 (variable -> ID .)
+    NOT_EQUAL       reduce using rule 24 (variable -> ID .)
+    AND             reduce using rule 24 (variable -> ID .)
+    OR              reduce using rule 24 (variable -> ID .)
+    C_PARENTHESIS   reduce using rule 24 (variable -> ID .)
+    COMMA           reduce using rule 24 (variable -> ID .)
+    SEMICOLON       reduce using rule 24 (variable -> ID .)
+    TO              reduce using rule 24 (variable -> ID .)
+    O_CBRACKET      reduce using rule 24 (variable -> ID .)
+    O_PARENTHESIS   shift and go to state 47
+
+
+state 32
+
+    (21) variable -> ID O_ABRACKET variable_tipo . C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET variable_tipo . C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID O_ABRACKET variable_tipo . C_ABRACKET
+
+    C_ABRACKET      shift and go to state 48
+
+
+state 33
+
+    (25) variable_tipo -> CTE_INT .
+    (80) cte -> CTE_INT .
+
+  ! reduce/reduce conflict for C_ABRACKET resolved using rule 25 (variable_tipo -> CTE_INT .)
+    C_ABRACKET      reduce using rule 25 (variable_tipo -> CTE_INT .)
+    TIMES           reduce using rule 80 (cte -> CTE_INT .)
+    DIVIDE          reduce using rule 80 (cte -> CTE_INT .)
+    MODULE          reduce using rule 80 (cte -> CTE_INT .)
+    PLUS            reduce using rule 80 (cte -> CTE_INT .)
+    MINUS           reduce using rule 80 (cte -> CTE_INT .)
+
+  ! C_ABRACKET      [ reduce using rule 80 (cte -> CTE_INT .) ]
+
+
+state 34
+
+    (26) variable_tipo -> exp .
+
+    C_ABRACKET      reduce using rule 26 (variable_tipo -> exp .)
+
+
+state 35
+
+    (67) exp -> termino .
+    (68) exp -> termino . PLUS exp
+    (69) exp -> termino . MINUS exp
+
+    C_ABRACKET      reduce using rule 67 (exp -> termino .)
+    GREATER         reduce using rule 67 (exp -> termino .)
+    LESSER          reduce using rule 67 (exp -> termino .)
+    GREATER_EQUAL   reduce using rule 67 (exp -> termino .)
+    LESSER_EQUAL    reduce using rule 67 (exp -> termino .)
+    EQUAL           reduce using rule 67 (exp -> termino .)
+    NOT_EQUAL       reduce using rule 67 (exp -> termino .)
+    AND             reduce using rule 67 (exp -> termino .)
+    OR              reduce using rule 67 (exp -> termino .)
+    C_PARENTHESIS   reduce using rule 67 (exp -> termino .)
+    COMMA           reduce using rule 67 (exp -> termino .)
+    SEMICOLON       reduce using rule 67 (exp -> termino .)
+    TO              reduce using rule 67 (exp -> termino .)
+    O_CBRACKET      reduce using rule 67 (exp -> termino .)
+    PLUS            shift and go to state 49
+    MINUS           shift and go to state 50
+
+
+state 36
+
+    (78) factor -> PLUS . cte
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    cte                            shift and go to state 51
+
+state 37
+
+    (79) factor -> MINUS . cte
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    cte                            shift and go to state 53
+
+state 38
+
+    (70) termino -> factor .
+    (71) termino -> factor . TIMES termino
+    (72) termino -> factor . DIVIDE termino
+    (73) termino -> factor . MODULE termino
+
+    PLUS            reduce using rule 70 (termino -> factor .)
+    MINUS           reduce using rule 70 (termino -> factor .)
+    C_ABRACKET      reduce using rule 70 (termino -> factor .)
+    GREATER         reduce using rule 70 (termino -> factor .)
+    LESSER          reduce using rule 70 (termino -> factor .)
+    GREATER_EQUAL   reduce using rule 70 (termino -> factor .)
+    LESSER_EQUAL    reduce using rule 70 (termino -> factor .)
+    EQUAL           reduce using rule 70 (termino -> factor .)
+    NOT_EQUAL       reduce using rule 70 (termino -> factor .)
+    AND             reduce using rule 70 (termino -> factor .)
+    OR              reduce using rule 70 (termino -> factor .)
+    C_PARENTHESIS   reduce using rule 70 (termino -> factor .)
+    COMMA           reduce using rule 70 (termino -> factor .)
+    SEMICOLON       reduce using rule 70 (termino -> factor .)
+    TO              reduce using rule 70 (termino -> factor .)
+    O_CBRACKET      reduce using rule 70 (termino -> factor .)
+    TIMES           shift and go to state 54
+    DIVIDE          shift and go to state 55
+    MODULE          shift and go to state 56
+
+
+state 39
+
+    (74) factor -> variable .
+
+    TIMES           reduce using rule 74 (factor -> variable .)
+    DIVIDE          reduce using rule 74 (factor -> variable .)
+    MODULE          reduce using rule 74 (factor -> variable .)
+    PLUS            reduce using rule 74 (factor -> variable .)
+    MINUS           reduce using rule 74 (factor -> variable .)
+    C_ABRACKET      reduce using rule 74 (factor -> variable .)
+    GREATER         reduce using rule 74 (factor -> variable .)
+    LESSER          reduce using rule 74 (factor -> variable .)
+    GREATER_EQUAL   reduce using rule 74 (factor -> variable .)
+    LESSER_EQUAL    reduce using rule 74 (factor -> variable .)
+    EQUAL           reduce using rule 74 (factor -> variable .)
+    NOT_EQUAL       reduce using rule 74 (factor -> variable .)
+    AND             reduce using rule 74 (factor -> variable .)
+    OR              reduce using rule 74 (factor -> variable .)
+    C_PARENTHESIS   reduce using rule 74 (factor -> variable .)
+    COMMA           reduce using rule 74 (factor -> variable .)
+    SEMICOLON       reduce using rule 74 (factor -> variable .)
+    TO              reduce using rule 74 (factor -> variable .)
+    O_CBRACKET      reduce using rule 74 (factor -> variable .)
+
+
+state 40
+
+    (75) factor -> O_PARENTHESIS . expr C_PARENTHESIS
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    expr                           shift and go to state 57
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 41
+
+    (76) factor -> llamada .
+
+    TIMES           reduce using rule 76 (factor -> llamada .)
+    DIVIDE          reduce using rule 76 (factor -> llamada .)
+    MODULE          reduce using rule 76 (factor -> llamada .)
+    PLUS            reduce using rule 76 (factor -> llamada .)
+    MINUS           reduce using rule 76 (factor -> llamada .)
+    C_ABRACKET      reduce using rule 76 (factor -> llamada .)
+    GREATER         reduce using rule 76 (factor -> llamada .)
+    LESSER          reduce using rule 76 (factor -> llamada .)
+    GREATER_EQUAL   reduce using rule 76 (factor -> llamada .)
+    LESSER_EQUAL    reduce using rule 76 (factor -> llamada .)
+    EQUAL           reduce using rule 76 (factor -> llamada .)
+    NOT_EQUAL       reduce using rule 76 (factor -> llamada .)
+    AND             reduce using rule 76 (factor -> llamada .)
+    OR              reduce using rule 76 (factor -> llamada .)
+    C_PARENTHESIS   reduce using rule 76 (factor -> llamada .)
+    COMMA           reduce using rule 76 (factor -> llamada .)
+    SEMICOLON       reduce using rule 76 (factor -> llamada .)
+    TO              reduce using rule 76 (factor -> llamada .)
+    O_CBRACKET      reduce using rule 76 (factor -> llamada .)
+
+
+state 42
+
+    (77) factor -> cte .
+
+    TIMES           reduce using rule 77 (factor -> cte .)
+    DIVIDE          reduce using rule 77 (factor -> cte .)
+    MODULE          reduce using rule 77 (factor -> cte .)
+    PLUS            reduce using rule 77 (factor -> cte .)
+    MINUS           reduce using rule 77 (factor -> cte .)
+    C_ABRACKET      reduce using rule 77 (factor -> cte .)
+    GREATER         reduce using rule 77 (factor -> cte .)
+    LESSER          reduce using rule 77 (factor -> cte .)
+    GREATER_EQUAL   reduce using rule 77 (factor -> cte .)
+    LESSER_EQUAL    reduce using rule 77 (factor -> cte .)
+    EQUAL           reduce using rule 77 (factor -> cte .)
+    NOT_EQUAL       reduce using rule 77 (factor -> cte .)
+    AND             reduce using rule 77 (factor -> cte .)
+    OR              reduce using rule 77 (factor -> cte .)
+    C_PARENTHESIS   reduce using rule 77 (factor -> cte .)
+    COMMA           reduce using rule 77 (factor -> cte .)
+    SEMICOLON       reduce using rule 77 (factor -> cte .)
+    TO              reduce using rule 77 (factor -> cte .)
+    O_CBRACKET      reduce using rule 77 (factor -> cte .)
+
+
+state 43
+
+    (81) cte -> CTE_FLOAT .
+
+    TIMES           reduce using rule 81 (cte -> CTE_FLOAT .)
+    DIVIDE          reduce using rule 81 (cte -> CTE_FLOAT .)
+    MODULE          reduce using rule 81 (cte -> CTE_FLOAT .)
+    PLUS            reduce using rule 81 (cte -> CTE_FLOAT .)
+    MINUS           reduce using rule 81 (cte -> CTE_FLOAT .)
+    C_ABRACKET      reduce using rule 81 (cte -> CTE_FLOAT .)
+    GREATER         reduce using rule 81 (cte -> CTE_FLOAT .)
+    LESSER          reduce using rule 81 (cte -> CTE_FLOAT .)
+    GREATER_EQUAL   reduce using rule 81 (cte -> CTE_FLOAT .)
+    LESSER_EQUAL    reduce using rule 81 (cte -> CTE_FLOAT .)
+    EQUAL           reduce using rule 81 (cte -> CTE_FLOAT .)
+    NOT_EQUAL       reduce using rule 81 (cte -> CTE_FLOAT .)
+    AND             reduce using rule 81 (cte -> CTE_FLOAT .)
+    OR              reduce using rule 81 (cte -> CTE_FLOAT .)
+    C_PARENTHESIS   reduce using rule 81 (cte -> CTE_FLOAT .)
+    COMMA           reduce using rule 81 (cte -> CTE_FLOAT .)
+    SEMICOLON       reduce using rule 81 (cte -> CTE_FLOAT .)
+    TO              reduce using rule 81 (cte -> CTE_FLOAT .)
+    O_CBRACKET      reduce using rule 81 (cte -> CTE_FLOAT .)
+
+
+state 44
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS . bloque
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 63
+
+state 45
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS . funcion_prime C_PARENTHESIS declaracion bloque
+    (17) funcion_prime -> . tipo ID
+    (18) funcion_prime -> . tipo ID COMMA funcion_prime
+    (10) tipo -> . INT
+    (11) tipo -> . FLOAT
+    (12) tipo -> . CHAR
+    (13) tipo -> . STRING
+
+    INT             shift and go to state 20
+    FLOAT           shift and go to state 21
+    CHAR            shift and go to state 22
+    STRING          shift and go to state 23
+
+    funcion_prime                  shift and go to state 65
+    tipo                           shift and go to state 66
+
+state 46
+
+    (7) declaracion_base -> LET declaracion_prime COLON tipo SEMICOLON .
+
+    LET             reduce using rule 7 (declaracion_base -> LET declaracion_prime COLON tipo SEMICOLON .)
+    FUNCTION        reduce using rule 7 (declaracion_base -> LET declaracion_prime COLON tipo SEMICOLON .)
+    O_CBRACKET      reduce using rule 7 (declaracion_base -> LET declaracion_prime COLON tipo SEMICOLON .)
+
+
+state 47
+
+    (37) llamada -> ID O_PARENTHESIS . llamada_prime C_PARENTHESIS
+    (38) llamada_prime -> . exp
+    (39) llamada_prime -> . exp COMMA llamada_prime
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    llamada_prime                  shift and go to state 67
+    exp                            shift and go to state 68
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 48
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET variable_tipo C_ABRACKET . O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID O_ABRACKET variable_tipo C_ABRACKET .
+
+    O_ABRACKET      shift and go to state 69
+    COMMA           reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    COLON           reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    TIMES           reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    DIVIDE          reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    MODULE          reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    PLUS            reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    MINUS           reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    C_ABRACKET      reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER         reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER          reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER_EQUAL   reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER_EQUAL    reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    EQUAL           reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    NOT_EQUAL       reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    AND             reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    OR              reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    C_PARENTHESIS   reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    SEMICOLON       reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    TO              reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    O_CBRACKET      reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+    ASSIGN          reduce using rule 23 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET .)
+
+
+state 49
+
+    (68) exp -> termino PLUS . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    termino                        shift and go to state 35
+    exp                            shift and go to state 70
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 50
+
+    (69) exp -> termino MINUS . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    termino                        shift and go to state 35
+    exp                            shift and go to state 71
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 51
+
+    (78) factor -> PLUS cte .
+
+    TIMES           reduce using rule 78 (factor -> PLUS cte .)
+    DIVIDE          reduce using rule 78 (factor -> PLUS cte .)
+    MODULE          reduce using rule 78 (factor -> PLUS cte .)
+    PLUS            reduce using rule 78 (factor -> PLUS cte .)
+    MINUS           reduce using rule 78 (factor -> PLUS cte .)
+    C_ABRACKET      reduce using rule 78 (factor -> PLUS cte .)
+    GREATER         reduce using rule 78 (factor -> PLUS cte .)
+    LESSER          reduce using rule 78 (factor -> PLUS cte .)
+    GREATER_EQUAL   reduce using rule 78 (factor -> PLUS cte .)
+    LESSER_EQUAL    reduce using rule 78 (factor -> PLUS cte .)
+    EQUAL           reduce using rule 78 (factor -> PLUS cte .)
+    NOT_EQUAL       reduce using rule 78 (factor -> PLUS cte .)
+    AND             reduce using rule 78 (factor -> PLUS cte .)
+    OR              reduce using rule 78 (factor -> PLUS cte .)
+    C_PARENTHESIS   reduce using rule 78 (factor -> PLUS cte .)
+    COMMA           reduce using rule 78 (factor -> PLUS cte .)
+    SEMICOLON       reduce using rule 78 (factor -> PLUS cte .)
+    TO              reduce using rule 78 (factor -> PLUS cte .)
+    O_CBRACKET      reduce using rule 78 (factor -> PLUS cte .)
+
+
+state 52
+
+    (80) cte -> CTE_INT .
+
+    TIMES           reduce using rule 80 (cte -> CTE_INT .)
+    DIVIDE          reduce using rule 80 (cte -> CTE_INT .)
+    MODULE          reduce using rule 80 (cte -> CTE_INT .)
+    PLUS            reduce using rule 80 (cte -> CTE_INT .)
+    MINUS           reduce using rule 80 (cte -> CTE_INT .)
+    C_ABRACKET      reduce using rule 80 (cte -> CTE_INT .)
+    GREATER         reduce using rule 80 (cte -> CTE_INT .)
+    LESSER          reduce using rule 80 (cte -> CTE_INT .)
+    GREATER_EQUAL   reduce using rule 80 (cte -> CTE_INT .)
+    LESSER_EQUAL    reduce using rule 80 (cte -> CTE_INT .)
+    EQUAL           reduce using rule 80 (cte -> CTE_INT .)
+    NOT_EQUAL       reduce using rule 80 (cte -> CTE_INT .)
+    AND             reduce using rule 80 (cte -> CTE_INT .)
+    OR              reduce using rule 80 (cte -> CTE_INT .)
+    C_PARENTHESIS   reduce using rule 80 (cte -> CTE_INT .)
+    COMMA           reduce using rule 80 (cte -> CTE_INT .)
+    SEMICOLON       reduce using rule 80 (cte -> CTE_INT .)
+    TO              reduce using rule 80 (cte -> CTE_INT .)
+    O_CBRACKET      reduce using rule 80 (cte -> CTE_INT .)
+
+
+state 53
+
+    (79) factor -> MINUS cte .
+
+    TIMES           reduce using rule 79 (factor -> MINUS cte .)
+    DIVIDE          reduce using rule 79 (factor -> MINUS cte .)
+    MODULE          reduce using rule 79 (factor -> MINUS cte .)
+    PLUS            reduce using rule 79 (factor -> MINUS cte .)
+    MINUS           reduce using rule 79 (factor -> MINUS cte .)
+    C_ABRACKET      reduce using rule 79 (factor -> MINUS cte .)
+    GREATER         reduce using rule 79 (factor -> MINUS cte .)
+    LESSER          reduce using rule 79 (factor -> MINUS cte .)
+    GREATER_EQUAL   reduce using rule 79 (factor -> MINUS cte .)
+    LESSER_EQUAL    reduce using rule 79 (factor -> MINUS cte .)
+    EQUAL           reduce using rule 79 (factor -> MINUS cte .)
+    NOT_EQUAL       reduce using rule 79 (factor -> MINUS cte .)
+    AND             reduce using rule 79 (factor -> MINUS cte .)
+    OR              reduce using rule 79 (factor -> MINUS cte .)
+    C_PARENTHESIS   reduce using rule 79 (factor -> MINUS cte .)
+    COMMA           reduce using rule 79 (factor -> MINUS cte .)
+    SEMICOLON       reduce using rule 79 (factor -> MINUS cte .)
+    TO              reduce using rule 79 (factor -> MINUS cte .)
+    O_CBRACKET      reduce using rule 79 (factor -> MINUS cte .)
+
+
+state 54
+
+    (71) termino -> factor TIMES . termino
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    factor                         shift and go to state 38
+    termino                        shift and go to state 72
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 55
+
+    (72) termino -> factor DIVIDE . termino
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    factor                         shift and go to state 38
+    termino                        shift and go to state 73
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 56
+
+    (73) termino -> factor MODULE . termino
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    factor                         shift and go to state 38
+    termino                        shift and go to state 74
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 57
+
+    (75) factor -> O_PARENTHESIS expr . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 75
+
+
+state 58
+
+    (54) expr -> or .
+
+    C_PARENTHESIS   reduce using rule 54 (expr -> or .)
+    SEMICOLON       reduce using rule 54 (expr -> or .)
+    COMMA           reduce using rule 54 (expr -> or .)
+
+
+state 59
+
+    (55) or -> and .
+    (56) or -> and . OR or
+
+    C_PARENTHESIS   reduce using rule 55 (or -> and .)
+    SEMICOLON       reduce using rule 55 (or -> and .)
+    COMMA           reduce using rule 55 (or -> and .)
+    OR              shift and go to state 76
+
+
+state 60
+
+    (57) and -> equal .
+    (58) and -> equal . AND and
+
+    OR              reduce using rule 57 (and -> equal .)
+    C_PARENTHESIS   reduce using rule 57 (and -> equal .)
+    SEMICOLON       reduce using rule 57 (and -> equal .)
+    COMMA           reduce using rule 57 (and -> equal .)
+    AND             shift and go to state 77
+
+
+state 61
+
+    (59) equal -> compare .
+    (60) equal -> compare . EQUAL compare
+    (61) equal -> compare . NOT_EQUAL compare
+
+    AND             reduce using rule 59 (equal -> compare .)
+    OR              reduce using rule 59 (equal -> compare .)
+    C_PARENTHESIS   reduce using rule 59 (equal -> compare .)
+    SEMICOLON       reduce using rule 59 (equal -> compare .)
+    COMMA           reduce using rule 59 (equal -> compare .)
+    EQUAL           shift and go to state 78
+    NOT_EQUAL       shift and go to state 79
+
+
+state 62
+
+    (62) compare -> exp .
+    (63) compare -> exp . GREATER exp
+    (64) compare -> exp . LESSER exp
+    (65) compare -> exp . GREATER_EQUAL exp
+    (66) compare -> exp . LESSER_EQUAL exp
+
+    EQUAL           reduce using rule 62 (compare -> exp .)
+    NOT_EQUAL       reduce using rule 62 (compare -> exp .)
+    AND             reduce using rule 62 (compare -> exp .)
+    OR              reduce using rule 62 (compare -> exp .)
+    C_PARENTHESIS   reduce using rule 62 (compare -> exp .)
+    SEMICOLON       reduce using rule 62 (compare -> exp .)
+    COMMA           reduce using rule 62 (compare -> exp .)
+    GREATER         shift and go to state 80
+    LESSER          shift and go to state 81
+    GREATER_EQUAL   shift and go to state 82
+    LESSER_EQUAL    shift and go to state 83
+
+
+state 63
+
+    (1) programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque .
+
+    $end            reduce using rule 1 (programa -> PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque .)
+
+
+state 64
+
+    (2) bloque -> O_CBRACKET . bloque_prime C_CBRACKET
+    (3) bloque_prime -> . estatuto bloque_prime
+    (4) bloque_prime -> . epsilon
+    (27) estatuto -> . asignacion SEMICOLON
+    (28) estatuto -> . llamada SEMICOLON
+    (29) estatuto -> . retorno SEMICOLON
+    (30) estatuto -> . lectura SEMICOLON
+    (31) estatuto -> . escritura SEMICOLON
+    (32) estatuto -> . decision
+    (33) estatuto -> . while
+    (34) estatuto -> . for
+    (35) estatuto -> . expr SEMICOLON
+    (82) epsilon -> .
+    (36) asignacion -> . variable ASSIGN expr
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (40) retorno -> . RETURN O_PARENTHESIS expr C_PARENTHESIS
+    (41) lectura -> . READ O_PARENTHESIS lectura_prime C_PARENTHESIS
+    (44) escritura -> . WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS
+    (49) decision -> . IF O_PARENTHESIS expr C_PARENTHESIS bloque else
+    (52) while -> . WHILE O_PARENTHESIS expr C_PARENTHESIS bloque
+    (53) for -> . FOR variable ASSIGN exp TO exp bloque
+    (54) expr -> . or
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    C_CBRACKET      reduce using rule 82 (epsilon -> .)
+    ID              shift and go to state 97
+    RETURN          shift and go to state 98
+    READ            shift and go to state 99
+    WRITE           shift and go to state 100
+    IF              shift and go to state 101
+    WHILE           shift and go to state 102
+    FOR             shift and go to state 103
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    bloque_prime                   shift and go to state 84
+    estatuto                       shift and go to state 85
+    epsilon                        shift and go to state 86
+    asignacion                     shift and go to state 87
+    llamada                        shift and go to state 88
+    retorno                        shift and go to state 89
+    lectura                        shift and go to state 90
+    escritura                      shift and go to state 91
+    decision                       shift and go to state 92
+    while                          shift and go to state 93
+    for                            shift and go to state 94
+    expr                           shift and go to state 95
+    variable                       shift and go to state 96
+    exp                            shift and go to state 62
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    cte                            shift and go to state 42
+
+state 65
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime . C_PARENTHESIS declaracion bloque
+
+    C_PARENTHESIS   shift and go to state 104
+
+
+state 66
+
+    (17) funcion_prime -> tipo . ID
+    (18) funcion_prime -> tipo . ID COMMA funcion_prime
+
+    ID              shift and go to state 105
+
+
+state 67
+
+    (37) llamada -> ID O_PARENTHESIS llamada_prime . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 106
+
+
+state 68
+
+    (38) llamada_prime -> exp .
+    (39) llamada_prime -> exp . COMMA llamada_prime
+
+    C_PARENTHESIS   reduce using rule 38 (llamada_prime -> exp .)
+    COMMA           shift and go to state 107
+
+
+state 69
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET . variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET . variable_tipo C_ABRACKET
+    (25) variable_tipo -> . CTE_INT
+    (26) variable_tipo -> . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 33
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_FLOAT       shift and go to state 43
+
+    variable_tipo                  shift and go to state 108
+    exp                            shift and go to state 34
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 70
+
+    (68) exp -> termino PLUS exp .
+
+    C_ABRACKET      reduce using rule 68 (exp -> termino PLUS exp .)
+    GREATER         reduce using rule 68 (exp -> termino PLUS exp .)
+    LESSER          reduce using rule 68 (exp -> termino PLUS exp .)
+    GREATER_EQUAL   reduce using rule 68 (exp -> termino PLUS exp .)
+    LESSER_EQUAL    reduce using rule 68 (exp -> termino PLUS exp .)
+    EQUAL           reduce using rule 68 (exp -> termino PLUS exp .)
+    NOT_EQUAL       reduce using rule 68 (exp -> termino PLUS exp .)
+    AND             reduce using rule 68 (exp -> termino PLUS exp .)
+    OR              reduce using rule 68 (exp -> termino PLUS exp .)
+    C_PARENTHESIS   reduce using rule 68 (exp -> termino PLUS exp .)
+    COMMA           reduce using rule 68 (exp -> termino PLUS exp .)
+    SEMICOLON       reduce using rule 68 (exp -> termino PLUS exp .)
+    TO              reduce using rule 68 (exp -> termino PLUS exp .)
+    O_CBRACKET      reduce using rule 68 (exp -> termino PLUS exp .)
+
+
+state 71
+
+    (69) exp -> termino MINUS exp .
+
+    C_ABRACKET      reduce using rule 69 (exp -> termino MINUS exp .)
+    GREATER         reduce using rule 69 (exp -> termino MINUS exp .)
+    LESSER          reduce using rule 69 (exp -> termino MINUS exp .)
+    GREATER_EQUAL   reduce using rule 69 (exp -> termino MINUS exp .)
+    LESSER_EQUAL    reduce using rule 69 (exp -> termino MINUS exp .)
+    EQUAL           reduce using rule 69 (exp -> termino MINUS exp .)
+    NOT_EQUAL       reduce using rule 69 (exp -> termino MINUS exp .)
+    AND             reduce using rule 69 (exp -> termino MINUS exp .)
+    OR              reduce using rule 69 (exp -> termino MINUS exp .)
+    C_PARENTHESIS   reduce using rule 69 (exp -> termino MINUS exp .)
+    COMMA           reduce using rule 69 (exp -> termino MINUS exp .)
+    SEMICOLON       reduce using rule 69 (exp -> termino MINUS exp .)
+    TO              reduce using rule 69 (exp -> termino MINUS exp .)
+    O_CBRACKET      reduce using rule 69 (exp -> termino MINUS exp .)
+
+
+state 72
+
+    (71) termino -> factor TIMES termino .
+
+    PLUS            reduce using rule 71 (termino -> factor TIMES termino .)
+    MINUS           reduce using rule 71 (termino -> factor TIMES termino .)
+    C_ABRACKET      reduce using rule 71 (termino -> factor TIMES termino .)
+    GREATER         reduce using rule 71 (termino -> factor TIMES termino .)
+    LESSER          reduce using rule 71 (termino -> factor TIMES termino .)
+    GREATER_EQUAL   reduce using rule 71 (termino -> factor TIMES termino .)
+    LESSER_EQUAL    reduce using rule 71 (termino -> factor TIMES termino .)
+    EQUAL           reduce using rule 71 (termino -> factor TIMES termino .)
+    NOT_EQUAL       reduce using rule 71 (termino -> factor TIMES termino .)
+    AND             reduce using rule 71 (termino -> factor TIMES termino .)
+    OR              reduce using rule 71 (termino -> factor TIMES termino .)
+    C_PARENTHESIS   reduce using rule 71 (termino -> factor TIMES termino .)
+    COMMA           reduce using rule 71 (termino -> factor TIMES termino .)
+    SEMICOLON       reduce using rule 71 (termino -> factor TIMES termino .)
+    TO              reduce using rule 71 (termino -> factor TIMES termino .)
+    O_CBRACKET      reduce using rule 71 (termino -> factor TIMES termino .)
+
+
+state 73
+
+    (72) termino -> factor DIVIDE termino .
+
+    PLUS            reduce using rule 72 (termino -> factor DIVIDE termino .)
+    MINUS           reduce using rule 72 (termino -> factor DIVIDE termino .)
+    C_ABRACKET      reduce using rule 72 (termino -> factor DIVIDE termino .)
+    GREATER         reduce using rule 72 (termino -> factor DIVIDE termino .)
+    LESSER          reduce using rule 72 (termino -> factor DIVIDE termino .)
+    GREATER_EQUAL   reduce using rule 72 (termino -> factor DIVIDE termino .)
+    LESSER_EQUAL    reduce using rule 72 (termino -> factor DIVIDE termino .)
+    EQUAL           reduce using rule 72 (termino -> factor DIVIDE termino .)
+    NOT_EQUAL       reduce using rule 72 (termino -> factor DIVIDE termino .)
+    AND             reduce using rule 72 (termino -> factor DIVIDE termino .)
+    OR              reduce using rule 72 (termino -> factor DIVIDE termino .)
+    C_PARENTHESIS   reduce using rule 72 (termino -> factor DIVIDE termino .)
+    COMMA           reduce using rule 72 (termino -> factor DIVIDE termino .)
+    SEMICOLON       reduce using rule 72 (termino -> factor DIVIDE termino .)
+    TO              reduce using rule 72 (termino -> factor DIVIDE termino .)
+    O_CBRACKET      reduce using rule 72 (termino -> factor DIVIDE termino .)
+
+
+state 74
+
+    (73) termino -> factor MODULE termino .
+
+    PLUS            reduce using rule 73 (termino -> factor MODULE termino .)
+    MINUS           reduce using rule 73 (termino -> factor MODULE termino .)
+    C_ABRACKET      reduce using rule 73 (termino -> factor MODULE termino .)
+    GREATER         reduce using rule 73 (termino -> factor MODULE termino .)
+    LESSER          reduce using rule 73 (termino -> factor MODULE termino .)
+    GREATER_EQUAL   reduce using rule 73 (termino -> factor MODULE termino .)
+    LESSER_EQUAL    reduce using rule 73 (termino -> factor MODULE termino .)
+    EQUAL           reduce using rule 73 (termino -> factor MODULE termino .)
+    NOT_EQUAL       reduce using rule 73 (termino -> factor MODULE termino .)
+    AND             reduce using rule 73 (termino -> factor MODULE termino .)
+    OR              reduce using rule 73 (termino -> factor MODULE termino .)
+    C_PARENTHESIS   reduce using rule 73 (termino -> factor MODULE termino .)
+    COMMA           reduce using rule 73 (termino -> factor MODULE termino .)
+    SEMICOLON       reduce using rule 73 (termino -> factor MODULE termino .)
+    TO              reduce using rule 73 (termino -> factor MODULE termino .)
+    O_CBRACKET      reduce using rule 73 (termino -> factor MODULE termino .)
+
+
+state 75
+
+    (75) factor -> O_PARENTHESIS expr C_PARENTHESIS .
+
+    TIMES           reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    DIVIDE          reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    MODULE          reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    PLUS            reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    MINUS           reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    C_ABRACKET      reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    GREATER         reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    LESSER          reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    GREATER_EQUAL   reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    LESSER_EQUAL    reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    EQUAL           reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    NOT_EQUAL       reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    AND             reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    OR              reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    C_PARENTHESIS   reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    COMMA           reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    SEMICOLON       reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    TO              reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    O_CBRACKET      reduce using rule 75 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+
+
+state 76
+
+    (56) or -> and OR . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    and                            shift and go to state 59
+    or                             shift and go to state 109
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 77
+
+    (58) and -> equal AND . and
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    equal                          shift and go to state 60
+    and                            shift and go to state 110
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 78
+
+    (60) equal -> compare EQUAL . compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    compare                        shift and go to state 111
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 79
+
+    (61) equal -> compare NOT_EQUAL . compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    compare                        shift and go to state 112
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 80
+
+    (63) compare -> exp GREATER . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    exp                            shift and go to state 113
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 81
+
+    (64) compare -> exp LESSER . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    exp                            shift and go to state 114
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 82
+
+    (65) compare -> exp GREATER_EQUAL . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    exp                            shift and go to state 115
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 83
+
+    (66) compare -> exp LESSER_EQUAL . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    exp                            shift and go to state 116
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 84
+
+    (2) bloque -> O_CBRACKET bloque_prime . C_CBRACKET
+
+    C_CBRACKET      shift and go to state 117
+
+
+state 85
+
+    (3) bloque_prime -> estatuto . bloque_prime
+    (3) bloque_prime -> . estatuto bloque_prime
+    (4) bloque_prime -> . epsilon
+    (27) estatuto -> . asignacion SEMICOLON
+    (28) estatuto -> . llamada SEMICOLON
+    (29) estatuto -> . retorno SEMICOLON
+    (30) estatuto -> . lectura SEMICOLON
+    (31) estatuto -> . escritura SEMICOLON
+    (32) estatuto -> . decision
+    (33) estatuto -> . while
+    (34) estatuto -> . for
+    (35) estatuto -> . expr SEMICOLON
+    (82) epsilon -> .
+    (36) asignacion -> . variable ASSIGN expr
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (40) retorno -> . RETURN O_PARENTHESIS expr C_PARENTHESIS
+    (41) lectura -> . READ O_PARENTHESIS lectura_prime C_PARENTHESIS
+    (44) escritura -> . WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS
+    (49) decision -> . IF O_PARENTHESIS expr C_PARENTHESIS bloque else
+    (52) while -> . WHILE O_PARENTHESIS expr C_PARENTHESIS bloque
+    (53) for -> . FOR variable ASSIGN exp TO exp bloque
+    (54) expr -> . or
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    C_CBRACKET      reduce using rule 82 (epsilon -> .)
+    ID              shift and go to state 97
+    RETURN          shift and go to state 98
+    READ            shift and go to state 99
+    WRITE           shift and go to state 100
+    IF              shift and go to state 101
+    WHILE           shift and go to state 102
+    FOR             shift and go to state 103
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    estatuto                       shift and go to state 85
+    bloque_prime                   shift and go to state 118
+    epsilon                        shift and go to state 86
+    asignacion                     shift and go to state 87
+    llamada                        shift and go to state 88
+    retorno                        shift and go to state 89
+    lectura                        shift and go to state 90
+    escritura                      shift and go to state 91
+    decision                       shift and go to state 92
+    while                          shift and go to state 93
+    for                            shift and go to state 94
+    expr                           shift and go to state 95
+    variable                       shift and go to state 96
+    exp                            shift and go to state 62
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    cte                            shift and go to state 42
+
+state 86
+
+    (4) bloque_prime -> epsilon .
+
+    C_CBRACKET      reduce using rule 4 (bloque_prime -> epsilon .)
+
+
+state 87
+
+    (27) estatuto -> asignacion . SEMICOLON
+
+    SEMICOLON       shift and go to state 119
+
+
+state 88
+
+    (28) estatuto -> llamada . SEMICOLON
+    (76) factor -> llamada .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 120
+    TIMES           reduce using rule 76 (factor -> llamada .)
+    DIVIDE          reduce using rule 76 (factor -> llamada .)
+    MODULE          reduce using rule 76 (factor -> llamada .)
+    PLUS            reduce using rule 76 (factor -> llamada .)
+    MINUS           reduce using rule 76 (factor -> llamada .)
+    GREATER         reduce using rule 76 (factor -> llamada .)
+    LESSER          reduce using rule 76 (factor -> llamada .)
+    GREATER_EQUAL   reduce using rule 76 (factor -> llamada .)
+    LESSER_EQUAL    reduce using rule 76 (factor -> llamada .)
+    EQUAL           reduce using rule 76 (factor -> llamada .)
+    NOT_EQUAL       reduce using rule 76 (factor -> llamada .)
+    AND             reduce using rule 76 (factor -> llamada .)
+    OR              reduce using rule 76 (factor -> llamada .)
+
+  ! SEMICOLON       [ reduce using rule 76 (factor -> llamada .) ]
+
+
+state 89
+
+    (29) estatuto -> retorno . SEMICOLON
+
+    SEMICOLON       shift and go to state 121
+
+
+state 90
+
+    (30) estatuto -> lectura . SEMICOLON
+
+    SEMICOLON       shift and go to state 122
+
+
+state 91
+
+    (31) estatuto -> escritura . SEMICOLON
+
+    SEMICOLON       shift and go to state 123
+
+
+state 92
+
+    (32) estatuto -> decision .
+
+    ID              reduce using rule 32 (estatuto -> decision .)
+    RETURN          reduce using rule 32 (estatuto -> decision .)
+    READ            reduce using rule 32 (estatuto -> decision .)
+    WRITE           reduce using rule 32 (estatuto -> decision .)
+    IF              reduce using rule 32 (estatuto -> decision .)
+    WHILE           reduce using rule 32 (estatuto -> decision .)
+    FOR             reduce using rule 32 (estatuto -> decision .)
+    O_PARENTHESIS   reduce using rule 32 (estatuto -> decision .)
+    PLUS            reduce using rule 32 (estatuto -> decision .)
+    MINUS           reduce using rule 32 (estatuto -> decision .)
+    CTE_INT         reduce using rule 32 (estatuto -> decision .)
+    CTE_FLOAT       reduce using rule 32 (estatuto -> decision .)
+    C_CBRACKET      reduce using rule 32 (estatuto -> decision .)
+
+
+state 93
+
+    (33) estatuto -> while .
+
+    ID              reduce using rule 33 (estatuto -> while .)
+    RETURN          reduce using rule 33 (estatuto -> while .)
+    READ            reduce using rule 33 (estatuto -> while .)
+    WRITE           reduce using rule 33 (estatuto -> while .)
+    IF              reduce using rule 33 (estatuto -> while .)
+    WHILE           reduce using rule 33 (estatuto -> while .)
+    FOR             reduce using rule 33 (estatuto -> while .)
+    O_PARENTHESIS   reduce using rule 33 (estatuto -> while .)
+    PLUS            reduce using rule 33 (estatuto -> while .)
+    MINUS           reduce using rule 33 (estatuto -> while .)
+    CTE_INT         reduce using rule 33 (estatuto -> while .)
+    CTE_FLOAT       reduce using rule 33 (estatuto -> while .)
+    C_CBRACKET      reduce using rule 33 (estatuto -> while .)
+
+
+state 94
+
+    (34) estatuto -> for .
+
+    ID              reduce using rule 34 (estatuto -> for .)
+    RETURN          reduce using rule 34 (estatuto -> for .)
+    READ            reduce using rule 34 (estatuto -> for .)
+    WRITE           reduce using rule 34 (estatuto -> for .)
+    IF              reduce using rule 34 (estatuto -> for .)
+    WHILE           reduce using rule 34 (estatuto -> for .)
+    FOR             reduce using rule 34 (estatuto -> for .)
+    O_PARENTHESIS   reduce using rule 34 (estatuto -> for .)
+    PLUS            reduce using rule 34 (estatuto -> for .)
+    MINUS           reduce using rule 34 (estatuto -> for .)
+    CTE_INT         reduce using rule 34 (estatuto -> for .)
+    CTE_FLOAT       reduce using rule 34 (estatuto -> for .)
+    C_CBRACKET      reduce using rule 34 (estatuto -> for .)
+
+
+state 95
+
+    (35) estatuto -> expr . SEMICOLON
+
+    SEMICOLON       shift and go to state 124
+
+
+state 96
+
+    (36) asignacion -> variable . ASSIGN expr
+    (74) factor -> variable .
+
+    ASSIGN          shift and go to state 125
+    TIMES           reduce using rule 74 (factor -> variable .)
+    DIVIDE          reduce using rule 74 (factor -> variable .)
+    MODULE          reduce using rule 74 (factor -> variable .)
+    PLUS            reduce using rule 74 (factor -> variable .)
+    MINUS           reduce using rule 74 (factor -> variable .)
+    GREATER         reduce using rule 74 (factor -> variable .)
+    LESSER          reduce using rule 74 (factor -> variable .)
+    GREATER_EQUAL   reduce using rule 74 (factor -> variable .)
+    LESSER_EQUAL    reduce using rule 74 (factor -> variable .)
+    EQUAL           reduce using rule 74 (factor -> variable .)
+    NOT_EQUAL       reduce using rule 74 (factor -> variable .)
+    AND             reduce using rule 74 (factor -> variable .)
+    OR              reduce using rule 74 (factor -> variable .)
+    SEMICOLON       reduce using rule 74 (factor -> variable .)
+
+
+state 97
+
+    (37) llamada -> ID . O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (21) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> ID . O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> ID .
+
+    O_PARENTHESIS   shift and go to state 47
+    O_ABRACKET      shift and go to state 26
+    ASSIGN          reduce using rule 24 (variable -> ID .)
+    TIMES           reduce using rule 24 (variable -> ID .)
+    DIVIDE          reduce using rule 24 (variable -> ID .)
+    MODULE          reduce using rule 24 (variable -> ID .)
+    PLUS            reduce using rule 24 (variable -> ID .)
+    MINUS           reduce using rule 24 (variable -> ID .)
+    GREATER         reduce using rule 24 (variable -> ID .)
+    LESSER          reduce using rule 24 (variable -> ID .)
+    GREATER_EQUAL   reduce using rule 24 (variable -> ID .)
+    LESSER_EQUAL    reduce using rule 24 (variable -> ID .)
+    EQUAL           reduce using rule 24 (variable -> ID .)
+    NOT_EQUAL       reduce using rule 24 (variable -> ID .)
+    AND             reduce using rule 24 (variable -> ID .)
+    OR              reduce using rule 24 (variable -> ID .)
+    SEMICOLON       reduce using rule 24 (variable -> ID .)
+
+
+state 98
+
+    (40) retorno -> RETURN . O_PARENTHESIS expr C_PARENTHESIS
+
+    O_PARENTHESIS   shift and go to state 126
+
+
+state 99
+
+    (41) lectura -> READ . O_PARENTHESIS lectura_prime C_PARENTHESIS
+
+    O_PARENTHESIS   shift and go to state 127
+
+
+state 100
+
+    (44) escritura -> WRITE . O_PARENTHESIS escritura_prime C_PARENTHESIS
+
+    O_PARENTHESIS   shift and go to state 128
+
+
+state 101
+
+    (49) decision -> IF . O_PARENTHESIS expr C_PARENTHESIS bloque else
+
+    O_PARENTHESIS   shift and go to state 129
+
+
+state 102
+
+    (52) while -> WHILE . O_PARENTHESIS expr C_PARENTHESIS bloque
+
+    O_PARENTHESIS   shift and go to state 130
+
+
+state 103
+
+    (53) for -> FOR . variable ASSIGN exp TO exp bloque
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+
+    ID              shift and go to state 14
+
+    variable                       shift and go to state 131
+
+state 104
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS . declaracion bloque
+    (5) declaracion -> . declaracion_base
+    (6) declaracion -> . declaracion_base declaracion
+    (7) declaracion_base -> . LET declaracion_prime COLON tipo SEMICOLON
+
+    LET             shift and go to state 7
+
+    declaracion                    shift and go to state 132
+    declaracion_base               shift and go to state 6
+
+state 105
+
+    (17) funcion_prime -> tipo ID .
+    (18) funcion_prime -> tipo ID . COMMA funcion_prime
+
+    C_PARENTHESIS   reduce using rule 17 (funcion_prime -> tipo ID .)
+    COMMA           shift and go to state 133
+
+
+state 106
+
+    (37) llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .
+
+    TIMES           reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    DIVIDE          reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    MODULE          reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    PLUS            reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    MINUS           reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    C_ABRACKET      reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    GREATER         reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    LESSER          reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    GREATER_EQUAL   reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    LESSER_EQUAL    reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    EQUAL           reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    NOT_EQUAL       reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    AND             reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    OR              reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    C_PARENTHESIS   reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    COMMA           reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    SEMICOLON       reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    TO              reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    O_CBRACKET      reduce using rule 37 (llamada -> ID O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+
+
+state 107
+
+    (39) llamada_prime -> exp COMMA . llamada_prime
+    (38) llamada_prime -> . exp
+    (39) llamada_prime -> . exp COMMA llamada_prime
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    exp                            shift and go to state 68
+    llamada_prime                  shift and go to state 134
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 108
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo . C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo . C_ABRACKET
+
+    C_ABRACKET      shift and go to state 135
+
+
+state 109
+
+    (56) or -> and OR or .
+
+    C_PARENTHESIS   reduce using rule 56 (or -> and OR or .)
+    SEMICOLON       reduce using rule 56 (or -> and OR or .)
+    COMMA           reduce using rule 56 (or -> and OR or .)
+
+
+state 110
+
+    (58) and -> equal AND and .
+
+    OR              reduce using rule 58 (and -> equal AND and .)
+    C_PARENTHESIS   reduce using rule 58 (and -> equal AND and .)
+    SEMICOLON       reduce using rule 58 (and -> equal AND and .)
+    COMMA           reduce using rule 58 (and -> equal AND and .)
+
+
+state 111
+
+    (60) equal -> compare EQUAL compare .
+
+    AND             reduce using rule 60 (equal -> compare EQUAL compare .)
+    OR              reduce using rule 60 (equal -> compare EQUAL compare .)
+    C_PARENTHESIS   reduce using rule 60 (equal -> compare EQUAL compare .)
+    SEMICOLON       reduce using rule 60 (equal -> compare EQUAL compare .)
+    COMMA           reduce using rule 60 (equal -> compare EQUAL compare .)
+
+
+state 112
+
+    (61) equal -> compare NOT_EQUAL compare .
+
+    AND             reduce using rule 61 (equal -> compare NOT_EQUAL compare .)
+    OR              reduce using rule 61 (equal -> compare NOT_EQUAL compare .)
+    C_PARENTHESIS   reduce using rule 61 (equal -> compare NOT_EQUAL compare .)
+    SEMICOLON       reduce using rule 61 (equal -> compare NOT_EQUAL compare .)
+    COMMA           reduce using rule 61 (equal -> compare NOT_EQUAL compare .)
+
+
+state 113
+
+    (63) compare -> exp GREATER exp .
+
+    EQUAL           reduce using rule 63 (compare -> exp GREATER exp .)
+    NOT_EQUAL       reduce using rule 63 (compare -> exp GREATER exp .)
+    AND             reduce using rule 63 (compare -> exp GREATER exp .)
+    OR              reduce using rule 63 (compare -> exp GREATER exp .)
+    C_PARENTHESIS   reduce using rule 63 (compare -> exp GREATER exp .)
+    SEMICOLON       reduce using rule 63 (compare -> exp GREATER exp .)
+    COMMA           reduce using rule 63 (compare -> exp GREATER exp .)
+
+
+state 114
+
+    (64) compare -> exp LESSER exp .
+
+    EQUAL           reduce using rule 64 (compare -> exp LESSER exp .)
+    NOT_EQUAL       reduce using rule 64 (compare -> exp LESSER exp .)
+    AND             reduce using rule 64 (compare -> exp LESSER exp .)
+    OR              reduce using rule 64 (compare -> exp LESSER exp .)
+    C_PARENTHESIS   reduce using rule 64 (compare -> exp LESSER exp .)
+    SEMICOLON       reduce using rule 64 (compare -> exp LESSER exp .)
+    COMMA           reduce using rule 64 (compare -> exp LESSER exp .)
+
+
+state 115
+
+    (65) compare -> exp GREATER_EQUAL exp .
+
+    EQUAL           reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    NOT_EQUAL       reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    AND             reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    OR              reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    C_PARENTHESIS   reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    SEMICOLON       reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+    COMMA           reduce using rule 65 (compare -> exp GREATER_EQUAL exp .)
+
+
+state 116
+
+    (66) compare -> exp LESSER_EQUAL exp .
+
+    EQUAL           reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    NOT_EQUAL       reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    AND             reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    OR              reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    C_PARENTHESIS   reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    SEMICOLON       reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+    COMMA           reduce using rule 66 (compare -> exp LESSER_EQUAL exp .)
+
+
+state 117
+
+    (2) bloque -> O_CBRACKET bloque_prime C_CBRACKET .
+
+    $end            reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    FUNCTION        reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    MAIN            reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    ELSE            reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    ID              reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    RETURN          reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    READ            reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    WRITE           reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    IF              reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    WHILE           reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    FOR             reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    O_PARENTHESIS   reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    PLUS            reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    MINUS           reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    CTE_INT         reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    CTE_FLOAT       reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+    C_CBRACKET      reduce using rule 2 (bloque -> O_CBRACKET bloque_prime C_CBRACKET .)
+
+
+state 118
+
+    (3) bloque_prime -> estatuto bloque_prime .
+
+    C_CBRACKET      reduce using rule 3 (bloque_prime -> estatuto bloque_prime .)
+
+
+state 119
+
+    (27) estatuto -> asignacion SEMICOLON .
+
+    ID              reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    RETURN          reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    READ            reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    WRITE           reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    IF              reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    WHILE           reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    FOR             reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    PLUS            reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    MINUS           reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    CTE_INT         reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    CTE_FLOAT       reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+    C_CBRACKET      reduce using rule 27 (estatuto -> asignacion SEMICOLON .)
+
+
+state 120
+
+    (28) estatuto -> llamada SEMICOLON .
+
+    ID              reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    RETURN          reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    READ            reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    WRITE           reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    IF              reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    WHILE           reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    FOR             reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    PLUS            reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    MINUS           reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    CTE_INT         reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    CTE_FLOAT       reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+    C_CBRACKET      reduce using rule 28 (estatuto -> llamada SEMICOLON .)
+
+
+state 121
+
+    (29) estatuto -> retorno SEMICOLON .
+
+    ID              reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    RETURN          reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    READ            reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    WRITE           reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    IF              reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    WHILE           reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    FOR             reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    PLUS            reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    MINUS           reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    CTE_INT         reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    CTE_FLOAT       reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+    C_CBRACKET      reduce using rule 29 (estatuto -> retorno SEMICOLON .)
+
+
+state 122
+
+    (30) estatuto -> lectura SEMICOLON .
+
+    ID              reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    RETURN          reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    READ            reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    WRITE           reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    IF              reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    WHILE           reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    FOR             reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    PLUS            reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    MINUS           reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    CTE_INT         reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    CTE_FLOAT       reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+    C_CBRACKET      reduce using rule 30 (estatuto -> lectura SEMICOLON .)
+
+
+state 123
+
+    (31) estatuto -> escritura SEMICOLON .
+
+    ID              reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    RETURN          reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    READ            reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    WRITE           reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    IF              reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    WHILE           reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    FOR             reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    PLUS            reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    MINUS           reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    CTE_INT         reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    CTE_FLOAT       reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+    C_CBRACKET      reduce using rule 31 (estatuto -> escritura SEMICOLON .)
+
+
+state 124
+
+    (35) estatuto -> expr SEMICOLON .
+
+    ID              reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    RETURN          reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    READ            reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    WRITE           reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    IF              reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    WHILE           reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    FOR             reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    O_PARENTHESIS   reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    PLUS            reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    MINUS           reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    CTE_INT         reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    CTE_FLOAT       reduce using rule 35 (estatuto -> expr SEMICOLON .)
+    C_CBRACKET      reduce using rule 35 (estatuto -> expr SEMICOLON .)
+
+
+state 125
+
+    (36) asignacion -> variable ASSIGN . expr
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    variable                       shift and go to state 39
+    expr                           shift and go to state 136
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 126
+
+    (40) retorno -> RETURN O_PARENTHESIS . expr C_PARENTHESIS
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    expr                           shift and go to state 137
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 127
+
+    (41) lectura -> READ O_PARENTHESIS . lectura_prime C_PARENTHESIS
+    (42) lectura_prime -> . variable
+    (43) lectura_prime -> . variable COMMA lectura_prime
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+
+    ID              shift and go to state 14
+
+    lectura_prime                  shift and go to state 138
+    variable                       shift and go to state 139
+
+state 128
+
+    (44) escritura -> WRITE O_PARENTHESIS . escritura_prime C_PARENTHESIS
+    (45) escritura_prime -> . expr
+    (46) escritura_prime -> . CTE_STRING
+    (47) escritura_prime -> . expr COMMA escritura_prime
+    (48) escritura_prime -> . CTE_STRING COMMA escritura_prime
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_STRING      shift and go to state 142
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    escritura_prime                shift and go to state 140
+    expr                           shift and go to state 141
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 129
+
+    (49) decision -> IF O_PARENTHESIS . expr C_PARENTHESIS bloque else
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    expr                           shift and go to state 143
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 130
+
+    (52) while -> WHILE O_PARENTHESIS . expr C_PARENTHESIS bloque
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    expr                           shift and go to state 144
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 131
+
+    (53) for -> FOR variable . ASSIGN exp TO exp bloque
+
+    ASSIGN          shift and go to state 145
+
+
+state 132
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion . bloque
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 146
+
+state 133
+
+    (18) funcion_prime -> tipo ID COMMA . funcion_prime
+    (17) funcion_prime -> . tipo ID
+    (18) funcion_prime -> . tipo ID COMMA funcion_prime
+    (10) tipo -> . INT
+    (11) tipo -> . FLOAT
+    (12) tipo -> . CHAR
+    (13) tipo -> . STRING
+
+    INT             shift and go to state 20
+    FLOAT           shift and go to state 21
+    CHAR            shift and go to state 22
+    STRING          shift and go to state 23
+
+    tipo                           shift and go to state 66
+    funcion_prime                  shift and go to state 147
+
+state 134
+
+    (39) llamada_prime -> exp COMMA llamada_prime .
+
+    C_PARENTHESIS   reduce using rule 39 (llamada_prime -> exp COMMA llamada_prime .)
+
+
+state 135
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET . O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .
+
+    O_ABRACKET      shift and go to state 148
+    COMMA           reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    COLON           reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    TIMES           reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    DIVIDE          reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    MODULE          reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    PLUS            reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    MINUS           reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    C_ABRACKET      reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER         reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER          reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER_EQUAL   reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER_EQUAL    reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    EQUAL           reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    NOT_EQUAL       reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    AND             reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    OR              reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    C_PARENTHESIS   reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    SEMICOLON       reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    TO              reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    O_CBRACKET      reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    ASSIGN          reduce using rule 22 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+
+
+state 136
+
+    (36) asignacion -> variable ASSIGN expr .
+
+    SEMICOLON       reduce using rule 36 (asignacion -> variable ASSIGN expr .)
+
+
+state 137
+
+    (40) retorno -> RETURN O_PARENTHESIS expr . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 149
+
+
+state 138
+
+    (41) lectura -> READ O_PARENTHESIS lectura_prime . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 150
+
+
+state 139
+
+    (42) lectura_prime -> variable .
+    (43) lectura_prime -> variable . COMMA lectura_prime
+
+    C_PARENTHESIS   reduce using rule 42 (lectura_prime -> variable .)
+    COMMA           shift and go to state 151
+
+
+state 140
+
+    (44) escritura -> WRITE O_PARENTHESIS escritura_prime . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 152
+
+
+state 141
+
+    (45) escritura_prime -> expr .
+    (47) escritura_prime -> expr . COMMA escritura_prime
+
+    C_PARENTHESIS   reduce using rule 45 (escritura_prime -> expr .)
+    COMMA           shift and go to state 153
+
+
+state 142
+
+    (46) escritura_prime -> CTE_STRING .
+    (48) escritura_prime -> CTE_STRING . COMMA escritura_prime
+
+    C_PARENTHESIS   reduce using rule 46 (escritura_prime -> CTE_STRING .)
+    COMMA           shift and go to state 154
+
+
+state 143
+
+    (49) decision -> IF O_PARENTHESIS expr . C_PARENTHESIS bloque else
+
+    C_PARENTHESIS   shift and go to state 155
+
+
+state 144
+
+    (52) while -> WHILE O_PARENTHESIS expr . C_PARENTHESIS bloque
+
+    C_PARENTHESIS   shift and go to state 156
+
+
+state 145
+
+    (53) for -> FOR variable ASSIGN . exp TO exp bloque
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    variable                       shift and go to state 39
+    exp                            shift and go to state 157
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 146
+
+    (16) funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque .
+
+    FUNCTION        reduce using rule 16 (funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque .)
+    MAIN            reduce using rule 16 (funcion_base -> FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque .)
+
+
+state 147
+
+    (18) funcion_prime -> tipo ID COMMA funcion_prime .
+
+    C_PARENTHESIS   reduce using rule 18 (funcion_prime -> tipo ID COMMA funcion_prime .)
+
+
+state 148
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET . variable_tipo C_ABRACKET
+    (25) variable_tipo -> . CTE_INT
+    (26) variable_tipo -> . exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 33
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_FLOAT       shift and go to state 43
+
+    variable_tipo                  shift and go to state 158
+    exp                            shift and go to state 34
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 149
+
+    (40) retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS .
+
+    SEMICOLON       reduce using rule 40 (retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS .)
+
+
+state 150
+
+    (41) lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS .
+
+    SEMICOLON       reduce using rule 41 (lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS .)
+
+
+state 151
+
+    (43) lectura_prime -> variable COMMA . lectura_prime
+    (42) lectura_prime -> . variable
+    (43) lectura_prime -> . variable COMMA lectura_prime
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+
+    ID              shift and go to state 14
+
+    variable                       shift and go to state 139
+    lectura_prime                  shift and go to state 159
+
+state 152
+
+    (44) escritura -> WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS .
+
+    SEMICOLON       reduce using rule 44 (escritura -> WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS .)
+
+
+state 153
+
+    (47) escritura_prime -> expr COMMA . escritura_prime
+    (45) escritura_prime -> . expr
+    (46) escritura_prime -> . CTE_STRING
+    (47) escritura_prime -> . expr COMMA escritura_prime
+    (48) escritura_prime -> . CTE_STRING COMMA escritura_prime
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_STRING      shift and go to state 142
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    expr                           shift and go to state 141
+    escritura_prime                shift and go to state 160
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 154
+
+    (48) escritura_prime -> CTE_STRING COMMA . escritura_prime
+    (45) escritura_prime -> . expr
+    (46) escritura_prime -> . CTE_STRING
+    (47) escritura_prime -> . expr COMMA escritura_prime
+    (48) escritura_prime -> . CTE_STRING COMMA escritura_prime
+    (54) expr -> . or
+    (55) or -> . and
+    (56) or -> . and OR or
+    (57) and -> . equal
+    (58) and -> . equal AND and
+    (59) equal -> . compare
+    (60) equal -> . compare EQUAL compare
+    (61) equal -> . compare NOT_EQUAL compare
+    (62) compare -> . exp
+    (63) compare -> . exp GREATER exp
+    (64) compare -> . exp LESSER exp
+    (65) compare -> . exp GREATER_EQUAL exp
+    (66) compare -> . exp LESSER_EQUAL exp
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    CTE_STRING      shift and go to state 142
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    escritura_prime                shift and go to state 161
+    expr                           shift and go to state 141
+    or                             shift and go to state 58
+    and                            shift and go to state 59
+    equal                          shift and go to state 60
+    compare                        shift and go to state 61
+    exp                            shift and go to state 62
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    variable                       shift and go to state 39
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 155
+
+    (49) decision -> IF O_PARENTHESIS expr C_PARENTHESIS . bloque else
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 162
+
+state 156
+
+    (52) while -> WHILE O_PARENTHESIS expr C_PARENTHESIS . bloque
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 163
+
+state 157
+
+    (53) for -> FOR variable ASSIGN exp . TO exp bloque
+
+    TO              shift and go to state 164
+
+
+state 158
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo . C_ABRACKET
+
+    C_ABRACKET      shift and go to state 165
+
+
+state 159
+
+    (43) lectura_prime -> variable COMMA lectura_prime .
+
+    C_PARENTHESIS   reduce using rule 43 (lectura_prime -> variable COMMA lectura_prime .)
+
+
+state 160
+
+    (47) escritura_prime -> expr COMMA escritura_prime .
+
+    C_PARENTHESIS   reduce using rule 47 (escritura_prime -> expr COMMA escritura_prime .)
+
+
+state 161
+
+    (48) escritura_prime -> CTE_STRING COMMA escritura_prime .
+
+    C_PARENTHESIS   reduce using rule 48 (escritura_prime -> CTE_STRING COMMA escritura_prime .)
+
+
+state 162
+
+    (49) decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque . else
+    (50) else -> . ELSE bloque
+    (51) else -> . epsilon
+    (82) epsilon -> .
+
+    ELSE            shift and go to state 167
+    ID              reduce using rule 82 (epsilon -> .)
+    RETURN          reduce using rule 82 (epsilon -> .)
+    READ            reduce using rule 82 (epsilon -> .)
+    WRITE           reduce using rule 82 (epsilon -> .)
+    IF              reduce using rule 82 (epsilon -> .)
+    WHILE           reduce using rule 82 (epsilon -> .)
+    FOR             reduce using rule 82 (epsilon -> .)
+    O_PARENTHESIS   reduce using rule 82 (epsilon -> .)
+    PLUS            reduce using rule 82 (epsilon -> .)
+    MINUS           reduce using rule 82 (epsilon -> .)
+    CTE_INT         reduce using rule 82 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 82 (epsilon -> .)
+    C_CBRACKET      reduce using rule 82 (epsilon -> .)
+
+    else                           shift and go to state 166
+    epsilon                        shift and go to state 168
+
+state 163
+
+    (52) while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .
+
+    ID              reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    RETURN          reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    READ            reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    WRITE           reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    IF              reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    WHILE           reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    FOR             reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    O_PARENTHESIS   reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    PLUS            reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    MINUS           reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    CTE_INT         reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    CTE_FLOAT       reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+    C_CBRACKET      reduce using rule 52 (while -> WHILE O_PARENTHESIS expr C_PARENTHESIS bloque .)
+
+
+state 164
+
+    (53) for -> FOR variable ASSIGN exp TO . exp bloque
+    (67) exp -> . termino
+    (68) exp -> . termino PLUS exp
+    (69) exp -> . termino MINUS exp
+    (70) termino -> . factor
+    (71) termino -> . factor TIMES termino
+    (72) termino -> . factor DIVIDE termino
+    (73) termino -> . factor MODULE termino
+    (74) factor -> . variable
+    (75) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (76) factor -> . llamada
+    (77) factor -> . cte
+    (78) factor -> . PLUS cte
+    (79) factor -> . MINUS cte
+    (21) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (22) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
+    (23) variable -> . ID O_ABRACKET variable_tipo C_ABRACKET
+    (24) variable -> . ID
+    (37) llamada -> . ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (80) cte -> . CTE_INT
+    (81) cte -> . CTE_FLOAT
+
+    O_PARENTHESIS   shift and go to state 40
+    PLUS            shift and go to state 36
+    MINUS           shift and go to state 37
+    ID              shift and go to state 31
+    CTE_INT         shift and go to state 52
+    CTE_FLOAT       shift and go to state 43
+
+    variable                       shift and go to state 39
+    exp                            shift and go to state 169
+    termino                        shift and go to state 35
+    factor                         shift and go to state 38
+    llamada                        shift and go to state 41
+    cte                            shift and go to state 42
+
+state 165
+
+    (21) variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .
+
+    COMMA           reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    COLON           reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    TIMES           reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    DIVIDE          reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    MODULE          reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    PLUS            reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    MINUS           reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    C_ABRACKET      reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER         reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER          reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    GREATER_EQUAL   reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    LESSER_EQUAL    reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    EQUAL           reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    NOT_EQUAL       reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    AND             reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    OR              reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    C_PARENTHESIS   reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    SEMICOLON       reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    TO              reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    O_CBRACKET      reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+    ASSIGN          reduce using rule 21 (variable -> ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET .)
+
+
+state 166
+
+    (49) decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .
+
+    ID              reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    RETURN          reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    READ            reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    WRITE           reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    IF              reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    WHILE           reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    FOR             reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    O_PARENTHESIS   reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    PLUS            reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    MINUS           reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    CTE_INT         reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    CTE_FLOAT       reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+    C_CBRACKET      reduce using rule 49 (decision -> IF O_PARENTHESIS expr C_PARENTHESIS bloque else .)
+
+
+state 167
+
+    (50) else -> ELSE . bloque
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 170
+
+state 168
+
+    (51) else -> epsilon .
+
+    ID              reduce using rule 51 (else -> epsilon .)
+    RETURN          reduce using rule 51 (else -> epsilon .)
+    READ            reduce using rule 51 (else -> epsilon .)
+    WRITE           reduce using rule 51 (else -> epsilon .)
+    IF              reduce using rule 51 (else -> epsilon .)
+    WHILE           reduce using rule 51 (else -> epsilon .)
+    FOR             reduce using rule 51 (else -> epsilon .)
+    O_PARENTHESIS   reduce using rule 51 (else -> epsilon .)
+    PLUS            reduce using rule 51 (else -> epsilon .)
+    MINUS           reduce using rule 51 (else -> epsilon .)
+    CTE_INT         reduce using rule 51 (else -> epsilon .)
+    CTE_FLOAT       reduce using rule 51 (else -> epsilon .)
+    C_CBRACKET      reduce using rule 51 (else -> epsilon .)
+
+
+state 169
+
+    (53) for -> FOR variable ASSIGN exp TO exp . bloque
+    (2) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
+
+    O_CBRACKET      shift and go to state 64
+
+    bloque                         shift and go to state 171
+
+state 170
+
+    (50) else -> ELSE bloque .
+
+    ID              reduce using rule 50 (else -> ELSE bloque .)
+    RETURN          reduce using rule 50 (else -> ELSE bloque .)
+    READ            reduce using rule 50 (else -> ELSE bloque .)
+    WRITE           reduce using rule 50 (else -> ELSE bloque .)
+    IF              reduce using rule 50 (else -> ELSE bloque .)
+    WHILE           reduce using rule 50 (else -> ELSE bloque .)
+    FOR             reduce using rule 50 (else -> ELSE bloque .)
+    O_PARENTHESIS   reduce using rule 50 (else -> ELSE bloque .)
+    PLUS            reduce using rule 50 (else -> ELSE bloque .)
+    MINUS           reduce using rule 50 (else -> ELSE bloque .)
+    CTE_INT         reduce using rule 50 (else -> ELSE bloque .)
+    CTE_FLOAT       reduce using rule 50 (else -> ELSE bloque .)
+    C_CBRACKET      reduce using rule 50 (else -> ELSE bloque .)
+
+
+state 171
+
+    (53) for -> FOR variable ASSIGN exp TO exp bloque .
+
+    ID              reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    RETURN          reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    READ            reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    WRITE           reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    IF              reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    WHILE           reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    FOR             reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    O_PARENTHESIS   reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    PLUS            reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    MINUS           reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    CTE_INT         reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    CTE_FLOAT       reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+    C_CBRACKET      reduce using rule 53 (for -> FOR variable ASSIGN exp TO exp bloque .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for SEMICOLON in state 88 resolved as shift
+WARNING: reduce/reduce conflict in state 33 resolved using rule (variable_tipo -> CTE_INT)
+WARNING: rejected rule (cte -> CTE_INT) in state 33
