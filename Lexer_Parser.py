@@ -304,19 +304,12 @@ def p_funcion_tipo(p):
 # Variable
 def p_variable(p):
 	'''
-	variable : ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
-			 | ID O_ABRACKET variable_tipo C_ABRACKET O_ABRACKET variable_tipo C_ABRACKET
-			 | ID O_ABRACKET variable_tipo C_ABRACKET
+	variable : ID O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET
+			 | ID O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET
+			 | ID O_ABRACKET exp C_ABRACKET
 			 | ID 
 	'''
 	print("call variable")
-
-def p_variable_tipo(p):
-	'''
-	variable_tipo : CTE_INT
-				  | exp
-	'''
-	print("call variable_tipo")
 
 # Estatuto
 def p_estatuto(p):
