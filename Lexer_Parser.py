@@ -322,7 +322,6 @@ def p_estatuto(p):
 			 | decision
 			 | while
 			 | for
-			 | expr SEMICOLON
 	'''
 	print("call estatuto")
 
@@ -508,7 +507,7 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = "test2.txt"
+	s = str(input(">> "))
 	with open(s, "r") as f:
 		program = f.read()
 except EOFError :
