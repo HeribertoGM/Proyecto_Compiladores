@@ -2,7 +2,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
-from Semantic import addMethod, addVariableTemp, addTypeTemp, printVars
+from Semantic import addGlobalVariables, addLocalVariables, addMethod, addVariableTemp, addTypeTemp, printVars
 
 # -----------------------
 # Lexer
@@ -226,7 +226,7 @@ lexer = lex.lex()
 # Programa
 def p_programa(p):
 	'''
-	programa : PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+	programa : PROGRAM ID SEMICOLON declaracion_global funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
 	'''
 	print("call programa")
 	addMethod(p[2], None, True)
@@ -247,6 +247,20 @@ def p_bloque_prime(p):
 	print("call bloque_prime")
 
 # Declaracion
+def p_declaracion_funcion(p):
+	'''
+	declaracion_funcion : declaracion
+	'''
+	addLocalVariables()
+	print("call declaracion_funcion")
+
+def p_declaracion_global(p):
+	'''
+	declaracion_global : declaracion
+	'''
+	addGlobalVariables()
+	print("call declaracion_global")
+
 def p_declaracion(p):
 	'''
 	declaracion : declaracion_base
@@ -288,7 +302,7 @@ def p_declaracion_variable(p):
 	else:
 		addTypeTemp(p[1], None)
 
-	print("call variable_declaracion")
+	print("call declaracion_variable")
 
 def p_declaracion_tipo(p):
 	'''
@@ -320,7 +334,7 @@ def p_funcion(p):
 
 def p_funcion_base(p):
 	'''
-	funcion_base : FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+	funcion_base : FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion bloque
 	'''
 	print("call funcion_base")
 

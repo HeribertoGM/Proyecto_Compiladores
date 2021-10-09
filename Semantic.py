@@ -1,4 +1,4 @@
-import pprint.pprint
+import pprint
 
 programID = None
 globalVariables = []
@@ -8,26 +8,38 @@ functionsTemp = []
 variablesTemp = []
 typeTemp = []
 
+# llamada para guardar las variables globales y borrar el acumulado de temporales
+def addGlobalVariables():
+	global globalVariables
+	globalVariables = variablesTemp.copy()
+	variablesTemp.clear()
+
+# llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
+# y borrar el acumulado de temporales
+def addLocalVariables():
+    global functionsTemp
+    functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
+    variablesTemp.clear()
+
 # cuando fromProgram es falso se agrega una funcion con 
 # las variables acumuladas como locales al diccionario de funciones.
 # cuando es verdadero, se envian las variables que quedan como acumuladas a el arreglo global
 def addMethod(ID, Type, fromProgram):
-	global programID, functionDictionary, globalVariables
+	global programID, functionDictionary
 	if(fromProgram):
 		# global
 		programID = ID
 		functionDictionary = functionsTemp.copy()
-		globalVariables = variablesTemp.copy()
 	else:
 		# funcion
-		obj = {"functionID":ID, "functionType":Type, "functionVariables":variablesTemp.copy()}
+		obj = {"functionID":ID, "functionType":Type, "functionVariables":[]}
 		functionsTemp.append(obj.copy())
 	
-	#variablesTemp.clear()
 
 # agrega tipo a las variables acumuladas en el arreglo temporal "typeTemp"
 # y lo pone en arreglo de variables acumuladas "variablesTemp"
 def addVariableTemp(variableType):
+	global variablesTemp
 	global typeTemp
 
 	for i in typeTemp:
@@ -46,9 +58,9 @@ def printVars():
 	print("##############################################")
 	print("globalVariables: ", len(globalVariables))
 	print("globalVariables: ")
-	pprint(globalVariables)
+	pprint.pprint(globalVariables)
 	print("##############################################")
 	print("functionDictionary: ", len(functionDictionary))
 	print("functionDictionary: ")
-	pprint(functionDictionary)
+	pprint.pprint(functionDictionary)
 	print("##############################################")
