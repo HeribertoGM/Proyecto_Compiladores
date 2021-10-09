@@ -1,0 +1,30 @@
+program Test1;
+let i, j, p, arreglo[10]: int;
+let x, y, z[5][32]: float;
+
+function int fact(int j)
+let h: int;
+{
+    i = j + (p - j * 2 + j);
+    if (j == 1) {
+        return(j);
+    }
+    else {
+        return(j * 2);
+    }
+}
+
+function void calcula(int y, float k)
+let g: float;
+{
+    x = 1;
+    while (x < 11) {
+        y = y * arreglo[x];
+        x = x + 1;
+        write(arreglo[x]);
+    }
+    write("acumulado", y);
+}
+
+main() {
+}

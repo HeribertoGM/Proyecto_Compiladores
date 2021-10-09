@@ -2,6 +2,8 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
+from Semantic import addGlobalVariables, addLocalVariables, addMethod, addVariableTemp, addTypeTemp, printVars
+
 # -----------------------
 # Lexer
 # -----------------------
@@ -224,9 +226,11 @@ lexer = lex.lex()
 # Programa
 def p_programa(p):
 	'''
-	programa : PROGRAM ID SEMICOLON declaracion funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+	programa : PROGRAM ID SEMICOLON declaracion_global funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
 	'''
 	print("call programa")
+	addMethod(p[2], None, True)
+	printVars()
 
 # Bloque
 def p_bloque(p):
@@ -243,6 +247,20 @@ def p_bloque_prime(p):
 	print("call bloque_prime")
 
 # Declaracion
+def p_declaracion_funcion(p):
+	'''
+	declaracion_funcion : declaracion
+	'''
+	addLocalVariables()
+	print("call declaracion_funcion")
+
+def p_declaracion_global(p):
+	'''
+	declaracion_global : declaracion
+	'''
+	addGlobalVariables()
+	print("call declaracion_global")
+
 def p_declaracion(p):
 	'''
 	declaracion : declaracion_base
@@ -252,16 +270,49 @@ def p_declaracion(p):
 
 def p_declaracion_base(p):
 	'''
-	declaracion_base : LET declaracion_prime COLON tipo SEMICOLON
+	declaracion_base : LET declaracion_prime COLON declaracion_tipo SEMICOLON
 	'''
 	print("call declaracion_base")
 
 def p_declaracion_prime(p):
 	'''
-	declaracion_prime : variable
-					  | variable COMMA declaracion_prime
+	declaracion_prime : declaracion_variable
+					  | declaracion_variable COMMA declaracion_prime
 	'''
 	print("call declaracion_prime")
+
+
+def p_declaracion_variable(p):
+	'''
+	declaracion_variable : ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET
+						 | ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET
+						 | ID O_ABRACKET CTE_INT C_ABRACKET
+						 | ID 
+	'''
+
+	if(len(p) > 2):
+		dim_len = int((len(p)-2)/3)
+		dims = []
+
+		for i in range(1,dim_len+1):
+			cte_index = i*3
+			dims.append(p[cte_index])
+
+		addTypeTemp(p[1], dims)
+	else:
+		addTypeTemp(p[1], None)
+
+	print("call declaracion_variable")
+
+def p_declaracion_tipo(p):
+	'''
+	declaracion_tipo : INT
+					 | FLOAT
+					 | CHAR
+					 | STRING
+	'''
+	addVariableTemp(p[1])
+	print("call declaracion_tipo")
 
 # Tipo
 def p_tipo(p):
@@ -276,14 +327,14 @@ def p_tipo(p):
 # Funcion
 def p_funcion(p):
 	'''
-	funcion : funcion_base
-			  | funcion_base funcion
+	funcion : funcion_base funcion
+			| epsilon
 	'''
 	print("call funcion")
 
 def p_funcion_base(p):
 	'''
-	funcion_base : FUNCTION funcion_tipo ID O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion bloque
+	funcion_base : FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion bloque
 	'''
 	print("call funcion_base")
 
@@ -294,12 +345,16 @@ def p_funcion_prime(p):
 	'''
 	print("call funcion_prime")
 
-def p_funcion_tipo(p):
+def p_funcion_ident(p):
 	'''
-	funcion_tipo : VOID
- 				 | tipo
+	funcion_ident : VOID ID
+ 				  | INT ID
+				  | FLOAT ID
+				  | CHAR ID
+				  | STRING ID
 	'''
-	print("call funcion_tipo")
+	addMethod(p[2], p[1], False)
+	print("call funcion_ident")
 
 # Variable
 def p_variable(p):
@@ -507,7 +562,7 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = str(input(">> "))
+	s = "testS.txt"#str(input(">> "))
 	with open(s, "r") as f:
 		program = f.read()
 except EOFError :
