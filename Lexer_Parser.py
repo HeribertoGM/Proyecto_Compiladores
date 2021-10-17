@@ -2,7 +2,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
-from Semantic import addGlobalVariables, addLocalVariables, addMethod, addVariableTemp, addTypeTemp, printVars
+from Semantic import addGlobalVariables, addLocalVariables, addMethod, addVariableTemp, addTypeTemp, printVars, semanticCompat
 
 # -----------------------
 # Lexer

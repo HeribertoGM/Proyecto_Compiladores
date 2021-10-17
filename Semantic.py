@@ -64,3 +64,209 @@ def printVars():
 	print("functionDictionary: ")
 	pprint.pprint(functionDictionary)
 	print("##############################################")
+
+def semanticCompat(varA, varB, operator):
+	varA = type(varA)
+	varB = type(varB)
+
+	return {
+        '+': {
+            (int, int): int,
+			(float, float): float,
+			(str, str): str,
+			
+            (int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+        '-': {
+            (int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+			
+            (int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'*': {
+            (int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+			
+            (int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'/': {
+            (int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+			
+            (int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'%': {
+            (int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+			
+            (int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'>': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'<': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'>=': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'<=': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'==': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): bool,
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'!=': {
+            (int, int): bool,
+			(float, float): bool,
+			(str, str): bool,
+			
+            (int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+            }[varA, varB],
+		'&&': {
+            (int, int): 'error',
+			(float, float): 'error',
+			(str, str): 'error',
+			
+            (int, float): 'error',
+			(int, str): 'error',
+
+			(float, int): 'error',
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+			#bool?
+
+            }[varA, varB],
+		'||': {
+            (int, int): 'error',
+			(float, float): 'error',
+			(str, str): 'error',
+			
+            (int, float): 'error',
+			(int, str): 'error',
+
+			(float, int): 'error',
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+			#bool?
+
+            }[varA, varB],
+    }[operator]
