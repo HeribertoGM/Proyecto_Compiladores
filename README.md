@@ -8,4 +8,7 @@
 1. Semántica básica de variables:
     a. Directorio de procedimientos
     b. Tablas de variables
-    
+
+## Entrega 3
+1. Semántica básica de expresiones:
+    a. Tabla de consideraciones semánticas (cubo semántico)
