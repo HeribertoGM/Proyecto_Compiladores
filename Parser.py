@@ -151,6 +151,8 @@ def p_variable(p):
 			 | ID O_ABRACKET exp C_ABRACKET
 			 | ID 
 	'''
+	pOperands.append(p[1])
+	# pTypes.append(functionDictionary[-1]['functionVariables'][VAR_ID][TYPE])
 	print("call variable")
 
 # Estatuto
