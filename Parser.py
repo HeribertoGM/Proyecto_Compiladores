@@ -225,6 +225,7 @@ def p_escritura_prime(p):
 					| expr COMMA escritura_prime
 					| CTE_STRING COMMA escritura_prime
 	'''
+	# AssignVM cte
 	print("call escritura_prime")
 
 # Decision
@@ -325,6 +326,7 @@ def p_termino(p):
 			resultType = semanticCube[operator][(lType, rType)]
 			if resultType != 'error':
 				# result = AVAIL.next()
+				# # # # TRATAR DE Buscar variable como local y luego global
 				# quads.append((operator, lOperand, rOperand, result))
 				# pOperands.append(result)
 				print("",end="")
@@ -360,6 +362,7 @@ def p_cte(p):
 	cte : CTE_INT
 		| CTE_FLOAT
 	'''
+	# Implementar assignVM cte
 	print("call cte")
 
 # Epsilon

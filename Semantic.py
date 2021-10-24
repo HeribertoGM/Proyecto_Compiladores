@@ -24,6 +24,7 @@ def addGlobalVariables():
 def addLocalVariables():
     global functionsTemp
     functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
+	# Agregar assignVirtualDirection locales
     variablesTemp.clear()
 
 # cuando fromProgram es falso se agrega una funcion con 
