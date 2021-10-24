@@ -4,6 +4,7 @@ let x, y, z[5][32]: float;
 
 function int fact(int j)
 let h: int;
+let s: string;
 {
     i = j + (p - j * 2 + j);
     if (j == 1) {
@@ -12,6 +13,7 @@ let h: int;
     else {
         return(j * 2);
     }
+    j = j + s;
 }
 
 function void calcula(int y, float k)
