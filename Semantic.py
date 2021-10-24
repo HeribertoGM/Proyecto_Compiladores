@@ -1,4 +1,5 @@
 import pprint
+from VirtualMachine import VirtualMachine
 
 programID = None
 globalVariables = []
@@ -8,10 +9,14 @@ functionsTemp = []
 variablesTemp = []
 typeTemp = []
 
+vm = VirtualMachine()
+
 # llamada para guardar las variables globales y borrar el acumulado de temporales
 def addGlobalVariables():
 	global globalVariables
 	globalVariables = variablesTemp.copy()
+	for variable in globalVariables:
+		variable["mem_direction"] = vm.assignVirtualDirection('global', variable['variableType'])
 	variablesTemp.clear()
 
 # llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
@@ -32,7 +37,7 @@ def addMethod(ID, Type, fromProgram):
 		functionDictionary = functionsTemp.copy()
 	else:
 		# funcion
-		obj = {"functionID":ID, "functionType":Type, "functionVariables":[]}
+		obj = {"functionID": ID, "functionType": Type, "functionVariables": []}
 		functionsTemp.append(obj.copy())
 	
 
@@ -52,221 +57,228 @@ def addTypeTemp(variableID, dimensiones):
 	global typeTemp
 	typeTemp.append([variableID, dimensiones])
 
+def createSemanticCube():
+	global semanticCube
+	semanticCube = {
+		'+': {
+			(int, int): int,
+			(float, float): float,
+			(str, str): str,
+
+			(int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+			},
+		'-': {
+			(int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+
+			(int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+		},
+		'*': {
+			(int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+
+			(int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'/': {
+			(int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+
+			(int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'%': {
+			(int, int): int,
+			(float, float): float,
+			(str, str): 'error',
+
+			(int, float): float,
+			(int, str): 'error',
+
+			(float, int): float,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'>': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'<': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'>=': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'<=': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): 'error',
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'==': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): bool,
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+
+		},
+		'!=': {
+			(int, int): bool,
+			(float, float): bool,
+			(str, str): bool,
+
+			(int, float): bool,
+			(int, str): 'error',
+
+			(float, int): bool,
+			(float, str): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+		},
+		'&&': {
+			(int, int): 'error',
+			(float, float): 'error',
+			(str, str): 'error',
+			(bool, bool): bool,
+
+			(int, float): 'error',
+			(int, str): 'error',
+			(int, bool): 'error',
+
+			(float, int): 'error',
+			(float, str): 'error',
+			(float, bool): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+			(str, bool): 'error',
+		},
+		'||': {
+			(int, int): 'error',
+			(float, float): 'error',
+			(str, str): 'error',
+			(bool, bool): bool,
+
+			(int, float): 'error',
+			(int, str): 'error',
+			(int, bool): 'error',
+
+			(float, int): 'error',
+			(float, str): 'error',
+			(float, bool): 'error',
+
+			(str, int): 'error',
+			(str, float): 'error',
+			(str, bool): 'error',
+		},
+	}
+
+def deleteSemanticCube():
+	global semanticCube
+	del semanticCube
+
 def printVars():
-	print("##############################################")
+	print("______________________________________________")
 	print("programID: ", programID)
-	print("##############################################")
+	print("______________________________________________")
 	print("globalVariables: ", len(globalVariables))
 	print("globalVariables: ")
 	pprint.pprint(globalVariables)
-	print("##############################################")
+	print("______________________________________________")
 	print("functionDictionary: ", len(functionDictionary))
 	print("functionDictionary: ")
 	pprint.pprint(functionDictionary)
-	print("##############################################")
+	print("______________________________________________")
 
-def semanticCompat(varA, varB, operator):
-	varA = type(varA)
-	varB = type(varB)
+def printQuads():
+	global quads
+	print("______________________________________________")
+	print("Quads:", quads)
 
-	return {
-        '+': {
-            (int, int): int,
-			(float, float): float,
-			(str, str): str,
-			
-            (int, float): float,
-			(int, str): 'error',
-
-			(float, int): float,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-        '-': {
-            (int, int): int,
-			(float, float): float,
-			(str, str): 'error',
-			
-            (int, float): float,
-			(int, str): 'error',
-
-			(float, int): float,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'*': {
-            (int, int): int,
-			(float, float): float,
-			(str, str): 'error',
-			
-            (int, float): float,
-			(int, str): 'error',
-
-			(float, int): float,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'/': {
-            (int, int): int,
-			(float, float): float,
-			(str, str): 'error',
-			
-            (int, float): float,
-			(int, str): 'error',
-
-			(float, int): float,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'%': {
-            (int, int): int,
-			(float, float): float,
-			(str, str): 'error',
-			
-            (int, float): float,
-			(int, str): 'error',
-
-			(float, int): float,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'>': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): 'error',
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'<': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): 'error',
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'>=': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): 'error',
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'<=': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): 'error',
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'==': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): bool,
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'!=': {
-            (int, int): bool,
-			(float, float): bool,
-			(str, str): bool,
-			
-            (int, float): bool,
-			(int, str): 'error',
-
-			(float, int): bool,
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-            }[varA, varB],
-		'&&': {
-            (int, int): 'error',
-			(float, float): 'error',
-			(str, str): 'error',
-			
-            (int, float): 'error',
-			(int, str): 'error',
-
-			(float, int): 'error',
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-			#bool?
-
-            }[varA, varB],
-		'||': {
-            (int, int): 'error',
-			(float, float): 'error',
-			(str, str): 'error',
-			
-            (int, float): 'error',
-			(int, str): 'error',
-
-			(float, int): 'error',
-			(float, str): 'error',
-
-			(str, int): 'error',
-			(str, float): 'error',
-
-			#bool?
-
-            }[varA, varB],
-    }[operator]
+pOperands = []
+pTypes = []
+pOper = []
+quads = []
+createSemanticCube()
