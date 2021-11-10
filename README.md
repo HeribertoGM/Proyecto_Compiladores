@@ -16,3 +16,6 @@
 ## Entrega 4
 1. Inicio básico de generación de Código de Expresiones Aritméticas y estatutos secuenciales (En desarrollo)
 2. Mapa de Memoria de Ejecución para Máquina virtual
+
+## Entrega 5
+1. Generación de Código de Expresiones Aritméticas y estatutos secuenciales (En desarrollo)
