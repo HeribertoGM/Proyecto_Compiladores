@@ -306,6 +306,13 @@ def p_exp(p):
 		| termino PLUS exp
 		| termino MINUS exp
 	'''
+
+	## PUNTO 5
+
+	try:
+		pOper.append(p[2])
+	except:
+		print("No operator.")
 	print("call exp")
 
 # Termino
