@@ -1,5 +1,5 @@
 import pprint
-from VirtualMemory import VirtualMemory
+from VirtualMemory import *
 
 programID = None
 globalVariables = []
@@ -20,11 +20,12 @@ def createEra():
 
 # llamada para guardar las variables globales y borrar el acumulado de temporales
 def addGlobalVariables():
-	global globalVariables
+	global globalVariables, variablesTemp
 	globalVariables = variablesTemp.copy()
 	for variable in globalVariables:
 		variable["mem_direction"] = vm[-1].assignVirtualDirection('global', variable['variableType'])
 	variablesTemp.clear()
+	print(globalVariables)
 
 # llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
 # y borrar el acumulado de temporales
@@ -283,6 +284,10 @@ def printVars():
 	print("functionDictionary: ")
 	pprint.pprint(functionDictionary)
 	print("______________________________________________")
+
+def compare(gV):
+	global globalVariables
+	print(gV is globalVariables)
 
 def printQuads():
 	global quads
