@@ -21,16 +21,19 @@ def createEra():
 # llamada para guardar las variables globales y borrar el acumulado de temporales
 def addGlobalVariables():
 	global globalVariables, variablesTemp
-	globalVariables = variablesTemp.copy()
+
+	for var in variablesTemp:
+		globalVariables.append(var)
+
 	for variable in globalVariables:
 		variable["mem_direction"] = vm[-1].assignVirtualDirection('global', variable['variableType'])
+
 	variablesTemp.clear()
-	print(globalVariables)
 
 # llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
 # y borrar el acumulado de temporales
 def addLocalVariables():
-	global functionsTemp
+	global functionsTemp, variablesTemp
 	functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
 	# Agregar assignVirtualDirection locales
 
@@ -47,7 +50,8 @@ def addMethod(ID, Type, fromProgram):
 	if(fromProgram):
 		# global
 		programID = ID
-		functionDictionary = functionsTemp.copy()
+		for func in functionsTemp:
+			functionDictionary.append(func)
 	else:
 		# funcion
 		obj = {"functionID": ID, "functionType": Type, "functionVariables": []}
@@ -284,10 +288,6 @@ def printVars():
 	print("functionDictionary: ")
 	pprint.pprint(functionDictionary)
 	print("______________________________________________")
-
-def compare(gV):
-	global globalVariables
-	print(gV is globalVariables)
 
 def printQuads():
 	global quads

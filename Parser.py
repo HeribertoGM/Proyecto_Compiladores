@@ -41,9 +41,6 @@ def p_declaracion_global(p):
 	'''
 	global globalVariables
 	addGlobalVariables()
-	print(globalVariables)
-	compare(globalVariables)
-	printVars()
 	print("call declaracion_global")
 
 def p_declaracion(p):
@@ -163,6 +160,7 @@ def p_variable(p):
 		y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
 	# print(globalVariables)
 	# print("_____________________________________________________________")
+	# printVars()
 	# print(functionsTemp)
 	varType = y[0]['variableType']
 	pTypes.append(varType)
