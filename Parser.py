@@ -39,6 +39,7 @@ def p_declaracion_global(p):
 	'''
 	declaracion_global : declaracion
 	'''
+	global globalVariables
 	addGlobalVariables()
 	print("call declaracion_global")
 
@@ -151,8 +152,18 @@ def p_variable(p):
 			 | ID O_ABRACKET exp C_ABRACKET
 			 | ID 
 	'''
+	global functionsTemp, globalVariables
 	pOperands.append(p[1])
-	# pTypes.append(functionDictionary[-1]['functionVariables'][VAR_ID][TYPE])
+	f = functionsTemp[-1]['functionVariables']
+	y = list(filter(lambda x: (x['variableID'] == p[1]), f))
+	if y == []:
+		y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
+	# print(globalVariables)
+	# print("_____________________________________________________________")
+	# printVars()
+	# print(functionsTemp)
+	varType = y[0]['variableType']
+	pTypes.append(varType)
 	print("call variable")
 
 # Estatuto
@@ -304,25 +315,25 @@ def p_compare(p):
 def p_exp(p):
 	'''
 	exp : termino
-		| termino PLUS exp
-		| termino MINUS exp
+		| termino exp_operador exp
 	'''
 
 	## PUNTO 5
-
-	try:
-		pOper.append(p[2])
-	except:
-		print("No operator.")
 	print("call exp")
+
+def p_exp_operador(p):
+	'''
+	exp_operador : PLUS
+				 | MINUS
+	'''
+	pOper.append(p[1])
+	print("call exp_operador")
 
 # Termino
 def p_termino(p):
 	'''
 	termino : factor
-			| factor TIMES termino
-			| factor DIVIDE termino
-			| factor MODULE termino
+			| factor termino_operador termino
 	'''
 	try:
 		if pOper[-1] in ('*', '/', '%'):
@@ -333,23 +344,27 @@ def p_termino(p):
 			operator = pOper.pop()
 			resultType = semanticCube[operator][(lType, rType)]
 			if resultType != 'error':
-				# result = AVAIL.next()
+				result = vm[-1].termporalAssign(resultType)
 				# # # # TRATAR DE Buscar variable como local y luego global
-				# quads.append((operator, lOperand, rOperand, result))
-				# pOperands.append(result)
-				print("",end="")
-
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
 			else:
 				print("Semantic error: type mismatch.")
 	except:
 		print("pOper empty.")
-
-	try:
-		pOper.append(p[2])
-	except:
-		print("No operator")
-
+		
 	print("call termino")
+
+def p_termino_operador(p):
+	'''
+	termino_operador : TIMES
+					 | DIVIDE
+					 | MODULE
+	'''
+	pOper.append(p[1])
+	print("call termino_operador")
 
 # Factor
 def p_factor(p):
