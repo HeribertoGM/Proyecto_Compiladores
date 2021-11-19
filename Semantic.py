@@ -1,5 +1,5 @@
 import pprint
-from VirtualMachine import VirtualMachine
+from VirtualMemory import VirtualMemory
 
 programID = None
 globalVariables = []
@@ -8,24 +8,35 @@ functionDictionary = []
 functionsTemp = []
 variablesTemp = []
 typeTemp = []
+vm = []
 
-vm = VirtualMachine()
+pOperands = []
+pTypes = []
+pOper = []
+quads = []
+
+def createEra():
+	vm.append(VirtualMemory())
 
 # llamada para guardar las variables globales y borrar el acumulado de temporales
 def addGlobalVariables():
 	global globalVariables
 	globalVariables = variablesTemp.copy()
 	for variable in globalVariables:
-		variable["mem_direction"] = vm.assignVirtualDirection('global', variable['variableType'])
+		variable["mem_direction"] = vm[-1].assignVirtualDirection('global', variable['variableType'])
 	variablesTemp.clear()
 
 # llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
 # y borrar el acumulado de temporales
 def addLocalVariables():
-    global functionsTemp
-    functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
+	global functionsTemp
+	functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
 	# Agregar assignVirtualDirection locales
-    variablesTemp.clear()
+
+	for variable in functionsTemp[-1]["functionVariables"]:
+		variable["mem_direction"] = vm[-1].assignVirtualDirection('local', variable['variableType'])
+	
+	variablesTemp.clear()
 
 # cuando fromProgram es falso se agrega una funcion con 
 # las variables acumuladas como locales al diccionario de funciones.
@@ -278,8 +289,5 @@ def printQuads():
 	print("______________________________________________")
 	print("Quads:", quads)
 
-pOperands = []
-pTypes = []
-pOper = []
-quads = []
 createSemanticCube()
+createEra()
