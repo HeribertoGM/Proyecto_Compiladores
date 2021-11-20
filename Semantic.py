@@ -299,5 +299,20 @@ def printQuads():
 	# for q in quads:
 	# 	print(q)
 
+def getVariable(varID, scope):
+	global globalVariables, functionsTemp
+
+	print(varID, scope)
+
+	if scope: # local
+		f = functionsTemp[-1]['functionVariables']
+		y = list(filter(lambda x: (x['variableID'] == varID), f))
+		if y == []:
+			y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
+		return y[0]
+	else: #global
+		y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
+		return y[0]
+
 createSemanticCube()
 createEra()

@@ -7,22 +7,40 @@ class VirtualMemory(object):
         self.globalFloats = pd.DataFrame(data = np.nan, index = np.arange(3001, 6000), columns = ['mem_dir'])
         self.globalStrings = pd.DataFrame(data = np.nan, index = np.arange(6001, 9000), columns = ['mem_dir'])
 
-        self.localInts = pd.DataFrame(data = np.nan, index = np.arange(0, 3000), columns = ['mem_dir'])
-        self.localFloats = pd.DataFrame(data = np.nan, index = np.arange(3001, 6000), columns = ['mem_dir'])
-        self.localStrings = pd.DataFrame(data = np.nan, index = np.arange(6001, 9000), columns = ['mem_dir'])
+        self.localInts = pd.DataFrame(data = np.nan, index = np.arange(9001, 12000), columns = ['mem_dir'])
+        self.localFloats = pd.DataFrame(data = np.nan, index = np.arange(12000, 15000), columns = ['mem_dir'])
+        self.localStrings = pd.DataFrame(data = np.nan, index = np.arange(15001, 18000), columns = ['mem_dir'])
 
-        self.cteInts = pd.DataFrame(data = np.nan, index = np.arange(0, 3000), columns = ['mem_dir'])
-        self.cteFloats = pd.DataFrame(data = np.nan, index = np.arange(3001, 6000), columns = ['mem_dir'])
-        self.cteStrings = pd.DataFrame(data = np.nan, index = np.arange(6001, 9000), columns = ['mem_dir'])
+        self.cteInts = pd.DataFrame(data = np.nan, index = np.arange(18001, 21000), columns = ['mem_dir'])
+        self.cteFloats = pd.DataFrame(data = np.nan, index = np.arange(21001, 24000), columns = ['mem_dir'])
+        self.cteStrings = pd.DataFrame(data = np.nan, index = np.arange(24001, 27000), columns = ['mem_dir'])
 
-        self.tempInts = pd.DataFrame(data = np.nan, index = np.arange(0, 3000), columns = ['mem_dir'])
-        self.tempFloats = pd.DataFrame(data = np.nan, index = np.arange(3001, 6000), columns = ['mem_dir'])
-        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(6001, 9000), columns = ['mem_dir'])
-        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(9001, 12000), columns = ['mem_dir'])
+        self.tempInts = pd.DataFrame(data = np.nan, index = np.arange(27001, 30000), columns = ['mem_dir'])
+        self.tempFloats = pd.DataFrame(data = np.nan, index = np.arange(30001, 33000), columns = ['mem_dir'])
+        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
+        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(42001, 45000), columns = ['mem_dir'])
 
-    # agregar funcion para asignar valores a la memoria
+    def cteAssign(self, value):
+        vType = type(value)
 
-    def termporalAssign(self, vType):
+        if vType == int:
+            index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
+            self.tempInts.loc[index] = value
+            return index
+        elif vType == float:
+            index = self.tempFloats.loc[self.tempFloats.loc[pd.isnull(self.tempFloats.mem_dir)].head(1).index, 'mem_dir'].index
+            self.tempFloats.loc[index] = value
+            return index
+        elif vType == bool:
+            index = self.tempBools.loc[self.tempBools.loc[pd.isnull(self.tempBools.mem_dir)].head(1).index, 'mem_dir'].index
+            self.tempBools.loc[index] = value
+            return index
+        else:
+            index = self.tempStrings.loc[self.tempStrings.loc[pd.isnull(self.tempStrings.mem_dir)].head(1).index, 'mem_dir'].index
+            self.tempStrings.loc[index] = value
+            return index
+
+    def temporalAssign(self, vType):
         if vType == int:
             index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
             self.tempInts.loc[index] = "None"

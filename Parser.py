@@ -163,23 +163,16 @@ def p_variable(p):
 			 | ID O_ABRACKET exp C_ABRACKET
 			 | ID 
 	'''
-	global functionsTemp, globalVariables, currScope
-	pOperands.append(p[1])
+	global currScope
 	try:
-		if currScope: # local
-			f = functionsTemp[-1]['functionVariables']
-			y = list(filter(lambda x: (x['variableID'] == p[1]), f))
-			if y == []:
-				y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
-			varType = y[0]['variableType']
-		else: #global
-			y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
-			varType = y[0]['variableType']
+		variable = getVariable(p[1], currScope)
 	except Exception as e:
-		print("Semantic Error: undefined variable - ",p[1])
+		print("Semantic Error: undefined variable - ", p[1])
 		sys.exit()
 
-	pTypes.append(varType)
+	pOperands.append(variable['mem_direction'])
+
+	pTypes.append(variable['variableType'])
 	print("call variable")
 
 # Estatuto
@@ -207,10 +200,14 @@ def p_asignacion_expr(p):
 	'''
 	asignacion_expr : expr
 	'''
+	global currScope
+
+	print(pOperands)
+	
 	lOperand = pOperands.pop()
 	result = pOperands.pop()
 
-	quads.append(("=", lOperand, "-", result))
+	quads.append(("=", lOperand, " ", result))
 	print("call asignacion_expr")
 
 # Llamada
@@ -343,7 +340,9 @@ def p_exp(p):
 	exp : termino
 		| termino exp_operador exp
 	'''
-	try:
+	global currScope
+	# Cambiar try por un if de len(p)
+	if len(p) > 2:
 		if pOper[-1] in ('+', '-'):
 			rOperand = pOperands.pop()
 			rType = pTypes.pop()
@@ -352,8 +351,7 @@ def p_exp(p):
 			operator = pOper.pop()
 			resultType = semanticCube[operator][(lType, rType)]
 			if resultType != 'error':
-				result = vm[-1].termporalAssign(resultType)
-				# # # # TRATAR DE Buscar variable como local y luego global
+				result = vm[-1].temporalAssign(resultType)
 				quads.append((operator, lOperand, rOperand, result))
 				pOperands.append(result)
 				pTypes.append(resultType)
@@ -362,7 +360,7 @@ def p_exp(p):
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
 				# raise Exception("Semantic error: type mismatch.")
-	except Exception as e:
+	else:
 		print("pOper empty.")
 
 	print("call exp")
@@ -381,7 +379,8 @@ def p_termino(p):
 	termino : factor
 			| factor termino_operador termino
 	'''
-	try:
+	global currScope
+	if len(p) > 2:
 		if pOper[-1] in ('*', '/', '%'):
 			rOperand = pOperands.pop()
 			rType = pTypes.pop()
@@ -390,8 +389,7 @@ def p_termino(p):
 			operator = pOper.pop()
 			resultType = semanticCube[operator][(lType, rType)]
 			if resultType != 'error':
-				result = vm[-1].termporalAssign(resultType)
-				# # # # TRATAR DE Buscar variable como local y luego global
+				result = vm[-1].temporalAssign(resultType)
 				quads.append((operator, lOperand, rOperand, result))
 				pOperands.append(result)
 				pTypes.append(resultType)
@@ -399,8 +397,7 @@ def p_termino(p):
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
-				# raise Exception("Semantic error: type mismatch.")
-	except Exception as e:
+	else:
 		print("pOper empty.")
 	
 	print("call termino")
@@ -434,7 +431,8 @@ def p_cte(p):
 		| CTE_FLOAT
 	'''
 	# Implementar assignVM cte
-	pOperands.append(p[1])
+	index = vm[-1].cteAssign(p[1])
+	pOperands.append(index)
 	pTypes.append(type(p[1]))
 	print("call cte")
 
