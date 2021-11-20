@@ -6,27 +6,9 @@ function int fact(int j)
 let h: int;
 let s: string;
 {
-    i = j + (p - j * 2 + j);
-    if (j == 1) {
-        return(j);
-    }
-    else {
-        return(j * 2);
-    }
-    j = j + s;
-}
-
-function void calcula(int y, float k)
-let g: float;
-{
-    x = 1;
-    while (x < 11) {
-        y = y * arreglo[x];
-        x = x + 1;
-        write(arreglo[x]);
-    }
-    write("acumulado", y);
+	s = p + h;
 }
 
 main() {
+	i = j + (p - i * 2 + j);
 }

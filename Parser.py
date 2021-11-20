@@ -1,3 +1,4 @@
+import sys
 import ply.yacc as yacc
 from Lexer import *
 from Semantic import *
@@ -5,13 +6,21 @@ from Semantic import *
 # Programa
 def p_programa(p):
 	'''
-	programa : PROGRAM ID SEMICOLON declaracion_global funcion MAIN O_PARENTHESIS C_PARENTHESIS bloque
+	programa : PROGRAM ID SEMICOLON declaracion_global funcion main bloque
 	'''
 	print("call programa")
 	addMethod(p[2], None, True)
 	deleteSemanticCube()
 	printVars()
 	printQuads()
+
+def p_main(p):
+	'''
+	main : MAIN O_PARENTHESIS C_PARENTHESIS
+	'''
+	global currScope
+	currScope = False #global
+	print("call main")
 
 # Bloque
 def p_bloque(p):
@@ -33,6 +42,8 @@ def p_declaracion_funcion(p):
 	declaracion_funcion : declaracion
 	'''
 	addLocalVariables()
+	global currScope
+	currScope = True # local
 	print("call declaracion_funcion")
 
 def p_declaracion_global(p):
@@ -152,17 +163,22 @@ def p_variable(p):
 			 | ID O_ABRACKET exp C_ABRACKET
 			 | ID 
 	'''
-	global functionsTemp, globalVariables
+	global functionsTemp, globalVariables, currScope
 	pOperands.append(p[1])
-	f = functionsTemp[-1]['functionVariables']
-	y = list(filter(lambda x: (x['variableID'] == p[1]), f))
-	if y == []:
-		y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
-	# print(globalVariables)
-	# print("_____________________________________________________________")
-	# printVars()
-	# print(functionsTemp)
-	varType = y[0]['variableType']
+	try:
+		if currScope: # local
+			f = functionsTemp[-1]['functionVariables']
+			y = list(filter(lambda x: (x['variableID'] == p[1]), f))
+			if y == []:
+				y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
+			varType = y[0]['variableType']
+		else: #global
+			y = list(filter(lambda x: (x['variableID'] == p[1]), globalVariables))
+			varType = y[0]['variableType']
+	except Exception as e:
+		print("Semantic Error: undefined variable - ",p[1])
+		sys.exit()
+
 	pTypes.append(varType)
 	print("call variable")
 
@@ -183,9 +199,19 @@ def p_estatuto(p):
 # Asignacion
 def p_asignacion(p):
 	'''
-	asignacion : variable ASSIGN expr
+	asignacion : variable ASSIGN asignacion_expr
 	'''
 	print("call asignacion")
+
+def p_asignacion_expr(p):
+	'''
+	asignacion_expr : expr
+	'''
+	lOperand = pOperands.pop()
+	result = pOperands.pop()
+
+	quads.append(("=", lOperand, "-", result))
+	print("call asignacion_expr")
 
 # Llamada
 def p_llamada(p):
@@ -317,8 +343,28 @@ def p_exp(p):
 	exp : termino
 		| termino exp_operador exp
 	'''
+	try:
+		if pOper[-1] in ('+', '-'):
+			rOperand = pOperands.pop()
+			rType = pTypes.pop()
+			lOperand = pOperands.pop()
+			lType = pTypes.pop()
+			operator = pOper.pop()
+			resultType = semanticCube[operator][(lType, rType)]
+			if resultType != 'error':
+				result = vm[-1].termporalAssign(resultType)
+				# # # # TRATAR DE Buscar variable como local y luego global
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
+			else:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+				# raise Exception("Semantic error: type mismatch.")
+	except Exception as e:
+		print("pOper empty.")
 
-	## PUNTO 5
 	print("call exp")
 
 def p_exp_operador(p):
@@ -351,10 +397,12 @@ def p_termino(p):
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
 			else:
-				print("Semantic error: type mismatch.")
-	except:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+				# raise Exception("Semantic error: type mismatch.")
+	except Exception as e:
 		print("pOper empty.")
-		
+	
 	print("call termino")
 
 def p_termino_operador(p):
@@ -386,6 +434,8 @@ def p_cte(p):
 		| CTE_FLOAT
 	'''
 	# Implementar assignVM cte
+	pOperands.append(p[1])
+	pTypes.append(type(p[1]))
 	print("call cte")
 
 # Epsilon
@@ -408,4 +458,7 @@ try:
 except EOFError :
     print("Error reading code.")
 
+# try:
 parser.parse(program)
+# except Exception as e:
+# 	print("ERR - ",e)

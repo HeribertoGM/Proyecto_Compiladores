@@ -5,6 +5,8 @@ programID = None
 globalVariables = []
 functionDictionary = []
 
+currScope = None
+
 functionsTemp = []
 variablesTemp = []
 typeTemp = []
@@ -292,7 +294,10 @@ def printVars():
 def printQuads():
 	global quads
 	print("______________________________________________")
-	print("Quads:", quads)
+	print("Quads:")
+	pprint.pprint(quads)
+	# for q in quads:
+	# 	print(q)
 
 createSemanticCube()
 createEra()
