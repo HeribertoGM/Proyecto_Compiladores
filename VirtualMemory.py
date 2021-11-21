@@ -17,8 +17,8 @@ class VirtualMemory(object):
 
         self.tempInts = pd.DataFrame(data = np.nan, index = np.arange(27001, 30000), columns = ['mem_dir'])
         self.tempFloats = pd.DataFrame(data = np.nan, index = np.arange(30001, 33000), columns = ['mem_dir'])
-        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
-        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(42001, 45000), columns = ['mem_dir'])
+        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(33001, 36000), columns = ['mem_dir'])
+        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
 
     def cteAssign(self, value):
         vType = type(value)

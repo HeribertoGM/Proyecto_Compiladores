@@ -15,4 +15,6 @@ main() {
 	write("Hola mundo");
 	write(p);
 	i = j + (p - i * 2 + j);
+
+	write(p == x);
 }

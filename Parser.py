@@ -8,11 +8,12 @@ def p_programa(p):
 	'''
 	programa : PROGRAM ID SEMICOLON declaracion_global funcion main bloque
 	'''
-	print("call programa")
+	quads.append(("END", "", "", ""))
 	addMethod(p[2], None, True)
 	deleteSemanticCube()
 	printVars()
 	printQuads()
+	print("call programa")
 
 def p_main(p):
 	'''
@@ -20,6 +21,7 @@ def p_main(p):
 	'''
 	global currScope
 	currScope = False #global
+	quads[0][3] = len(quads)
 	print("call main")
 
 # Bloque
@@ -262,6 +264,7 @@ def p_escritura_prime(p):
 					| expr COMMA escritura_prime
 					| escritura_string COMMA escritura_prime
 	'''
+	print(pOperands)
 	pTypes.pop()
 	quads.append(("write", "", "", pOperands.pop()))
 	print("call escritura_prime")
@@ -272,35 +275,146 @@ def p_escritura_string(p):
 	'''
 	index = vm[-1].cteAssign(p[1])
 	pOperands.append(index)
+	pTypes.append("Wenas")
 	print("call escritura_string")
 
 # Decision
 def p_decision(p):
 	'''
-	decision : IF O_PARENTHESIS expr C_PARENTHESIS bloque else
+	decision : IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque else
 	'''
 	print("call decision")
 
+def p_decision_expr(p):
+	'''
+	decision_expr : expr
+	'''
+	result = pOperands.pop()
+	varType = pTypes.pop()
+	if varType == bool:
+		quads.append(["GOTOF", result, "", None])
+		pJumps.append(len(quads) - 1)
+	else:
+		print(f'Semantic error: type mismatch - ({result}:{varType}) not boolean)' )
+		sys.exit()
+
+	print("call decision_expr")
+
 def p_else(p):
 	'''
-	else : ELSE bloque
+	else : else_prime bloque
 		 | epsilon
 	'''
+	quads[pJumps.pop()][3] = len(quads)
 	print("call else")
+
+def p_else_prime(p):
+	'''
+	else_prime : ELSE
+	'''
+	quads.append(["GOTO", "", "", None])
+	jump = pJumps.pop()
+	pJumps.append(len(quads) - 1)
+	quads[jump][3] = len(quads)
+	print("call else_prime")
 
 # While
 def p_while(p):
 	'''
-	while : WHILE O_PARENTHESIS expr C_PARENTHESIS bloque
+	while : while_prime while_expr bloque
 	'''
+	end = pJumps.pop()
+	ret = pJumps.pop()
+	quads.append(["GOTO", "", "", ret])
+	quads[end][3] = len(quads)
 	print("call while")
+
+def p_while_prime(p):
+	'''
+	while_prime : WHILE
+	'''
+	pJumps.append(len(quads))
+	print("call while_prime")
+
+def p_while_expr(p):
+	'''
+	while_expr : O_PARENTHESIS expr C_PARENTHESIS
+	'''
+	result = pOperands.pop()
+	varType = pTypes.pop()
+	if varType == bool:
+		quads.append(["GOTOF", result, "", None])
+		pJumps.append(len(quads) - 1)
+	else:
+		print(f'Semantic error: type mismatch - ({result}:{varType}) not boolean)' )
+		sys.exit()
+	print("call while_expr")
 
 # For
 def p_for(p):
 	'''
-	for : FOR variable ASSIGN exp TO exp bloque
+	for : FOR for_asignacion for_to for_exp bloque
 	'''
+	operand = pOperands.pop()
+	index = vm[-1].cteAssign(1)
+	result = vm[-1].temporalAssign(int)
+	quads.append(('+', operand, index, result))
+	quads.append(('=', result, "", operand))
+
+	despues = pJumps.pop()
+	antes = pJumps.pop()
+
+	quads.append(("GOTO", "", "", antes))
+	quads[despues][3] = len(quads)
 	print("call for")
+
+def p_for_asignacion(p):
+	'''
+	for_asignacion : variable ASSIGN for_asignacion_expr
+	'''
+	print("call asignacion")
+
+def p_for_asignacion_expr(p):
+	'''
+	for_asignacion_expr : expr
+	'''
+	global currScope
+	
+	lOperand = pOperands.pop()
+	result = pOperands.pop()
+
+	quads.append(("=", lOperand, " ", result))
+	pOperands.append(result)
+	print("call asignacion_expr")
+
+def p_for_to(p):
+	'''
+	for_to : TO
+	'''
+	pJumps.append(len(quads)) #antes de comp
+	print("call for_to")
+
+def p_for_exp(p):
+	'''
+	for_exp : exp
+	'''
+	rOperand = pOperands.pop()
+	rType = pTypes.pop()
+	lOperand = pOperands.pop()
+	lType = pTypes.pop()
+	resultType = semanticCube['<'][(lType, rType)]
+	if resultType != 'error':
+		result = vm[-1].temporalAssign(resultType)
+		quads.append(('<', lOperand, rOperand, result))
+		pOperands.append(result)
+		pTypes.append(resultType)
+		quads.append(["GOTOF", "", "", None])
+		pJumps.append(len(quads) - 1) #despues de comp
+		# If any operand were a temporal space, return it to AVAIL
+	else:
+		print(f'Semantic error: type mismatch - ({lOperand}:{lType})<({rOperand}:{rType})' )
+		sys.exit()
+	print("call for_exp")
 
 # Expr
 def p_expr(p):
@@ -313,37 +427,147 @@ def p_expr(p):
 def p_or(p):
 	'''
 	or : and
-	   | and OR or
+	   | and or_operador or
 	'''
+	if len(p) > 2:
+		if pOper[-1] == '||':
+			rOperand = pOperands.pop()
+			rType = pTypes.pop()
+			lOperand = pOperands.pop()
+			lType = pTypes.pop()
+			operator = pOper.pop()
+			resultType = semanticCube[operator][(lType, rType)]
+			if resultType != 'error':
+				result = vm[-1].temporalAssign(resultType)
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
+			else:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+
+	else:
+		print("pOper empty.")
 	print("call or")
+
+def p_or_operador(p):
+	'''
+	or_operador : OR
+	'''
+	pOper.append(p[1])
+	print("call or_operador")
 
 # And
 def p_and(p):
 	'''
 	and : equal
-		| equal AND and
+		| equal and_operador and
 	'''
+	print(pOper, "|||", pOperands)
+	if len(p) > 2:
+		if pOper[-1] == '&&':
+			rOperand = pOperands.pop()
+			rType = pTypes.pop()
+			lOperand = pOperands.pop()
+			lType = pTypes.pop()
+			operator = pOper.pop()
+			resultType = semanticCube[operator][(lType, rType)]
+			if resultType != 'error':
+				result = vm[-1].temporalAssign(resultType)
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
+			else:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+
+	else:
+		print("pOper empty.")
 	print("call and")
+
+def p_and_operador(p):
+	'''
+	and_operador : AND
+	'''
+	pOper.append(p[1])
+	print("call and_operador")
 
 # Equal
 def p_equal(p):
 	'''
 	equal : compare
-		  | compare EQUAL compare
-		  | compare NOT_EQUAL compare
+		  | compare equal_operador compare
 	'''
+	print(pOper, "|||", pOperands)
+	if len(p) > 2:
+		if pOper[-1] in ('==', '!='):
+			rOperand = pOperands.pop()
+			rType = pTypes.pop()
+			lOperand = pOperands.pop()
+			lType = pTypes.pop()
+			operator = pOper.pop()
+			resultType = semanticCube[operator][(lType, rType)]
+			if resultType != 'error':
+				result = vm[-1].temporalAssign(resultType)
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
+			else:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+
+	else:
+		print("pOper empty.")
 	print("call equal")
+
+def p_equal_operador(p):
+	'''
+	equal_operador : EQUAL
+				   | NOT_EQUAL
+	'''
+	pOper.append(p[1])
+	print("call equal_operador")
 
 # Compare
 def p_compare(p):
 	'''
 	compare : exp
-			| exp GREATER exp
-			| exp LESSER exp
-			| exp GREATER_EQUAL exp
-			| exp LESSER_EQUAL exp
+			| exp compare_operador exp
 	'''
+	if len(p) > 2:
+		if pOper[-1] in ('>', '<', '>=', '<='):
+			rOperand = pOperands.pop()
+			rType = pTypes.pop()
+			lOperand = pOperands.pop()
+			lType = pTypes.pop()
+			operator = pOper.pop()
+			resultType = semanticCube[operator][(lType, rType)]
+			if resultType != 'error':
+				result = vm[-1].temporalAssign(resultType)
+				quads.append((operator, lOperand, rOperand, result))
+				pOperands.append(result)
+				pTypes.append(resultType)
+				# If any operand were a temporal space, return it to AVAIL
+			else:
+				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
+				sys.exit()
+
+	else:
+		print("pOper empty.")
 	print("call compare")
+
+def p_compare_operador(p):
+	'''
+	compare_operador : GREATER
+					 | LESSER
+					 | GREATER_EQUAL
+					 | LESSER_EQUAL
+	'''
+	pOper.append(p[1])
+	print("call compare_operador")
 
 # Exp
 def p_exp(p):
@@ -370,9 +594,6 @@ def p_exp(p):
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
-				# raise Exception("Semantic error: type mismatch.")
-		elif pOper[-1] == "write":
-			quads.append((pOper.pop(), "", "", pOperands.pop()))
 
 	else:
 		print("pOper empty.")
@@ -382,7 +603,7 @@ def p_exp(p):
 def p_exp_operador(p):
 	'''
 	exp_operador : PLUS
-				 | MINUS
+			 | MINUS
 	'''
 	pOper.append(p[1])
 	print("call exp_operador")
@@ -411,8 +632,6 @@ def p_termino(p):
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
-		elif pOper[-1] == "write":
-			quads.append((pOper.pop(), "", "", pOperands.pop()))
 	else:
 		print("pOper empty.")
 	
@@ -466,7 +685,7 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = "testS.txt"#str(input(">> "))
+	s = "test3.txt"#str(input(">> "))
 	with open(s, "r") as f:
 		program = f.read()
 except EOFError :

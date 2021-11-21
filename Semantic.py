@@ -15,7 +15,8 @@ vm = []
 pOperands = []
 pTypes = []
 pOper = []
-quads = []
+quads = [["GOTO", "", "", None]]
+pJumps = []
 
 def createEra():
 	vm.append(VirtualMemory())
@@ -295,7 +296,8 @@ def printQuads():
 	global quads
 	print("______________________________________________")
 	print("Quads:")
-	pprint.pprint(quads)
+	for i in range(len(quads)):
+		print(i, quads[i])
 	# for q in quads:
 	# 	print(q)
 
@@ -311,6 +313,8 @@ def getVariable(varID, scope):
 	else: #global
 		y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
 		return y[0]
+
+#def 
 
 createSemanticCube()
 createEra()
