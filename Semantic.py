@@ -302,8 +302,6 @@ def printQuads():
 def getVariable(varID, scope):
 	global globalVariables, functionsTemp
 
-	print(varID, scope)
-
 	if scope: # local
 		f = functionsTemp[-1]['functionVariables']
 		y = list(filter(lambda x: (x['variableID'] == varID), f))

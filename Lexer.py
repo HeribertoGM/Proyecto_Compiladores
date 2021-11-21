@@ -192,7 +192,7 @@ def t_CTE_CHAR(t):
 	return t
 
 def t_CTE_STRING(t):
-	r'(\")[a-zA-Z0-9_]*(\")'
+	r'(\")[a-zA-Z0-9_\s]*(\")'
 	t.value = str(t.value)
 	return t
 

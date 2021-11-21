@@ -85,3 +85,24 @@ class VirtualMemory(object):
                 index = self.localStrings.loc[self.localStrings.loc[pd.isnull(self.localStrings.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localStrings.loc[index] = "None"
                 return index
+
+    # def getValue(self, index, vType, scope):
+    #     if scope: #global
+    #         if vType == int:
+    #             index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
+    #             self.tempInts.loc[index] = "None"
+    #             return index
+    #         elif vType == float:
+    #             index = self.tempFloats.loc[self.tempFloats.loc[pd.isnull(self.tempFloats.mem_dir)].head(1).index, 'mem_dir'].index
+    #             self.tempFloats.loc[index] = "None"
+    #             return index
+    #         elif vType == bool:
+    #             index = self.tempBools.loc[self.tempBools.loc[pd.isnull(self.tempBools.mem_dir)].head(1).index, 'mem_dir'].index
+    #             self.tempBools.loc[index] = "None"
+    #             return index
+    #         else:
+    #             index = self.tempStrings.loc[self.tempStrings.loc[pd.isnull(self.tempStrings.mem_dir)].head(1).index, 'mem_dir'].index
+    #             self.tempStrings.loc[index] = "None"
+    #             return index
+
+    #     else: #local

@@ -244,6 +244,8 @@ def p_lectura_prime(p):
 	lectura_prime : variable
 				  | variable COMMA lectura_prime
 	'''
+	pTypes.pop()
+	quads.append(("read", "", "", pOperands.pop()))
 	print("call lectura_prime")
 
 # Escritura
@@ -256,12 +258,21 @@ def p_escritura(p):
 def p_escritura_prime(p):
 	'''
 	escritura_prime : expr
-					| CTE_STRING
+					| escritura_string
 					| expr COMMA escritura_prime
-					| CTE_STRING COMMA escritura_prime
+					| escritura_string COMMA escritura_prime
 	'''
-	# AssignVM cte
+	pTypes.pop()
+	quads.append(("write", "", "", pOperands.pop()))
 	print("call escritura_prime")
+
+def p_escritura_string(p):
+	'''
+	escritura_string : CTE_STRING
+	'''
+	index = vm[-1].cteAssign(p[1])
+	pOperands.append(index)
+	print("call escritura_string")
 
 # Decision
 def p_decision(p):
@@ -360,6 +371,9 @@ def p_exp(p):
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
 				# raise Exception("Semantic error: type mismatch.")
+		elif pOper[-1] == "write":
+			quads.append((pOper.pop(), "", "", pOperands.pop()))
+
 	else:
 		print("pOper empty.")
 
@@ -397,6 +411,8 @@ def p_termino(p):
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
+		elif pOper[-1] == "write":
+			quads.append((pOper.pop(), "", "", pOperands.pop()))
 	else:
 		print("pOper empty.")
 	

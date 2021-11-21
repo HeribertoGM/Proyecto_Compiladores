@@ -10,5 +10,9 @@ let s: string;
 }
 
 main() {
+	read(j);
+	read(p, x);
+	write("Hola mundo");
+	write(p);
 	i = j + (p - i * 2 + j);
 }
