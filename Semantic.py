@@ -17,11 +17,12 @@ pTypes = []
 pOper = []
 quads = [["GOTO", "", "", None]]
 pJumps = []
+pDim = []
 
 #QuadsID
 pOperandsID = []
 quadsID = [["GOTO", "", "", None]]
-nTemps = 0
+nTemps = 1
 
 def createEra():
 	vm.append(VirtualMemory())

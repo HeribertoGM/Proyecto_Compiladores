@@ -169,25 +169,125 @@ def p_funcion_ident(p):
 # Variable
 def p_variable(p):
 	'''
-	variable : ID O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET
-			 | ID O_ABRACKET exp C_ABRACKET O_ABRACKET exp C_ABRACKET
-			 | ID O_ABRACKET exp C_ABRACKET
+	variable : var_array
 			 | ID 
+	'''
+	global currScope
+	if p[1] != None:
+		try:
+			variable = getVariable(p[1], currScope)
+		except Exception as e:
+			print("Semantic Error[1]: undefined variable - ", p[1])
+			sys.exit()
+
+		pOperands.append(variable['mem_direction'])
+
+		#QuadsID
+		pOperandsID.append(p[1])
+
+		pTypes.append(variable['variableType'])
+	print("call variable")
+
+def p_var_array(p):
+	'''
+	var_array : arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+			  | arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+			  | arr_id O_ABRACKET exp arr_close_bracket
+	'''
+	aux1 = pOperands.pop()
+	k = vm[-1].cteAssign(0)
+	result = vm[-1].temporalAssign(int)
+	quads.append(("+", aux1, k, result))
+	temp = vm[-1].temporalAssign(int)
+	variable, dim = pDim.pop()
+	base_dir = vm[-1].cteAssign(variable["mem_direction"])
+	quads.append(("+", result, [base_dir], temp))
+	pOperands.append([temp])
+	pOper.pop()
+
+	#QuadsID
+	global nTemps
+	aux1ID = pOperandsID.pop()
+	quadsID.append(("+", aux1ID, 0, "t" + str(nTemps)))
+	quadsID.append(("+", "t" + str(nTemps), [variable["mem_direction"]], "t" + str(nTemps + 1)))
+	pOperandsID.append(["t" + str(nTemps + 1)])
+	nTemps += 2
+	print("call var_array")
+
+def p_arr_id(p):
+	'''
+	arr_id : ID
 	'''
 	global currScope
 	try:
 		variable = getVariable(p[1], currScope)
-	except Exception as e:
-		print("Semantic Error: undefined variable - ", p[1])
-		sys.exit()
 
-	pOperands.append(variable['mem_direction'])
+		# pOperands.append(variable["mem_direction"])
+		# pTypes.append(variable["variableType"])
+
+		dim = 0
+		pDim.append((variable, dim))
+		pOper.append("FakeBottom")
+	except Exception as e:
+		print("Semantic Error[2]: undefined variable - ", p[1])
+		sys.exit()
+	print("call arr_id")
+
+def p_arr_close_bracket(p):
+	'''
+	arr_close_bracket : C_ABRACKET
+	'''
+	operand = pOperands[-1]
+	index = vm[-1].cteAssign(0)
+	variable, dim = pDim[-1]
+	ls = vm[-1].cteAssign(variable["variableDimLL"][dim]["ls"])
+	quads.append(("verify", operand, index, ls))
 
 	#QuadsID
-	pOperandsID.append(p[1])
+	operandID = pOperandsID[-1]
+	quadsID.append(("verify", operandID, 0, variable["variableDimLL"][dim]["ls"]))
 
-	pTypes.append(variable['variableType'])
-	print("call variable")
+	print("Dimension:", dim)
+	if len(variable["variableDimLL"]) > dim + 1:
+		aux = pOperands.pop()
+		result = vm[-1].temporalAssign(int)
+		r = vm[-1].cteAssign(variable["variableDimLL"][dim]["R"])
+		quads.append(('*', aux, r, result))
+		pOperands.append(result)
+
+		#QuadsID
+		global nTemps
+		operandID = pOperandsID.pop()
+		quadsID.append(('*', operandID, variable["variableDimLL"][dim]["R"], "t" + str(nTemps)))
+		pOperandsID.append("t" + str(nTemps))
+		nTemps += 1
+	
+	# if not (len(variable["variableDimLL"]) > dim + 1):
+	# 	pDim.append((variable, dim))
+	if dim >= 1:
+		aux2 = pOperands.pop()
+		aux1 = pOperands.pop()
+		result = vm[-1].temporalAssign(int)
+		quads.append(('+', aux1, aux2, result))
+		pOperands.append(result)
+
+		#QuadsID
+		aux2ID = pOperandsID.pop()
+		aux1ID = pOperandsID.pop()
+		quadsID.append(('+', aux1ID, aux2ID, "t" + str(nTemps)))
+		pOperandsID.append("t" + str(nTemps))
+		nTemps += 1
+		print("=========Más de una==========")
+	print("call arr_close_bracket")
+
+def p_arr_open_bracket(p):
+	'''
+	arr_open_bracket : O_ABRACKET
+	'''
+	variable, dim = pDim.pop()
+	dim += 1
+	pDim.append((variable, dim))
+	print("call arr_open_bracket")
 
 # Estatuto
 def p_estatuto(p):

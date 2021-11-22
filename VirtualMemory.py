@@ -14,30 +14,31 @@ class VirtualMemory(object):
         self.cteInts = pd.DataFrame(data = np.nan, index = np.arange(18001, 21000), columns = ['mem_dir'])
         self.cteFloats = pd.DataFrame(data = np.nan, index = np.arange(21001, 24000), columns = ['mem_dir'])
         self.cteStrings = pd.DataFrame(data = np.nan, index = np.arange(24001, 27000), columns = ['mem_dir'])
+        self.cteDirections = pd.DataFrame(data = np.nan, index = np.arange(27001, 30000), columns = ['mem_dir'])
 
-        self.tempInts = pd.DataFrame(data = np.nan, index = np.arange(27001, 30000), columns = ['mem_dir'])
-        self.tempFloats = pd.DataFrame(data = np.nan, index = np.arange(30001, 33000), columns = ['mem_dir'])
-        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(33001, 36000), columns = ['mem_dir'])
-        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
+        self.tempInts = pd.DataFrame(data = np.nan, index = np.arange(30001, 33000), columns = ['mem_dir'])
+        self.tempFloats = pd.DataFrame(data = np.nan, index = np.arange(33001, 36000), columns = ['mem_dir'])
+        self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
+        self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(39001, 42000), columns = ['mem_dir'])
 
     def cteAssign(self, value):
         vType = type(value)
 
         if vType == int:
-            index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
-            self.tempInts.loc[index] = value
+            index = self.cteInts.loc[self.cteInts.loc[pd.isnull(self.cteInts.mem_dir)].head(1).index, 'mem_dir'].index
+            self.cteInts.loc[index] = value
             return index
         elif vType == float:
-            index = self.tempFloats.loc[self.tempFloats.loc[pd.isnull(self.tempFloats.mem_dir)].head(1).index, 'mem_dir'].index
-            self.tempFloats.loc[index] = value
+            index = self.cteFloats.loc[self.cteFloats.loc[pd.isnull(self.cteFloats.mem_dir)].head(1).index, 'mem_dir'].index
+            self.cteFloats.loc[index] = value
             return index
-        elif vType == bool:
-            index = self.tempBools.loc[self.tempBools.loc[pd.isnull(self.tempBools.mem_dir)].head(1).index, 'mem_dir'].index
-            self.tempBools.loc[index] = value
+        elif vType == str:
+            index = self.cteStrings.loc[self.cteStrings.loc[pd.isnull(self.cteStrings.mem_dir)].head(1).index, 'mem_dir'].index
+            self.cteStrings.loc[index] = value
             return index
         else:
-            index = self.tempStrings.loc[self.tempStrings.loc[pd.isnull(self.tempStrings.mem_dir)].head(1).index, 'mem_dir'].index
-            self.tempStrings.loc[index] = value
+            index = self.cteDirections.loc[self.cteDirections.loc[pd.isnull(self.cteDirections.mem_dir)].head(1).index, 'mem_dir'].index
+            self.cteDirections.loc[index] = value
             return index
 
     def temporalAssign(self, vType):
