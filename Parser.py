@@ -1,3 +1,4 @@
+import ntpath
 import sys
 import ply.yacc as yacc
 from Lexer import *
@@ -9,6 +10,10 @@ def p_programa(p):
 	programa : PROGRAM ID SEMICOLON declaracion_global funcion main bloque
 	'''
 	quads.append(("END", "", "", ""))
+
+	#QuadsID
+	quadsID.append(("END", "", "", ""))
+
 	addMethod(p[2], None, True)
 	deleteSemanticCube()
 	printVars()
@@ -22,6 +27,9 @@ def p_main(p):
 	global currScope
 	currScope = False #global
 	quads[0][3] = len(quads)
+
+	#QuadsID
+	quadsID[0][3] = len(quadsID)
 	print("call main")
 
 # Bloque
@@ -93,6 +101,7 @@ def p_declaracion_variable(p):
 			cte_index = i*3
 			dims.append(p[cte_index])
 
+		print(dims)
 		addTypeTemp(p[1], dims)
 	else:
 		addTypeTemp(p[1], None)
@@ -174,6 +183,9 @@ def p_variable(p):
 
 	pOperands.append(variable['mem_direction'])
 
+	#QuadsID
+	pOperandsID.append(p[1])
+
 	pTypes.append(variable['variableType'])
 	print("call variable")
 
@@ -203,13 +215,17 @@ def p_asignacion_expr(p):
 	asignacion_expr : expr
 	'''
 	global currScope
-
-	print(pOperands)
 	
 	lOperand = pOperands.pop()
 	result = pOperands.pop()
 
 	quads.append(("=", lOperand, " ", result))
+
+	#QuadsID
+	lOperandID = pOperandsID.pop()
+	resultID = pOperandsID.pop()
+
+	quadsID.append(("=", lOperandID, " ", resultID))
 	print("call asignacion_expr")
 
 # Llamada
@@ -248,6 +264,9 @@ def p_lectura_prime(p):
 	'''
 	pTypes.pop()
 	quads.append(("read", "", "", pOperands.pop()))
+
+	#QuadsID
+	quadsID.append(("read", "", "", pOperandsID.pop()))
 	print("call lectura_prime")
 
 # Escritura
@@ -264,9 +283,11 @@ def p_escritura_prime(p):
 					| expr COMMA escritura_prime
 					| escritura_string COMMA escritura_prime
 	'''
-	print(pOperands)
 	pTypes.pop()
 	quads.append(("write", "", "", pOperands.pop()))
+
+	#QuadsID
+	quadsID.append(("write", "", "", pOperandsID.pop()))
 	print("call escritura_prime")
 
 def p_escritura_string(p):
@@ -275,7 +296,10 @@ def p_escritura_string(p):
 	'''
 	index = vm[-1].cteAssign(p[1])
 	pOperands.append(index)
-	pTypes.append("Wenas")
+	pTypes.append("TypeDummie")
+
+	#QuadsID
+	pOperandsID.append(p[1])
 	print("call escritura_string")
 
 # Decision
@@ -294,6 +318,9 @@ def p_decision_expr(p):
 	if varType == bool:
 		quads.append(["GOTOF", result, "", None])
 		pJumps.append(len(quads) - 1)
+
+		#QuadsID
+		quadsID.append(["GOTOF", pOperandsID.pop(), "", None])
 	else:
 		print(f'Semantic error: type mismatch - ({result}:{varType}) not boolean)' )
 		sys.exit()
@@ -316,6 +343,10 @@ def p_else_prime(p):
 	jump = pJumps.pop()
 	pJumps.append(len(quads) - 1)
 	quads[jump][3] = len(quads)
+
+	#QuadsID
+	quadsID.append(["GOTO", "", "", None])
+	quadsID[jump][3] = len(quadsID)
 	print("call else_prime")
 
 # While
@@ -327,6 +358,10 @@ def p_while(p):
 	ret = pJumps.pop()
 	quads.append(["GOTO", "", "", ret])
 	quads[end][3] = len(quads)
+
+	#QuadsID
+	quadsID.append(["GOTO", "", "", ret])
+	quadsID[end][3] = len(quadsID)
 	print("call while")
 
 def p_while_prime(p):
@@ -345,6 +380,9 @@ def p_while_expr(p):
 	if varType == bool:
 		quads.append(["GOTOF", result, "", None])
 		pJumps.append(len(quads) - 1)
+
+		#QuadsID
+		quadsID.append(["GOTOF", pOperandsID.pop(), "", None])
 	else:
 		print(f'Semantic error: type mismatch - ({result}:{varType}) not boolean)' )
 		sys.exit()
@@ -366,6 +404,15 @@ def p_for(p):
 
 	quads.append(("GOTO", "", "", antes))
 	quads[despues][3] = len(quads)
+
+	#QuadsID
+	global nTemps
+	operandID = pOperandsID.pop()
+	quadsID.append(('+', operandID, 1, "t" + str(nTemps)))
+	quadsID.append(('=', "t" + str(nTemps), "", operandID))
+
+	quadsID.append(("GOTO", "", "", antes))
+	quadsID[despues][3] = len(quadsID)
 	print("call for")
 
 def p_for_asignacion(p):
@@ -385,6 +432,13 @@ def p_for_asignacion_expr(p):
 
 	quads.append(("=", lOperand, " ", result))
 	pOperands.append(result)
+
+	#QuadsID
+	lOperandID = pOperandsID.pop()
+	resultID = pOperandsID.pop()
+
+	quadsID.append(("=", lOperandID, " ", resultID))
+	pOperandsID.append(resultID)
 	print("call asignacion_expr")
 
 def p_for_to(p):
@@ -411,6 +465,15 @@ def p_for_exp(p):
 		quads.append(["GOTOF", "", "", None])
 		pJumps.append(len(quads) - 1) #despues de comp
 		# If any operand were a temporal space, return it to AVAIL
+
+		#QuadsID
+		global nTemps
+		rOperandID = pOperandsID.pop()
+		lOperandID = pOperandsID.pop()
+		quadsID.append(('<', lOperandID, rOperandID, "t" + str(nTemps)))
+		pOperandsID.append("t" + str(nTemps))
+		nTemps += 1
+		quadsID.append(["GOTOF", "", "", None])
 	else:
 		print(f'Semantic error: type mismatch - ({lOperand}:{lType})<({rOperand}:{rType})' )
 		sys.exit()
@@ -443,6 +506,14 @@ def p_or(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -464,7 +535,6 @@ def p_and(p):
 	and : equal
 		| equal and_operador and
 	'''
-	print(pOper, "|||", pOperands)
 	if len(p) > 2:
 		if pOper[-1] == '&&':
 			rOperand = pOperands.pop()
@@ -479,6 +549,14 @@ def p_and(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -500,7 +578,6 @@ def p_equal(p):
 	equal : compare
 		  | compare equal_operador compare
 	'''
-	print(pOper, "|||", pOperands)
 	if len(p) > 2:
 		if pOper[-1] in ('==', '!='):
 			rOperand = pOperands.pop()
@@ -515,6 +592,14 @@ def p_equal(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -551,6 +636,14 @@ def p_compare(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -591,6 +684,14 @@ def p_exp(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -629,6 +730,14 @@ def p_termino(p):
 				pOperands.append(result)
 				pTypes.append(resultType)
 				# If any operand were a temporal space, return it to AVAIL
+
+				#QuadsID
+				global nTemps
+				rOperandID = pOperandsID.pop()
+				lOperandID = pOperandsID.pop()
+				quadsID.append((operator, lOperandID, rOperandID, "t" + str(nTemps)))
+				pOperandsID.append("t" + str(nTemps))
+				nTemps += 1
 			else:
 				print(f'Semantic error: type mismatch - ({lOperand}:{lType}){operator}({rOperand}:{rType})' )
 				sys.exit()
@@ -669,6 +778,9 @@ def p_cte(p):
 	index = vm[-1].cteAssign(p[1])
 	pOperands.append(index)
 	pTypes.append(type(p[1]))
+
+	#QuadsID
+	pOperandsID.append(p[1])
 	print("call cte")
 
 # Epsilon
@@ -685,7 +797,7 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = "test3.txt"#str(input(">> "))
+	s = "testS.txt"#str(input(">> "))
 	with open(s, "r") as f:
 		program = f.read()
 except EOFError :

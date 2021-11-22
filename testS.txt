@@ -1,6 +1,6 @@
 program Test1;
-let i, j, p, arreglo[10]: int;
-let x, y, z[5][32]: float;
+let i, j, p, arreglo[10], k: int;
+let x, z[5][3], l, w[4][7][2], y: float;
 
 function int fact(int j)
 let h: int;
@@ -17,4 +17,12 @@ main() {
 	i = j + (p - i * 2 + j);
 
 	write(p == x);
+	write("Hola mundo");
+
+    for i = 0 to 10 {
+        i = 4;
+        x = 2;
+    }
+
+    j = 3 + 4;
 }

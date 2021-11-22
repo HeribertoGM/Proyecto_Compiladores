@@ -18,6 +18,11 @@ pOper = []
 quads = [["GOTO", "", "", None]]
 pJumps = []
 
+#QuadsID
+pOperandsID = []
+quadsID = [["GOTO", "", "", None]]
+nTemps = 0
+
 def createEra():
 	vm.append(VirtualMemory())
 
@@ -29,7 +34,10 @@ def addGlobalVariables():
 		globalVariables.append(var)
 
 	for variable in globalVariables:
-		variable["mem_direction"] = vm[-1].assignVirtualDirection('global', variable['variableType'])
+		if variable["variableDimentions"] == None:
+			variable["mem_direction"] = vm[-1].assignVirtualDirection('global', variable['variableType'])
+		else:
+			variable["mem_direction"] = vm[-1].assignMemoryArray('global', variable['variableType'], variable["arrSize"])
 
 	variablesTemp.clear()
 
@@ -41,7 +49,10 @@ def addLocalVariables():
 	# Agregar assignVirtualDirection locales
 
 	for variable in functionsTemp[-1]["functionVariables"]:
-		variable["mem_direction"] = vm[-1].assignVirtualDirection('local', variable['variableType'])
+		if variable["variableDimentions"] == None:
+			variable["mem_direction"] = vm[-1].assignVirtualDirection('local', variable['variableType'])
+		else:
+			variable["mem_direction"] = vm[-1].assignMemoryArray('local', variable['variableType'], variable["arrSize"])
 	
 	variablesTemp.clear()
 
@@ -68,7 +79,31 @@ def addVariableTemp(variableType):
 	global typeTemp
 
 	for i in typeTemp:
-		variablesTemp.append({"variableID":i[0], "variableType":variableType, "variableDimentions": i[1]})
+		dimLL = []
+		r = 1
+		if i[1] != None:
+			li = 0
+			for ls in i[1]:
+				ls -= 1
+				dimLL.append({"li": li, "ls": ls, "R": None})
+				r = (ls - li + 1) * r
+
+			m = [r, 0, 0, 0]
+			dim = 1
+			offset = 0
+			for node in dimLL:
+				m[dim] = m[dim - 1] / (node["ls"] - node["li"] + 1)
+				node["R"] = m[dim]
+				offset = offset + node["li"] * m[dim]
+				dim += 1
+
+			dimLL[-1]["R"] = -offset
+			# pprint.pprint(dimLL)
+		else:
+			dimLL = None
+			r = None
+
+		variablesTemp.append({"variableID":i[0], "variableType":variableType, "variableDimentions": i[1], "variableDimLL" : dimLL, "arrSize": r})
 
 	typeTemp.clear()
 
@@ -298,8 +333,13 @@ def printQuads():
 	print("Quads:")
 	for i in range(len(quads)):
 		print(i, quads[i])
-	# for q in quads:
-	# 	print(q)
+	
+	#QuadsID
+	global quadsID
+	print("______________________________________________")
+	print("QuadsID:")
+	for i in range(len(quadsID)):
+		print(i, quadsID[i])
 
 def getVariable(varID, scope):
 	global globalVariables, functionsTemp
