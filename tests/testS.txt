@@ -1,10 +1,10 @@
 program Test1;
-let i, j, p, arreglo[10]: int;
+let i, j, p, arreglo[10], i: int;
 let x, y, z[5][32]: float;
 let a: string;
 
 function int fact(int j, float k, string abc)
-let h: int;
+let h,h: int;
 let s: string;
 {
 	x = 5;

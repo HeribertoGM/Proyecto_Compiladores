@@ -1,6 +1,7 @@
 import ntpath
 import re
 import sys
+import os.path
 import ply.yacc as yacc
 from Lexer import *
 from Semantic import *
@@ -1008,7 +1009,8 @@ parser = yacc.yacc()
 program = None
 try:
 	s = "testS.txt"#str(input(">> "))
-	with open(s, "r") as f:
+	path = os.path.join("tests", s)
+	with open(path, "r") as f:
 		program = f.read()
 except EOFError :
     print("Error reading code.")
