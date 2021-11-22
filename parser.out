@@ -65,7 +65,7 @@ Rule 55    llamada_prime -> llamada_exp
 Rule 56    llamada_prime -> llamada_exp llamada_comma llamada_prime
 Rule 57    llamada_exp -> exp
 Rule 58    llamada_comma -> COMMA
-Rule 59    retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS
+Rule 59    retorno -> RETURN expr
 Rule 60    lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS
 Rule 61    lectura_prime -> variable
 Rule 62    lectura_prime -> variable COMMA lectura_prime
@@ -137,7 +137,7 @@ CTE_INT              : 13 13 13 14 14 15 114
 CTE_STRING           : 68
 C_ABRACKET           : 13 13 13 14 14 15 41
 C_CBRACKET           : 3
-C_PARENTHESIS        : 2 27 53 59 60 63 69 76 109
+C_PARENTHESIS        : 2 27 53 60 63 69 76 109
 DIVIDE               : 106
 ELSE                 : 73
 EQUAL                : 91
@@ -159,7 +159,7 @@ NOT_EQUAL            : 92
 OR                   : 85
 O_ABRACKET           : 13 13 13 14 14 15 37 38 39 42
 O_CBRACKET           : 3
-O_PARENTHESIS        : 2 27 53 59 60 63 69 76 109
+O_PARENTHESIS        : 2 27 53 60 63 69 76 109
 PLUS                 : 101 112
 PROGRAM              : 1
 READ                 : 60
@@ -550,7 +550,7 @@ state 30
     (116) epsilon -> .
     (51) asignacion -> . variable ASSIGN asignacion_expr
     (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (59) retorno -> . RETURN O_PARENTHESIS expr C_PARENTHESIS
+    (59) retorno -> . RETURN expr
     (60) lectura -> . READ O_PARENTHESIS lectura_prime C_PARENTHESIS
     (63) escritura -> . WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS
     (69) decision -> . IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque else
@@ -725,7 +725,7 @@ state 46
     (116) epsilon -> .
     (51) asignacion -> . variable ASSIGN asignacion_expr
     (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (59) retorno -> . RETURN O_PARENTHESIS expr C_PARENTHESIS
+    (59) retorno -> . RETURN expr
     (60) lectura -> . READ O_PARENTHESIS lectura_prime C_PARENTHESIS
     (63) escritura -> . WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS
     (69) decision -> . IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque else
@@ -866,30 +866,78 @@ state 57
 
 state 58
 
-    (59) retorno -> RETURN . O_PARENTHESIS expr C_PARENTHESIS
+    (59) retorno -> RETURN . expr
+    (82) expr -> . or
+    (83) or -> . and
+    (84) or -> . and or_operador or
+    (86) and -> . equal
+    (87) and -> . equal and_operador and
+    (89) equal -> . compare
+    (90) equal -> . compare equal_operador compare
+    (93) compare -> . exp
+    (94) compare -> . exp compare_operador exp
+    (99) exp -> . termino
+    (100) exp -> . termino exp_operador exp
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 86
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
+    expr                           shift and go to state 86
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
 
 state 59
 
     (60) lectura -> READ . O_PARENTHESIS lectura_prime C_PARENTHESIS
 
-    O_PARENTHESIS   shift and go to state 87
+    O_PARENTHESIS   shift and go to state 102
 
 
 state 60
 
     (63) escritura -> WRITE . O_PARENTHESIS escritura_prime C_PARENTHESIS
 
-    O_PARENTHESIS   shift and go to state 88
+    O_PARENTHESIS   shift and go to state 103
 
 
 state 61
 
     (69) decision -> IF . O_PARENTHESIS decision_expr C_PARENTHESIS bloque else
 
-    O_PARENTHESIS   shift and go to state 89
+    O_PARENTHESIS   shift and go to state 104
 
 
 state 62
@@ -897,9 +945,9 @@ state 62
     (74) while -> while_prime . while_expr bloque
     (76) while_expr -> . O_PARENTHESIS expr C_PARENTHESIS
 
-    O_PARENTHESIS   shift and go to state 91
+    O_PARENTHESIS   shift and go to state 106
 
-    while_expr                     shift and go to state 90
+    while_expr                     shift and go to state 105
 
 state 63
 
@@ -912,10 +960,10 @@ state 63
     (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
     (40) arr_id -> . ID
 
-    ID              shift and go to state 94
+    ID              shift and go to state 109
 
-    for_asignacion                 shift and go to state 92
-    variable                       shift and go to state 93
+    for_asignacion                 shift and go to state 107
+    variable                       shift and go to state 108
     var_array                      shift and go to state 64
     arr_id                         shift and go to state 67
 
@@ -941,8 +989,8 @@ state 64
     COMMA           reduce using rule 35 (variable -> var_array .)
     C_PARENTHESIS   reduce using rule 35 (variable -> var_array .)
     C_ABRACKET      reduce using rule 35 (variable -> var_array .)
-    O_CBRACKET      reduce using rule 35 (variable -> var_array .)
     TO              reduce using rule 35 (variable -> var_array .)
+    O_CBRACKET      reduce using rule 35 (variable -> var_array .)
 
 
 state 65
@@ -969,8 +1017,8 @@ state 65
     COMMA           reduce using rule 36 (variable -> ID .)
     C_PARENTHESIS   reduce using rule 36 (variable -> ID .)
     C_ABRACKET      reduce using rule 36 (variable -> ID .)
-    O_CBRACKET      reduce using rule 36 (variable -> ID .)
     TO              reduce using rule 36 (variable -> ID .)
+    O_CBRACKET      reduce using rule 36 (variable -> ID .)
     O_PARENTHESIS   reduce using rule 54 (function_id -> ID .)
     O_ABRACKET      reduce using rule 40 (arr_id -> ID .)
 
@@ -988,7 +1036,7 @@ state 67
     (38) var_array -> arr_id . O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
     (39) var_array -> arr_id . O_ABRACKET exp arr_close_bracket
 
-    O_ABRACKET      shift and go to state 95
+    O_ABRACKET      shift and go to state 110
 
 
 state 68
@@ -1002,7 +1050,7 @@ state 69
 
     (27) funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime . C_PARENTHESIS declaracion_funcion bloque
 
-    C_PARENTHESIS   shift and go to state 96
+    C_PARENTHESIS   shift and go to state 111
 
 
 state 70
@@ -1011,35 +1059,35 @@ state 70
     (29) funcion_prime -> param_tipo . COMMA funcion_prime
 
     C_PARENTHESIS   reduce using rule 28 (funcion_prime -> param_tipo .)
-    COMMA           shift and go to state 97
+    COMMA           shift and go to state 112
 
 
 state 71
 
     (21) param_tipo -> INT . ID
 
-    ID              shift and go to state 98
+    ID              shift and go to state 113
 
 
 state 72
 
     (22) param_tipo -> FLOAT . ID
 
-    ID              shift and go to state 99
+    ID              shift and go to state 114
 
 
 state 73
 
     (23) param_tipo -> CHAR . ID
 
-    ID              shift and go to state 100
+    ID              shift and go to state 115
 
 
 state 74
 
     (24) param_tipo -> STRING . ID
 
-    ID              shift and go to state 101
+    ID              shift and go to state 116
 
 
 state 75
@@ -1058,7 +1106,7 @@ state 76
     (14) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET . O_ABRACKET CTE_INT C_ABRACKET
     (15) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET .
 
-    O_ABRACKET      shift and go to state 102
+    O_ABRACKET      shift and go to state 117
     COMMA           reduce using rule 15 (declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET .)
     COLON           reduce using rule 15 (declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET .)
 
@@ -1192,25 +1240,25 @@ state 84
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    variable                       shift and go to state 103
-    asignacion_expr                shift and go to state 104
-    expr                           shift and go to state 105
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    variable                       shift and go to state 94
+    asignacion_expr                shift and go to state 118
+    expr                           shift and go to state 119
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
@@ -1242,28 +1290,197 @@ state 85
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
     function_id                    shift and go to state 57
     llamada_prime                  shift and go to state 120
     llamada_exp                    shift and go to state 121
     exp                            shift and go to state 122
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     arr_id                         shift and go to state 67
 
 state 86
 
-    (59) retorno -> RETURN O_PARENTHESIS . expr C_PARENTHESIS
+    (59) retorno -> RETURN expr .
+
+    SEMICOLON       reduce using rule 59 (retorno -> RETURN expr .)
+
+
+state 87
+
+    (82) expr -> or .
+
+    SEMICOLON       reduce using rule 82 (expr -> or .)
+    C_PARENTHESIS   reduce using rule 82 (expr -> or .)
+    COMMA           reduce using rule 82 (expr -> or .)
+    TO              reduce using rule 82 (expr -> or .)
+
+
+state 88
+
+    (83) or -> and .
+    (84) or -> and . or_operador or
+    (85) or_operador -> . OR
+
+    SEMICOLON       reduce using rule 83 (or -> and .)
+    C_PARENTHESIS   reduce using rule 83 (or -> and .)
+    COMMA           reduce using rule 83 (or -> and .)
+    TO              reduce using rule 83 (or -> and .)
+    OR              shift and go to state 124
+
+    or_operador                    shift and go to state 123
+
+state 89
+
+    (86) and -> equal .
+    (87) and -> equal . and_operador and
+    (88) and_operador -> . AND
+
+    OR              reduce using rule 86 (and -> equal .)
+    SEMICOLON       reduce using rule 86 (and -> equal .)
+    C_PARENTHESIS   reduce using rule 86 (and -> equal .)
+    COMMA           reduce using rule 86 (and -> equal .)
+    TO              reduce using rule 86 (and -> equal .)
+    AND             shift and go to state 126
+
+    and_operador                   shift and go to state 125
+
+state 90
+
+    (89) equal -> compare .
+    (90) equal -> compare . equal_operador compare
+    (91) equal_operador -> . EQUAL
+    (92) equal_operador -> . NOT_EQUAL
+
+    AND             reduce using rule 89 (equal -> compare .)
+    OR              reduce using rule 89 (equal -> compare .)
+    SEMICOLON       reduce using rule 89 (equal -> compare .)
+    C_PARENTHESIS   reduce using rule 89 (equal -> compare .)
+    COMMA           reduce using rule 89 (equal -> compare .)
+    TO              reduce using rule 89 (equal -> compare .)
+    EQUAL           shift and go to state 128
+    NOT_EQUAL       shift and go to state 129
+
+    equal_operador                 shift and go to state 127
+
+state 91
+
+    (93) compare -> exp .
+    (94) compare -> exp . compare_operador exp
+    (95) compare_operador -> . GREATER
+    (96) compare_operador -> . LESSER
+    (97) compare_operador -> . GREATER_EQUAL
+    (98) compare_operador -> . LESSER_EQUAL
+
+    EQUAL           reduce using rule 93 (compare -> exp .)
+    NOT_EQUAL       reduce using rule 93 (compare -> exp .)
+    AND             reduce using rule 93 (compare -> exp .)
+    OR              reduce using rule 93 (compare -> exp .)
+    SEMICOLON       reduce using rule 93 (compare -> exp .)
+    C_PARENTHESIS   reduce using rule 93 (compare -> exp .)
+    COMMA           reduce using rule 93 (compare -> exp .)
+    TO              reduce using rule 93 (compare -> exp .)
+    GREATER         shift and go to state 131
+    LESSER          shift and go to state 132
+    GREATER_EQUAL   shift and go to state 133
+    LESSER_EQUAL    shift and go to state 134
+
+    compare_operador               shift and go to state 130
+
+state 92
+
+    (99) exp -> termino .
+    (100) exp -> termino . exp_operador exp
+    (101) exp_operador -> . PLUS
+    (102) exp_operador -> . MINUS
+
+    GREATER         reduce using rule 99 (exp -> termino .)
+    LESSER          reduce using rule 99 (exp -> termino .)
+    GREATER_EQUAL   reduce using rule 99 (exp -> termino .)
+    LESSER_EQUAL    reduce using rule 99 (exp -> termino .)
+    EQUAL           reduce using rule 99 (exp -> termino .)
+    NOT_EQUAL       reduce using rule 99 (exp -> termino .)
+    AND             reduce using rule 99 (exp -> termino .)
+    OR              reduce using rule 99 (exp -> termino .)
+    SEMICOLON       reduce using rule 99 (exp -> termino .)
+    COMMA           reduce using rule 99 (exp -> termino .)
+    C_PARENTHESIS   reduce using rule 99 (exp -> termino .)
+    C_ABRACKET      reduce using rule 99 (exp -> termino .)
+    TO              reduce using rule 99 (exp -> termino .)
+    O_CBRACKET      reduce using rule 99 (exp -> termino .)
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 137
+
+    exp_operador                   shift and go to state 135
+
+state 93
+
+    (103) termino -> factor .
+    (104) termino -> factor . termino_operador termino
+    (105) termino_operador -> . TIMES
+    (106) termino_operador -> . DIVIDE
+    (107) termino_operador -> . MODULE
+
+    PLUS            reduce using rule 103 (termino -> factor .)
+    MINUS           reduce using rule 103 (termino -> factor .)
+    GREATER         reduce using rule 103 (termino -> factor .)
+    LESSER          reduce using rule 103 (termino -> factor .)
+    GREATER_EQUAL   reduce using rule 103 (termino -> factor .)
+    LESSER_EQUAL    reduce using rule 103 (termino -> factor .)
+    EQUAL           reduce using rule 103 (termino -> factor .)
+    NOT_EQUAL       reduce using rule 103 (termino -> factor .)
+    AND             reduce using rule 103 (termino -> factor .)
+    OR              reduce using rule 103 (termino -> factor .)
+    SEMICOLON       reduce using rule 103 (termino -> factor .)
+    COMMA           reduce using rule 103 (termino -> factor .)
+    C_PARENTHESIS   reduce using rule 103 (termino -> factor .)
+    C_ABRACKET      reduce using rule 103 (termino -> factor .)
+    TO              reduce using rule 103 (termino -> factor .)
+    O_CBRACKET      reduce using rule 103 (termino -> factor .)
+    TIMES           shift and go to state 139
+    DIVIDE          shift and go to state 140
+    MODULE          shift and go to state 141
+
+    termino_operador               shift and go to state 138
+
+state 94
+
+    (108) factor -> variable .
+
+    TIMES           reduce using rule 108 (factor -> variable .)
+    DIVIDE          reduce using rule 108 (factor -> variable .)
+    MODULE          reduce using rule 108 (factor -> variable .)
+    PLUS            reduce using rule 108 (factor -> variable .)
+    MINUS           reduce using rule 108 (factor -> variable .)
+    GREATER         reduce using rule 108 (factor -> variable .)
+    LESSER          reduce using rule 108 (factor -> variable .)
+    GREATER_EQUAL   reduce using rule 108 (factor -> variable .)
+    LESSER_EQUAL    reduce using rule 108 (factor -> variable .)
+    EQUAL           reduce using rule 108 (factor -> variable .)
+    NOT_EQUAL       reduce using rule 108 (factor -> variable .)
+    AND             reduce using rule 108 (factor -> variable .)
+    OR              reduce using rule 108 (factor -> variable .)
+    SEMICOLON       reduce using rule 108 (factor -> variable .)
+    COMMA           reduce using rule 108 (factor -> variable .)
+    C_PARENTHESIS   reduce using rule 108 (factor -> variable .)
+    C_ABRACKET      reduce using rule 108 (factor -> variable .)
+    TO              reduce using rule 108 (factor -> variable .)
+    O_CBRACKET      reduce using rule 108 (factor -> variable .)
+
+
+state 95
+
+    (109) factor -> O_PARENTHESIS . expr C_PARENTHESIS
     (82) expr -> . or
     (83) or -> . and
     (84) or -> . and or_operador or
@@ -1294,29 +1511,151 @@ state 86
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    expr                           shift and go to state 123
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    expr                           shift and go to state 142
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 87
+state 96
+
+    (110) factor -> llamada .
+
+    TIMES           reduce using rule 110 (factor -> llamada .)
+    DIVIDE          reduce using rule 110 (factor -> llamada .)
+    MODULE          reduce using rule 110 (factor -> llamada .)
+    PLUS            reduce using rule 110 (factor -> llamada .)
+    MINUS           reduce using rule 110 (factor -> llamada .)
+    GREATER         reduce using rule 110 (factor -> llamada .)
+    LESSER          reduce using rule 110 (factor -> llamada .)
+    GREATER_EQUAL   reduce using rule 110 (factor -> llamada .)
+    LESSER_EQUAL    reduce using rule 110 (factor -> llamada .)
+    EQUAL           reduce using rule 110 (factor -> llamada .)
+    NOT_EQUAL       reduce using rule 110 (factor -> llamada .)
+    AND             reduce using rule 110 (factor -> llamada .)
+    OR              reduce using rule 110 (factor -> llamada .)
+    SEMICOLON       reduce using rule 110 (factor -> llamada .)
+    COMMA           reduce using rule 110 (factor -> llamada .)
+    C_PARENTHESIS   reduce using rule 110 (factor -> llamada .)
+    C_ABRACKET      reduce using rule 110 (factor -> llamada .)
+    TO              reduce using rule 110 (factor -> llamada .)
+    O_CBRACKET      reduce using rule 110 (factor -> llamada .)
+
+
+state 97
+
+    (111) factor -> cte .
+
+    TIMES           reduce using rule 111 (factor -> cte .)
+    DIVIDE          reduce using rule 111 (factor -> cte .)
+    MODULE          reduce using rule 111 (factor -> cte .)
+    PLUS            reduce using rule 111 (factor -> cte .)
+    MINUS           reduce using rule 111 (factor -> cte .)
+    GREATER         reduce using rule 111 (factor -> cte .)
+    LESSER          reduce using rule 111 (factor -> cte .)
+    GREATER_EQUAL   reduce using rule 111 (factor -> cte .)
+    LESSER_EQUAL    reduce using rule 111 (factor -> cte .)
+    EQUAL           reduce using rule 111 (factor -> cte .)
+    NOT_EQUAL       reduce using rule 111 (factor -> cte .)
+    AND             reduce using rule 111 (factor -> cte .)
+    OR              reduce using rule 111 (factor -> cte .)
+    SEMICOLON       reduce using rule 111 (factor -> cte .)
+    COMMA           reduce using rule 111 (factor -> cte .)
+    C_PARENTHESIS   reduce using rule 111 (factor -> cte .)
+    C_ABRACKET      reduce using rule 111 (factor -> cte .)
+    TO              reduce using rule 111 (factor -> cte .)
+    O_CBRACKET      reduce using rule 111 (factor -> cte .)
+
+
+state 98
+
+    (112) factor -> PLUS . cte
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    cte                            shift and go to state 143
+
+state 99
+
+    (113) factor -> MINUS . cte
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    cte                            shift and go to state 144
+
+state 100
+
+    (114) cte -> CTE_INT .
+
+    TIMES           reduce using rule 114 (cte -> CTE_INT .)
+    DIVIDE          reduce using rule 114 (cte -> CTE_INT .)
+    MODULE          reduce using rule 114 (cte -> CTE_INT .)
+    PLUS            reduce using rule 114 (cte -> CTE_INT .)
+    MINUS           reduce using rule 114 (cte -> CTE_INT .)
+    GREATER         reduce using rule 114 (cte -> CTE_INT .)
+    LESSER          reduce using rule 114 (cte -> CTE_INT .)
+    GREATER_EQUAL   reduce using rule 114 (cte -> CTE_INT .)
+    LESSER_EQUAL    reduce using rule 114 (cte -> CTE_INT .)
+    EQUAL           reduce using rule 114 (cte -> CTE_INT .)
+    NOT_EQUAL       reduce using rule 114 (cte -> CTE_INT .)
+    AND             reduce using rule 114 (cte -> CTE_INT .)
+    OR              reduce using rule 114 (cte -> CTE_INT .)
+    SEMICOLON       reduce using rule 114 (cte -> CTE_INT .)
+    COMMA           reduce using rule 114 (cte -> CTE_INT .)
+    C_PARENTHESIS   reduce using rule 114 (cte -> CTE_INT .)
+    C_ABRACKET      reduce using rule 114 (cte -> CTE_INT .)
+    TO              reduce using rule 114 (cte -> CTE_INT .)
+    O_CBRACKET      reduce using rule 114 (cte -> CTE_INT .)
+
+
+state 101
+
+    (115) cte -> CTE_FLOAT .
+
+    TIMES           reduce using rule 115 (cte -> CTE_FLOAT .)
+    DIVIDE          reduce using rule 115 (cte -> CTE_FLOAT .)
+    MODULE          reduce using rule 115 (cte -> CTE_FLOAT .)
+    PLUS            reduce using rule 115 (cte -> CTE_FLOAT .)
+    MINUS           reduce using rule 115 (cte -> CTE_FLOAT .)
+    GREATER         reduce using rule 115 (cte -> CTE_FLOAT .)
+    LESSER          reduce using rule 115 (cte -> CTE_FLOAT .)
+    GREATER_EQUAL   reduce using rule 115 (cte -> CTE_FLOAT .)
+    LESSER_EQUAL    reduce using rule 115 (cte -> CTE_FLOAT .)
+    EQUAL           reduce using rule 115 (cte -> CTE_FLOAT .)
+    NOT_EQUAL       reduce using rule 115 (cte -> CTE_FLOAT .)
+    AND             reduce using rule 115 (cte -> CTE_FLOAT .)
+    OR              reduce using rule 115 (cte -> CTE_FLOAT .)
+    SEMICOLON       reduce using rule 115 (cte -> CTE_FLOAT .)
+    COMMA           reduce using rule 115 (cte -> CTE_FLOAT .)
+    C_PARENTHESIS   reduce using rule 115 (cte -> CTE_FLOAT .)
+    C_ABRACKET      reduce using rule 115 (cte -> CTE_FLOAT .)
+    TO              reduce using rule 115 (cte -> CTE_FLOAT .)
+    O_CBRACKET      reduce using rule 115 (cte -> CTE_FLOAT .)
+
+
+state 102
 
     (60) lectura -> READ O_PARENTHESIS . lectura_prime C_PARENTHESIS
     (61) lectura_prime -> . variable
@@ -1328,14 +1667,14 @@ state 87
     (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
     (40) arr_id -> . ID
 
-    ID              shift and go to state 94
+    ID              shift and go to state 109
 
-    lectura_prime                  shift and go to state 124
-    variable                       shift and go to state 125
+    lectura_prime                  shift and go to state 145
+    variable                       shift and go to state 146
     var_array                      shift and go to state 64
     arr_id                         shift and go to state 67
 
-state 88
+state 103
 
     (63) escritura -> WRITE O_PARENTHESIS . escritura_prime C_PARENTHESIS
     (64) escritura_prime -> . expr
@@ -1373,32 +1712,32 @@ state 88
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    CTE_STRING      shift and go to state 129
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    CTE_STRING      shift and go to state 150
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    escritura_prime                shift and go to state 126
-    expr                           shift and go to state 127
-    escritura_string               shift and go to state 128
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    escritura_prime                shift and go to state 147
+    expr                           shift and go to state 148
+    escritura_string               shift and go to state 149
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 89
+state 104
 
     (69) decision -> IF O_PARENTHESIS . decision_expr C_PARENTHESIS bloque else
     (70) decision_expr -> . expr
@@ -1432,39 +1771,39 @@ state 89
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    decision_expr                  shift and go to state 130
-    expr                           shift and go to state 131
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    decision_expr                  shift and go to state 151
+    expr                           shift and go to state 152
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 90
+state 105
 
     (74) while -> while_prime while_expr . bloque
     (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
 
     O_CBRACKET      shift and go to state 30
 
-    bloque                         shift and go to state 132
+    bloque                         shift and go to state 153
 
-state 91
+state 106
 
     (76) while_expr -> O_PARENTHESIS . expr C_PARENTHESIS
     (82) expr -> . or
@@ -1497,45 +1836,45 @@ state 91
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    expr                           shift and go to state 133
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    expr                           shift and go to state 154
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 92
+state 107
 
     (77) for -> FOR for_asignacion . for_to for_exp bloque
     (80) for_to -> . TO
 
-    TO              shift and go to state 135
+    TO              shift and go to state 156
 
-    for_to                         shift and go to state 134
+    for_to                         shift and go to state 155
 
-state 93
+state 108
 
     (78) for_asignacion -> variable . ASSIGN for_asignacion_expr
 
-    ASSIGN          shift and go to state 136
+    ASSIGN          shift and go to state 157
 
 
-state 94
+state 109
 
     (36) variable -> ID .
     (40) arr_id -> ID .
@@ -1546,7 +1885,7 @@ state 94
     O_ABRACKET      reduce using rule 40 (arr_id -> ID .)
 
 
-state 95
+state 110
 
     (37) var_array -> arr_id O_ABRACKET . exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
     (38) var_array -> arr_id O_ABRACKET . exp arr_close_bracket arr_open_bracket exp arr_close_bracket
@@ -1572,24 +1911,24 @@ state 95
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
     arr_id                         shift and go to state 67
-    exp                            shift and go to state 137
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    exp                            shift and go to state 158
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
 
-state 96
+state 111
 
     (27) funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS . declaracion_funcion bloque
     (6) declaracion_funcion -> . declaracion
@@ -1599,11 +1938,11 @@ state 96
 
     LET             shift and go to state 8
 
-    declaracion_funcion            shift and go to state 138
-    declaracion                    shift and go to state 139
+    declaracion_funcion            shift and go to state 159
+    declaracion                    shift and go to state 160
     declaracion_base               shift and go to state 7
 
-state 97
+state 112
 
     (29) funcion_prime -> param_tipo COMMA . funcion_prime
     (28) funcion_prime -> . param_tipo
@@ -1619,9 +1958,9 @@ state 97
     STRING          shift and go to state 74
 
     param_tipo                     shift and go to state 70
-    funcion_prime                  shift and go to state 140
+    funcion_prime                  shift and go to state 161
 
-state 98
+state 113
 
     (21) param_tipo -> INT ID .
 
@@ -1629,7 +1968,7 @@ state 98
     C_PARENTHESIS   reduce using rule 21 (param_tipo -> INT ID .)
 
 
-state 99
+state 114
 
     (22) param_tipo -> FLOAT ID .
 
@@ -1637,7 +1976,7 @@ state 99
     C_PARENTHESIS   reduce using rule 22 (param_tipo -> FLOAT ID .)
 
 
-state 100
+state 115
 
     (23) param_tipo -> CHAR ID .
 
@@ -1645,7 +1984,7 @@ state 100
     C_PARENTHESIS   reduce using rule 23 (param_tipo -> CHAR ID .)
 
 
-state 101
+state 116
 
     (24) param_tipo -> STRING ID .
 
@@ -1653,194 +1992,57 @@ state 101
     C_PARENTHESIS   reduce using rule 24 (param_tipo -> STRING ID .)
 
 
-state 102
+state 117
 
     (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET . CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET
     (14) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET . CTE_INT C_ABRACKET
 
-    CTE_INT         shift and go to state 141
+    CTE_INT         shift and go to state 162
 
 
-state 103
-
-    (108) factor -> variable .
-
-    TIMES           reduce using rule 108 (factor -> variable .)
-    DIVIDE          reduce using rule 108 (factor -> variable .)
-    MODULE          reduce using rule 108 (factor -> variable .)
-    PLUS            reduce using rule 108 (factor -> variable .)
-    MINUS           reduce using rule 108 (factor -> variable .)
-    GREATER         reduce using rule 108 (factor -> variable .)
-    LESSER          reduce using rule 108 (factor -> variable .)
-    GREATER_EQUAL   reduce using rule 108 (factor -> variable .)
-    LESSER_EQUAL    reduce using rule 108 (factor -> variable .)
-    EQUAL           reduce using rule 108 (factor -> variable .)
-    NOT_EQUAL       reduce using rule 108 (factor -> variable .)
-    AND             reduce using rule 108 (factor -> variable .)
-    OR              reduce using rule 108 (factor -> variable .)
-    SEMICOLON       reduce using rule 108 (factor -> variable .)
-    COMMA           reduce using rule 108 (factor -> variable .)
-    C_PARENTHESIS   reduce using rule 108 (factor -> variable .)
-    C_ABRACKET      reduce using rule 108 (factor -> variable .)
-    O_CBRACKET      reduce using rule 108 (factor -> variable .)
-    TO              reduce using rule 108 (factor -> variable .)
-
-
-state 104
+state 118
 
     (51) asignacion -> variable ASSIGN asignacion_expr .
 
     SEMICOLON       reduce using rule 51 (asignacion -> variable ASSIGN asignacion_expr .)
 
 
-state 105
+state 119
 
     (52) asignacion_expr -> expr .
 
     SEMICOLON       reduce using rule 52 (asignacion_expr -> expr .)
 
 
-state 106
+state 120
 
-    (82) expr -> or .
+    (53) llamada -> function_id O_PARENTHESIS llamada_prime . C_PARENTHESIS
 
-    SEMICOLON       reduce using rule 82 (expr -> or .)
-    C_PARENTHESIS   reduce using rule 82 (expr -> or .)
-    COMMA           reduce using rule 82 (expr -> or .)
-    TO              reduce using rule 82 (expr -> or .)
+    C_PARENTHESIS   shift and go to state 163
 
 
-state 107
+state 121
 
-    (83) or -> and .
-    (84) or -> and . or_operador or
-    (85) or_operador -> . OR
+    (55) llamada_prime -> llamada_exp .
+    (56) llamada_prime -> llamada_exp . llamada_comma llamada_prime
+    (58) llamada_comma -> . COMMA
 
-    SEMICOLON       reduce using rule 83 (or -> and .)
-    C_PARENTHESIS   reduce using rule 83 (or -> and .)
-    COMMA           reduce using rule 83 (or -> and .)
-    TO              reduce using rule 83 (or -> and .)
-    OR              shift and go to state 143
+    C_PARENTHESIS   reduce using rule 55 (llamada_prime -> llamada_exp .)
+    COMMA           shift and go to state 165
 
-    or_operador                    shift and go to state 142
+    llamada_comma                  shift and go to state 164
 
-state 108
+state 122
 
-    (86) and -> equal .
-    (87) and -> equal . and_operador and
-    (88) and_operador -> . AND
+    (57) llamada_exp -> exp .
 
-    OR              reduce using rule 86 (and -> equal .)
-    SEMICOLON       reduce using rule 86 (and -> equal .)
-    C_PARENTHESIS   reduce using rule 86 (and -> equal .)
-    COMMA           reduce using rule 86 (and -> equal .)
-    TO              reduce using rule 86 (and -> equal .)
-    AND             shift and go to state 145
+    COMMA           reduce using rule 57 (llamada_exp -> exp .)
+    C_PARENTHESIS   reduce using rule 57 (llamada_exp -> exp .)
 
-    and_operador                   shift and go to state 144
 
-state 109
+state 123
 
-    (89) equal -> compare .
-    (90) equal -> compare . equal_operador compare
-    (91) equal_operador -> . EQUAL
-    (92) equal_operador -> . NOT_EQUAL
-
-    AND             reduce using rule 89 (equal -> compare .)
-    OR              reduce using rule 89 (equal -> compare .)
-    SEMICOLON       reduce using rule 89 (equal -> compare .)
-    C_PARENTHESIS   reduce using rule 89 (equal -> compare .)
-    COMMA           reduce using rule 89 (equal -> compare .)
-    TO              reduce using rule 89 (equal -> compare .)
-    EQUAL           shift and go to state 147
-    NOT_EQUAL       shift and go to state 148
-
-    equal_operador                 shift and go to state 146
-
-state 110
-
-    (93) compare -> exp .
-    (94) compare -> exp . compare_operador exp
-    (95) compare_operador -> . GREATER
-    (96) compare_operador -> . LESSER
-    (97) compare_operador -> . GREATER_EQUAL
-    (98) compare_operador -> . LESSER_EQUAL
-
-    EQUAL           reduce using rule 93 (compare -> exp .)
-    NOT_EQUAL       reduce using rule 93 (compare -> exp .)
-    AND             reduce using rule 93 (compare -> exp .)
-    OR              reduce using rule 93 (compare -> exp .)
-    SEMICOLON       reduce using rule 93 (compare -> exp .)
-    C_PARENTHESIS   reduce using rule 93 (compare -> exp .)
-    COMMA           reduce using rule 93 (compare -> exp .)
-    TO              reduce using rule 93 (compare -> exp .)
-    GREATER         shift and go to state 150
-    LESSER          shift and go to state 151
-    GREATER_EQUAL   shift and go to state 152
-    LESSER_EQUAL    shift and go to state 153
-
-    compare_operador               shift and go to state 149
-
-state 111
-
-    (99) exp -> termino .
-    (100) exp -> termino . exp_operador exp
-    (101) exp_operador -> . PLUS
-    (102) exp_operador -> . MINUS
-
-    GREATER         reduce using rule 99 (exp -> termino .)
-    LESSER          reduce using rule 99 (exp -> termino .)
-    GREATER_EQUAL   reduce using rule 99 (exp -> termino .)
-    LESSER_EQUAL    reduce using rule 99 (exp -> termino .)
-    EQUAL           reduce using rule 99 (exp -> termino .)
-    NOT_EQUAL       reduce using rule 99 (exp -> termino .)
-    AND             reduce using rule 99 (exp -> termino .)
-    OR              reduce using rule 99 (exp -> termino .)
-    SEMICOLON       reduce using rule 99 (exp -> termino .)
-    COMMA           reduce using rule 99 (exp -> termino .)
-    C_PARENTHESIS   reduce using rule 99 (exp -> termino .)
-    C_ABRACKET      reduce using rule 99 (exp -> termino .)
-    O_CBRACKET      reduce using rule 99 (exp -> termino .)
-    TO              reduce using rule 99 (exp -> termino .)
-    PLUS            shift and go to state 155
-    MINUS           shift and go to state 156
-
-    exp_operador                   shift and go to state 154
-
-state 112
-
-    (103) termino -> factor .
-    (104) termino -> factor . termino_operador termino
-    (105) termino_operador -> . TIMES
-    (106) termino_operador -> . DIVIDE
-    (107) termino_operador -> . MODULE
-
-    PLUS            reduce using rule 103 (termino -> factor .)
-    MINUS           reduce using rule 103 (termino -> factor .)
-    GREATER         reduce using rule 103 (termino -> factor .)
-    LESSER          reduce using rule 103 (termino -> factor .)
-    GREATER_EQUAL   reduce using rule 103 (termino -> factor .)
-    LESSER_EQUAL    reduce using rule 103 (termino -> factor .)
-    EQUAL           reduce using rule 103 (termino -> factor .)
-    NOT_EQUAL       reduce using rule 103 (termino -> factor .)
-    AND             reduce using rule 103 (termino -> factor .)
-    OR              reduce using rule 103 (termino -> factor .)
-    SEMICOLON       reduce using rule 103 (termino -> factor .)
-    COMMA           reduce using rule 103 (termino -> factor .)
-    C_PARENTHESIS   reduce using rule 103 (termino -> factor .)
-    C_ABRACKET      reduce using rule 103 (termino -> factor .)
-    O_CBRACKET      reduce using rule 103 (termino -> factor .)
-    TO              reduce using rule 103 (termino -> factor .)
-    TIMES           shift and go to state 158
-    DIVIDE          shift and go to state 159
-    MODULE          shift and go to state 160
-
-    termino_operador               shift and go to state 157
-
-state 113
-
-    (109) factor -> O_PARENTHESIS . expr C_PARENTHESIS
-    (82) expr -> . or
+    (84) or -> and or_operador . or
     (83) or -> . and
     (84) or -> . and or_operador or
     (86) and -> . equal
@@ -1870,225 +2072,496 @@ state 113
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    expr                           shift and go to state 161
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    and                            shift and go to state 88
+    or                             shift and go to state 166
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 114
-
-    (110) factor -> llamada .
-
-    TIMES           reduce using rule 110 (factor -> llamada .)
-    DIVIDE          reduce using rule 110 (factor -> llamada .)
-    MODULE          reduce using rule 110 (factor -> llamada .)
-    PLUS            reduce using rule 110 (factor -> llamada .)
-    MINUS           reduce using rule 110 (factor -> llamada .)
-    GREATER         reduce using rule 110 (factor -> llamada .)
-    LESSER          reduce using rule 110 (factor -> llamada .)
-    GREATER_EQUAL   reduce using rule 110 (factor -> llamada .)
-    LESSER_EQUAL    reduce using rule 110 (factor -> llamada .)
-    EQUAL           reduce using rule 110 (factor -> llamada .)
-    NOT_EQUAL       reduce using rule 110 (factor -> llamada .)
-    AND             reduce using rule 110 (factor -> llamada .)
-    OR              reduce using rule 110 (factor -> llamada .)
-    SEMICOLON       reduce using rule 110 (factor -> llamada .)
-    COMMA           reduce using rule 110 (factor -> llamada .)
-    C_PARENTHESIS   reduce using rule 110 (factor -> llamada .)
-    C_ABRACKET      reduce using rule 110 (factor -> llamada .)
-    O_CBRACKET      reduce using rule 110 (factor -> llamada .)
-    TO              reduce using rule 110 (factor -> llamada .)
-
-
-state 115
-
-    (111) factor -> cte .
-
-    TIMES           reduce using rule 111 (factor -> cte .)
-    DIVIDE          reduce using rule 111 (factor -> cte .)
-    MODULE          reduce using rule 111 (factor -> cte .)
-    PLUS            reduce using rule 111 (factor -> cte .)
-    MINUS           reduce using rule 111 (factor -> cte .)
-    GREATER         reduce using rule 111 (factor -> cte .)
-    LESSER          reduce using rule 111 (factor -> cte .)
-    GREATER_EQUAL   reduce using rule 111 (factor -> cte .)
-    LESSER_EQUAL    reduce using rule 111 (factor -> cte .)
-    EQUAL           reduce using rule 111 (factor -> cte .)
-    NOT_EQUAL       reduce using rule 111 (factor -> cte .)
-    AND             reduce using rule 111 (factor -> cte .)
-    OR              reduce using rule 111 (factor -> cte .)
-    SEMICOLON       reduce using rule 111 (factor -> cte .)
-    COMMA           reduce using rule 111 (factor -> cte .)
-    C_PARENTHESIS   reduce using rule 111 (factor -> cte .)
-    C_ABRACKET      reduce using rule 111 (factor -> cte .)
-    O_CBRACKET      reduce using rule 111 (factor -> cte .)
-    TO              reduce using rule 111 (factor -> cte .)
-
-
-state 116
-
-    (112) factor -> PLUS . cte
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    cte                            shift and go to state 162
-
-state 117
-
-    (113) factor -> MINUS . cte
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    cte                            shift and go to state 163
-
-state 118
-
-    (114) cte -> CTE_INT .
-
-    TIMES           reduce using rule 114 (cte -> CTE_INT .)
-    DIVIDE          reduce using rule 114 (cte -> CTE_INT .)
-    MODULE          reduce using rule 114 (cte -> CTE_INT .)
-    PLUS            reduce using rule 114 (cte -> CTE_INT .)
-    MINUS           reduce using rule 114 (cte -> CTE_INT .)
-    GREATER         reduce using rule 114 (cte -> CTE_INT .)
-    LESSER          reduce using rule 114 (cte -> CTE_INT .)
-    GREATER_EQUAL   reduce using rule 114 (cte -> CTE_INT .)
-    LESSER_EQUAL    reduce using rule 114 (cte -> CTE_INT .)
-    EQUAL           reduce using rule 114 (cte -> CTE_INT .)
-    NOT_EQUAL       reduce using rule 114 (cte -> CTE_INT .)
-    AND             reduce using rule 114 (cte -> CTE_INT .)
-    OR              reduce using rule 114 (cte -> CTE_INT .)
-    SEMICOLON       reduce using rule 114 (cte -> CTE_INT .)
-    COMMA           reduce using rule 114 (cte -> CTE_INT .)
-    C_PARENTHESIS   reduce using rule 114 (cte -> CTE_INT .)
-    C_ABRACKET      reduce using rule 114 (cte -> CTE_INT .)
-    O_CBRACKET      reduce using rule 114 (cte -> CTE_INT .)
-    TO              reduce using rule 114 (cte -> CTE_INT .)
-
-
-state 119
-
-    (115) cte -> CTE_FLOAT .
-
-    TIMES           reduce using rule 115 (cte -> CTE_FLOAT .)
-    DIVIDE          reduce using rule 115 (cte -> CTE_FLOAT .)
-    MODULE          reduce using rule 115 (cte -> CTE_FLOAT .)
-    PLUS            reduce using rule 115 (cte -> CTE_FLOAT .)
-    MINUS           reduce using rule 115 (cte -> CTE_FLOAT .)
-    GREATER         reduce using rule 115 (cte -> CTE_FLOAT .)
-    LESSER          reduce using rule 115 (cte -> CTE_FLOAT .)
-    GREATER_EQUAL   reduce using rule 115 (cte -> CTE_FLOAT .)
-    LESSER_EQUAL    reduce using rule 115 (cte -> CTE_FLOAT .)
-    EQUAL           reduce using rule 115 (cte -> CTE_FLOAT .)
-    NOT_EQUAL       reduce using rule 115 (cte -> CTE_FLOAT .)
-    AND             reduce using rule 115 (cte -> CTE_FLOAT .)
-    OR              reduce using rule 115 (cte -> CTE_FLOAT .)
-    SEMICOLON       reduce using rule 115 (cte -> CTE_FLOAT .)
-    COMMA           reduce using rule 115 (cte -> CTE_FLOAT .)
-    C_PARENTHESIS   reduce using rule 115 (cte -> CTE_FLOAT .)
-    C_ABRACKET      reduce using rule 115 (cte -> CTE_FLOAT .)
-    O_CBRACKET      reduce using rule 115 (cte -> CTE_FLOAT .)
-    TO              reduce using rule 115 (cte -> CTE_FLOAT .)
-
-
-state 120
-
-    (53) llamada -> function_id O_PARENTHESIS llamada_prime . C_PARENTHESIS
-
-    C_PARENTHESIS   shift and go to state 164
-
-
-state 121
-
-    (55) llamada_prime -> llamada_exp .
-    (56) llamada_prime -> llamada_exp . llamada_comma llamada_prime
-    (58) llamada_comma -> . COMMA
-
-    C_PARENTHESIS   reduce using rule 55 (llamada_prime -> llamada_exp .)
-    COMMA           shift and go to state 166
-
-    llamada_comma                  shift and go to state 165
-
-state 122
-
-    (57) llamada_exp -> exp .
-
-    COMMA           reduce using rule 57 (llamada_exp -> exp .)
-    C_PARENTHESIS   reduce using rule 57 (llamada_exp -> exp .)
-
-
-state 123
-
-    (59) retorno -> RETURN O_PARENTHESIS expr . C_PARENTHESIS
-
-    C_PARENTHESIS   shift and go to state 167
-
-
 state 124
 
-    (60) lectura -> READ O_PARENTHESIS lectura_prime . C_PARENTHESIS
+    (85) or_operador -> OR .
 
-    C_PARENTHESIS   shift and go to state 168
+    O_PARENTHESIS   reduce using rule 85 (or_operador -> OR .)
+    PLUS            reduce using rule 85 (or_operador -> OR .)
+    MINUS           reduce using rule 85 (or_operador -> OR .)
+    ID              reduce using rule 85 (or_operador -> OR .)
+    CTE_INT         reduce using rule 85 (or_operador -> OR .)
+    CTE_FLOAT       reduce using rule 85 (or_operador -> OR .)
 
 
 state 125
+
+    (87) and -> equal and_operador . and
+    (86) and -> . equal
+    (87) and -> . equal and_operador and
+    (89) equal -> . compare
+    (90) equal -> . compare equal_operador compare
+    (93) compare -> . exp
+    (94) compare -> . exp compare_operador exp
+    (99) exp -> . termino
+    (100) exp -> . termino exp_operador exp
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
+
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    equal                          shift and go to state 89
+    and                            shift and go to state 167
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
+
+state 126
+
+    (88) and_operador -> AND .
+
+    O_PARENTHESIS   reduce using rule 88 (and_operador -> AND .)
+    PLUS            reduce using rule 88 (and_operador -> AND .)
+    MINUS           reduce using rule 88 (and_operador -> AND .)
+    ID              reduce using rule 88 (and_operador -> AND .)
+    CTE_INT         reduce using rule 88 (and_operador -> AND .)
+    CTE_FLOAT       reduce using rule 88 (and_operador -> AND .)
+
+
+state 127
+
+    (90) equal -> compare equal_operador . compare
+    (93) compare -> . exp
+    (94) compare -> . exp compare_operador exp
+    (99) exp -> . termino
+    (100) exp -> . termino exp_operador exp
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
+
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    compare                        shift and go to state 168
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
+
+state 128
+
+    (91) equal_operador -> EQUAL .
+
+    O_PARENTHESIS   reduce using rule 91 (equal_operador -> EQUAL .)
+    PLUS            reduce using rule 91 (equal_operador -> EQUAL .)
+    MINUS           reduce using rule 91 (equal_operador -> EQUAL .)
+    ID              reduce using rule 91 (equal_operador -> EQUAL .)
+    CTE_INT         reduce using rule 91 (equal_operador -> EQUAL .)
+    CTE_FLOAT       reduce using rule 91 (equal_operador -> EQUAL .)
+
+
+state 129
+
+    (92) equal_operador -> NOT_EQUAL .
+
+    O_PARENTHESIS   reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+    PLUS            reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+    MINUS           reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+    ID              reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+    CTE_INT         reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+    CTE_FLOAT       reduce using rule 92 (equal_operador -> NOT_EQUAL .)
+
+
+state 130
+
+    (94) compare -> exp compare_operador . exp
+    (99) exp -> . termino
+    (100) exp -> . termino exp_operador exp
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
+
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    exp                            shift and go to state 169
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
+
+state 131
+
+    (95) compare_operador -> GREATER .
+
+    O_PARENTHESIS   reduce using rule 95 (compare_operador -> GREATER .)
+    PLUS            reduce using rule 95 (compare_operador -> GREATER .)
+    MINUS           reduce using rule 95 (compare_operador -> GREATER .)
+    ID              reduce using rule 95 (compare_operador -> GREATER .)
+    CTE_INT         reduce using rule 95 (compare_operador -> GREATER .)
+    CTE_FLOAT       reduce using rule 95 (compare_operador -> GREATER .)
+
+
+state 132
+
+    (96) compare_operador -> LESSER .
+
+    O_PARENTHESIS   reduce using rule 96 (compare_operador -> LESSER .)
+    PLUS            reduce using rule 96 (compare_operador -> LESSER .)
+    MINUS           reduce using rule 96 (compare_operador -> LESSER .)
+    ID              reduce using rule 96 (compare_operador -> LESSER .)
+    CTE_INT         reduce using rule 96 (compare_operador -> LESSER .)
+    CTE_FLOAT       reduce using rule 96 (compare_operador -> LESSER .)
+
+
+state 133
+
+    (97) compare_operador -> GREATER_EQUAL .
+
+    O_PARENTHESIS   reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+    PLUS            reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+    MINUS           reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+    ID              reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+    CTE_INT         reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+    CTE_FLOAT       reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
+
+
+state 134
+
+    (98) compare_operador -> LESSER_EQUAL .
+
+    O_PARENTHESIS   reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+    PLUS            reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+    MINUS           reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+    ID              reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+    CTE_INT         reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+    CTE_FLOAT       reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
+
+
+state 135
+
+    (100) exp -> termino exp_operador . exp
+    (99) exp -> . termino
+    (100) exp -> . termino exp_operador exp
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
+
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    termino                        shift and go to state 92
+    exp                            shift and go to state 170
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
+
+state 136
+
+    (101) exp_operador -> PLUS .
+
+    O_PARENTHESIS   reduce using rule 101 (exp_operador -> PLUS .)
+    PLUS            reduce using rule 101 (exp_operador -> PLUS .)
+    MINUS           reduce using rule 101 (exp_operador -> PLUS .)
+    ID              reduce using rule 101 (exp_operador -> PLUS .)
+    CTE_INT         reduce using rule 101 (exp_operador -> PLUS .)
+    CTE_FLOAT       reduce using rule 101 (exp_operador -> PLUS .)
+
+
+state 137
+
+    (102) exp_operador -> MINUS .
+
+    O_PARENTHESIS   reduce using rule 102 (exp_operador -> MINUS .)
+    PLUS            reduce using rule 102 (exp_operador -> MINUS .)
+    MINUS           reduce using rule 102 (exp_operador -> MINUS .)
+    ID              reduce using rule 102 (exp_operador -> MINUS .)
+    CTE_INT         reduce using rule 102 (exp_operador -> MINUS .)
+    CTE_FLOAT       reduce using rule 102 (exp_operador -> MINUS .)
+
+
+state 138
+
+    (104) termino -> factor termino_operador . termino
+    (103) termino -> . factor
+    (104) termino -> . factor termino_operador termino
+    (108) factor -> . variable
+    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
+    (110) factor -> . llamada
+    (111) factor -> . cte
+    (112) factor -> . PLUS cte
+    (113) factor -> . MINUS cte
+    (35) variable -> . var_array
+    (36) variable -> . ID
+    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
+    (114) cte -> . CTE_INT
+    (115) cte -> . CTE_FLOAT
+    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
+    (54) function_id -> . ID
+    (40) arr_id -> . ID
+
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
+    ID              shift and go to state 65
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    factor                         shift and go to state 93
+    termino                        shift and go to state 171
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
+    var_array                      shift and go to state 64
+    function_id                    shift and go to state 57
+    arr_id                         shift and go to state 67
+
+state 139
+
+    (105) termino_operador -> TIMES .
+
+    O_PARENTHESIS   reduce using rule 105 (termino_operador -> TIMES .)
+    PLUS            reduce using rule 105 (termino_operador -> TIMES .)
+    MINUS           reduce using rule 105 (termino_operador -> TIMES .)
+    ID              reduce using rule 105 (termino_operador -> TIMES .)
+    CTE_INT         reduce using rule 105 (termino_operador -> TIMES .)
+    CTE_FLOAT       reduce using rule 105 (termino_operador -> TIMES .)
+
+
+state 140
+
+    (106) termino_operador -> DIVIDE .
+
+    O_PARENTHESIS   reduce using rule 106 (termino_operador -> DIVIDE .)
+    PLUS            reduce using rule 106 (termino_operador -> DIVIDE .)
+    MINUS           reduce using rule 106 (termino_operador -> DIVIDE .)
+    ID              reduce using rule 106 (termino_operador -> DIVIDE .)
+    CTE_INT         reduce using rule 106 (termino_operador -> DIVIDE .)
+    CTE_FLOAT       reduce using rule 106 (termino_operador -> DIVIDE .)
+
+
+state 141
+
+    (107) termino_operador -> MODULE .
+
+    O_PARENTHESIS   reduce using rule 107 (termino_operador -> MODULE .)
+    PLUS            reduce using rule 107 (termino_operador -> MODULE .)
+    MINUS           reduce using rule 107 (termino_operador -> MODULE .)
+    ID              reduce using rule 107 (termino_operador -> MODULE .)
+    CTE_INT         reduce using rule 107 (termino_operador -> MODULE .)
+    CTE_FLOAT       reduce using rule 107 (termino_operador -> MODULE .)
+
+
+state 142
+
+    (109) factor -> O_PARENTHESIS expr . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 172
+
+
+state 143
+
+    (112) factor -> PLUS cte .
+
+    TIMES           reduce using rule 112 (factor -> PLUS cte .)
+    DIVIDE          reduce using rule 112 (factor -> PLUS cte .)
+    MODULE          reduce using rule 112 (factor -> PLUS cte .)
+    PLUS            reduce using rule 112 (factor -> PLUS cte .)
+    MINUS           reduce using rule 112 (factor -> PLUS cte .)
+    GREATER         reduce using rule 112 (factor -> PLUS cte .)
+    LESSER          reduce using rule 112 (factor -> PLUS cte .)
+    GREATER_EQUAL   reduce using rule 112 (factor -> PLUS cte .)
+    LESSER_EQUAL    reduce using rule 112 (factor -> PLUS cte .)
+    EQUAL           reduce using rule 112 (factor -> PLUS cte .)
+    NOT_EQUAL       reduce using rule 112 (factor -> PLUS cte .)
+    AND             reduce using rule 112 (factor -> PLUS cte .)
+    OR              reduce using rule 112 (factor -> PLUS cte .)
+    SEMICOLON       reduce using rule 112 (factor -> PLUS cte .)
+    COMMA           reduce using rule 112 (factor -> PLUS cte .)
+    C_PARENTHESIS   reduce using rule 112 (factor -> PLUS cte .)
+    C_ABRACKET      reduce using rule 112 (factor -> PLUS cte .)
+    TO              reduce using rule 112 (factor -> PLUS cte .)
+    O_CBRACKET      reduce using rule 112 (factor -> PLUS cte .)
+
+
+state 144
+
+    (113) factor -> MINUS cte .
+
+    TIMES           reduce using rule 113 (factor -> MINUS cte .)
+    DIVIDE          reduce using rule 113 (factor -> MINUS cte .)
+    MODULE          reduce using rule 113 (factor -> MINUS cte .)
+    PLUS            reduce using rule 113 (factor -> MINUS cte .)
+    MINUS           reduce using rule 113 (factor -> MINUS cte .)
+    GREATER         reduce using rule 113 (factor -> MINUS cte .)
+    LESSER          reduce using rule 113 (factor -> MINUS cte .)
+    GREATER_EQUAL   reduce using rule 113 (factor -> MINUS cte .)
+    LESSER_EQUAL    reduce using rule 113 (factor -> MINUS cte .)
+    EQUAL           reduce using rule 113 (factor -> MINUS cte .)
+    NOT_EQUAL       reduce using rule 113 (factor -> MINUS cte .)
+    AND             reduce using rule 113 (factor -> MINUS cte .)
+    OR              reduce using rule 113 (factor -> MINUS cte .)
+    SEMICOLON       reduce using rule 113 (factor -> MINUS cte .)
+    COMMA           reduce using rule 113 (factor -> MINUS cte .)
+    C_PARENTHESIS   reduce using rule 113 (factor -> MINUS cte .)
+    C_ABRACKET      reduce using rule 113 (factor -> MINUS cte .)
+    TO              reduce using rule 113 (factor -> MINUS cte .)
+    O_CBRACKET      reduce using rule 113 (factor -> MINUS cte .)
+
+
+state 145
+
+    (60) lectura -> READ O_PARENTHESIS lectura_prime . C_PARENTHESIS
+
+    C_PARENTHESIS   shift and go to state 173
+
+
+state 146
 
     (61) lectura_prime -> variable .
     (62) lectura_prime -> variable . COMMA lectura_prime
 
     C_PARENTHESIS   reduce using rule 61 (lectura_prime -> variable .)
-    COMMA           shift and go to state 169
+    COMMA           shift and go to state 174
 
 
-state 126
+state 147
 
     (63) escritura -> WRITE O_PARENTHESIS escritura_prime . C_PARENTHESIS
 
-    C_PARENTHESIS   shift and go to state 170
+    C_PARENTHESIS   shift and go to state 175
 
 
-state 127
+state 148
 
     (64) escritura_prime -> expr .
     (66) escritura_prime -> expr . COMMA escritura_prime
 
     C_PARENTHESIS   reduce using rule 64 (escritura_prime -> expr .)
-    COMMA           shift and go to state 171
+    COMMA           shift and go to state 176
 
 
-state 128
+state 149
 
     (65) escritura_prime -> escritura_string .
     (67) escritura_prime -> escritura_string . COMMA escritura_prime
 
     C_PARENTHESIS   reduce using rule 65 (escritura_prime -> escritura_string .)
-    COMMA           shift and go to state 172
+    COMMA           shift and go to state 177
 
 
-state 129
+state 150
 
     (68) escritura_string -> CTE_STRING .
 
@@ -2096,21 +2569,21 @@ state 129
     C_PARENTHESIS   reduce using rule 68 (escritura_string -> CTE_STRING .)
 
 
-state 130
+state 151
 
     (69) decision -> IF O_PARENTHESIS decision_expr . C_PARENTHESIS bloque else
 
-    C_PARENTHESIS   shift and go to state 173
+    C_PARENTHESIS   shift and go to state 178
 
 
-state 131
+state 152
 
     (70) decision_expr -> expr .
 
     C_PARENTHESIS   reduce using rule 70 (decision_expr -> expr .)
 
 
-state 132
+state 153
 
     (74) while -> while_prime while_expr bloque .
 
@@ -2124,14 +2597,14 @@ state 132
     C_CBRACKET      reduce using rule 74 (while -> while_prime while_expr bloque .)
 
 
-state 133
+state 154
 
     (76) while_expr -> O_PARENTHESIS expr . C_PARENTHESIS
 
-    C_PARENTHESIS   shift and go to state 174
+    C_PARENTHESIS   shift and go to state 179
 
 
-state 134
+state 155
 
     (77) for -> FOR for_asignacion for_to . for_exp bloque
     (81) for_exp -> . exp
@@ -2156,25 +2629,25 @@ state 134
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    for_exp                        shift and go to state 175
-    exp                            shift and go to state 176
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    for_exp                        shift and go to state 180
+    exp                            shift and go to state 181
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 135
+state 156
 
     (80) for_to -> TO .
 
@@ -2186,7 +2659,7 @@ state 135
     CTE_FLOAT       reduce using rule 80 (for_to -> TO .)
 
 
-state 136
+state 157
 
     (78) for_asignacion -> variable ASSIGN . for_asignacion_expr
     (79) for_asignacion_expr -> . expr
@@ -2220,552 +2693,72 @@ state 136
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    variable                       shift and go to state 103
-    for_asignacion_expr            shift and go to state 177
-    expr                           shift and go to state 178
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 137
-
-    (37) var_array -> arr_id O_ABRACKET exp . arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> arr_id O_ABRACKET exp . arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> arr_id O_ABRACKET exp . arr_close_bracket
-    (41) arr_close_bracket -> . C_ABRACKET
-
-    C_ABRACKET      shift and go to state 180
-
-    arr_close_bracket              shift and go to state 179
-
-state 138
-
-    (27) funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion . bloque
-    (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
-
-    O_CBRACKET      shift and go to state 30
-
-    bloque                         shift and go to state 181
-
-state 139
-
-    (6) declaracion_funcion -> declaracion .
-
-    O_CBRACKET      reduce using rule 6 (declaracion_funcion -> declaracion .)
-
-
-state 140
-
-    (29) funcion_prime -> param_tipo COMMA funcion_prime .
-
-    C_PARENTHESIS   reduce using rule 29 (funcion_prime -> param_tipo COMMA funcion_prime .)
-
-
-state 141
-
-    (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT . C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET
-    (14) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT . C_ABRACKET
-
-    C_ABRACKET      shift and go to state 182
-
-
-state 142
-
-    (84) or -> and or_operador . or
-    (83) or -> . and
-    (84) or -> . and or_operador or
-    (86) and -> . equal
-    (87) and -> . equal and_operador and
-    (89) equal -> . compare
-    (90) equal -> . compare equal_operador compare
-    (93) compare -> . exp
-    (94) compare -> . exp compare_operador exp
-    (99) exp -> . termino
-    (100) exp -> . termino exp_operador exp
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    and                            shift and go to state 107
-    or                             shift and go to state 183
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 143
-
-    (85) or_operador -> OR .
-
-    O_PARENTHESIS   reduce using rule 85 (or_operador -> OR .)
-    PLUS            reduce using rule 85 (or_operador -> OR .)
-    MINUS           reduce using rule 85 (or_operador -> OR .)
-    ID              reduce using rule 85 (or_operador -> OR .)
-    CTE_INT         reduce using rule 85 (or_operador -> OR .)
-    CTE_FLOAT       reduce using rule 85 (or_operador -> OR .)
-
-
-state 144
-
-    (87) and -> equal and_operador . and
-    (86) and -> . equal
-    (87) and -> . equal and_operador and
-    (89) equal -> . compare
-    (90) equal -> . compare equal_operador compare
-    (93) compare -> . exp
-    (94) compare -> . exp compare_operador exp
-    (99) exp -> . termino
-    (100) exp -> . termino exp_operador exp
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    equal                          shift and go to state 108
-    and                            shift and go to state 184
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 145
-
-    (88) and_operador -> AND .
-
-    O_PARENTHESIS   reduce using rule 88 (and_operador -> AND .)
-    PLUS            reduce using rule 88 (and_operador -> AND .)
-    MINUS           reduce using rule 88 (and_operador -> AND .)
-    ID              reduce using rule 88 (and_operador -> AND .)
-    CTE_INT         reduce using rule 88 (and_operador -> AND .)
-    CTE_FLOAT       reduce using rule 88 (and_operador -> AND .)
-
-
-state 146
-
-    (90) equal -> compare equal_operador . compare
-    (93) compare -> . exp
-    (94) compare -> . exp compare_operador exp
-    (99) exp -> . termino
-    (100) exp -> . termino exp_operador exp
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    compare                        shift and go to state 185
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 147
-
-    (91) equal_operador -> EQUAL .
-
-    O_PARENTHESIS   reduce using rule 91 (equal_operador -> EQUAL .)
-    PLUS            reduce using rule 91 (equal_operador -> EQUAL .)
-    MINUS           reduce using rule 91 (equal_operador -> EQUAL .)
-    ID              reduce using rule 91 (equal_operador -> EQUAL .)
-    CTE_INT         reduce using rule 91 (equal_operador -> EQUAL .)
-    CTE_FLOAT       reduce using rule 91 (equal_operador -> EQUAL .)
-
-
-state 148
-
-    (92) equal_operador -> NOT_EQUAL .
-
-    O_PARENTHESIS   reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-    PLUS            reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-    MINUS           reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-    ID              reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-    CTE_INT         reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-    CTE_FLOAT       reduce using rule 92 (equal_operador -> NOT_EQUAL .)
-
-
-state 149
-
-    (94) compare -> exp compare_operador . exp
-    (99) exp -> . termino
-    (100) exp -> . termino exp_operador exp
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    exp                            shift and go to state 186
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 150
-
-    (95) compare_operador -> GREATER .
-
-    O_PARENTHESIS   reduce using rule 95 (compare_operador -> GREATER .)
-    PLUS            reduce using rule 95 (compare_operador -> GREATER .)
-    MINUS           reduce using rule 95 (compare_operador -> GREATER .)
-    ID              reduce using rule 95 (compare_operador -> GREATER .)
-    CTE_INT         reduce using rule 95 (compare_operador -> GREATER .)
-    CTE_FLOAT       reduce using rule 95 (compare_operador -> GREATER .)
-
-
-state 151
-
-    (96) compare_operador -> LESSER .
-
-    O_PARENTHESIS   reduce using rule 96 (compare_operador -> LESSER .)
-    PLUS            reduce using rule 96 (compare_operador -> LESSER .)
-    MINUS           reduce using rule 96 (compare_operador -> LESSER .)
-    ID              reduce using rule 96 (compare_operador -> LESSER .)
-    CTE_INT         reduce using rule 96 (compare_operador -> LESSER .)
-    CTE_FLOAT       reduce using rule 96 (compare_operador -> LESSER .)
-
-
-state 152
-
-    (97) compare_operador -> GREATER_EQUAL .
-
-    O_PARENTHESIS   reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-    PLUS            reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-    MINUS           reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-    ID              reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-    CTE_INT         reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-    CTE_FLOAT       reduce using rule 97 (compare_operador -> GREATER_EQUAL .)
-
-
-state 153
-
-    (98) compare_operador -> LESSER_EQUAL .
-
-    O_PARENTHESIS   reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-    PLUS            reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-    MINUS           reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-    ID              reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-    CTE_INT         reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-    CTE_FLOAT       reduce using rule 98 (compare_operador -> LESSER_EQUAL .)
-
-
-state 154
-
-    (100) exp -> termino exp_operador . exp
-    (99) exp -> . termino
-    (100) exp -> . termino exp_operador exp
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    termino                        shift and go to state 111
-    exp                            shift and go to state 187
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
-    var_array                      shift and go to state 64
-    function_id                    shift and go to state 57
-    arr_id                         shift and go to state 67
-
-state 155
-
-    (101) exp_operador -> PLUS .
-
-    O_PARENTHESIS   reduce using rule 101 (exp_operador -> PLUS .)
-    PLUS            reduce using rule 101 (exp_operador -> PLUS .)
-    MINUS           reduce using rule 101 (exp_operador -> PLUS .)
-    ID              reduce using rule 101 (exp_operador -> PLUS .)
-    CTE_INT         reduce using rule 101 (exp_operador -> PLUS .)
-    CTE_FLOAT       reduce using rule 101 (exp_operador -> PLUS .)
-
-
-state 156
-
-    (102) exp_operador -> MINUS .
-
-    O_PARENTHESIS   reduce using rule 102 (exp_operador -> MINUS .)
-    PLUS            reduce using rule 102 (exp_operador -> MINUS .)
-    MINUS           reduce using rule 102 (exp_operador -> MINUS .)
-    ID              reduce using rule 102 (exp_operador -> MINUS .)
-    CTE_INT         reduce using rule 102 (exp_operador -> MINUS .)
-    CTE_FLOAT       reduce using rule 102 (exp_operador -> MINUS .)
-
-
-state 157
-
-    (104) termino -> factor termino_operador . termino
-    (103) termino -> . factor
-    (104) termino -> . factor termino_operador termino
-    (108) factor -> . variable
-    (109) factor -> . O_PARENTHESIS expr C_PARENTHESIS
-    (110) factor -> . llamada
-    (111) factor -> . cte
-    (112) factor -> . PLUS cte
-    (113) factor -> . MINUS cte
-    (35) variable -> . var_array
-    (36) variable -> . ID
-    (53) llamada -> . function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
-    (114) cte -> . CTE_INT
-    (115) cte -> . CTE_FLOAT
-    (37) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (38) var_array -> . arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket
-    (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
-    (54) function_id -> . ID
-    (40) arr_id -> . ID
-
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
-    ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
-
-    factor                         shift and go to state 112
-    termino                        shift and go to state 188
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
+
+    variable                       shift and go to state 94
+    for_asignacion_expr            shift and go to state 182
+    expr                           shift and go to state 183
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
 state 158
 
-    (105) termino_operador -> TIMES .
+    (37) var_array -> arr_id O_ABRACKET exp . arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (38) var_array -> arr_id O_ABRACKET exp . arr_close_bracket arr_open_bracket exp arr_close_bracket
+    (39) var_array -> arr_id O_ABRACKET exp . arr_close_bracket
+    (41) arr_close_bracket -> . C_ABRACKET
 
-    O_PARENTHESIS   reduce using rule 105 (termino_operador -> TIMES .)
-    PLUS            reduce using rule 105 (termino_operador -> TIMES .)
-    MINUS           reduce using rule 105 (termino_operador -> TIMES .)
-    ID              reduce using rule 105 (termino_operador -> TIMES .)
-    CTE_INT         reduce using rule 105 (termino_operador -> TIMES .)
-    CTE_FLOAT       reduce using rule 105 (termino_operador -> TIMES .)
+    C_ABRACKET      shift and go to state 185
 
+    arr_close_bracket              shift and go to state 184
 
 state 159
 
-    (106) termino_operador -> DIVIDE .
+    (27) funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion . bloque
+    (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
 
-    O_PARENTHESIS   reduce using rule 106 (termino_operador -> DIVIDE .)
-    PLUS            reduce using rule 106 (termino_operador -> DIVIDE .)
-    MINUS           reduce using rule 106 (termino_operador -> DIVIDE .)
-    ID              reduce using rule 106 (termino_operador -> DIVIDE .)
-    CTE_INT         reduce using rule 106 (termino_operador -> DIVIDE .)
-    CTE_FLOAT       reduce using rule 106 (termino_operador -> DIVIDE .)
+    O_CBRACKET      shift and go to state 30
 
+    bloque                         shift and go to state 186
 
 state 160
 
-    (107) termino_operador -> MODULE .
+    (6) declaracion_funcion -> declaracion .
 
-    O_PARENTHESIS   reduce using rule 107 (termino_operador -> MODULE .)
-    PLUS            reduce using rule 107 (termino_operador -> MODULE .)
-    MINUS           reduce using rule 107 (termino_operador -> MODULE .)
-    ID              reduce using rule 107 (termino_operador -> MODULE .)
-    CTE_INT         reduce using rule 107 (termino_operador -> MODULE .)
-    CTE_FLOAT       reduce using rule 107 (termino_operador -> MODULE .)
+    O_CBRACKET      reduce using rule 6 (declaracion_funcion -> declaracion .)
 
 
 state 161
 
-    (109) factor -> O_PARENTHESIS expr . C_PARENTHESIS
+    (29) funcion_prime -> param_tipo COMMA funcion_prime .
 
-    C_PARENTHESIS   shift and go to state 189
+    C_PARENTHESIS   reduce using rule 29 (funcion_prime -> param_tipo COMMA funcion_prime .)
 
 
 state 162
 
-    (112) factor -> PLUS cte .
+    (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT . C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET
+    (14) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT . C_ABRACKET
 
-    TIMES           reduce using rule 112 (factor -> PLUS cte .)
-    DIVIDE          reduce using rule 112 (factor -> PLUS cte .)
-    MODULE          reduce using rule 112 (factor -> PLUS cte .)
-    PLUS            reduce using rule 112 (factor -> PLUS cte .)
-    MINUS           reduce using rule 112 (factor -> PLUS cte .)
-    GREATER         reduce using rule 112 (factor -> PLUS cte .)
-    LESSER          reduce using rule 112 (factor -> PLUS cte .)
-    GREATER_EQUAL   reduce using rule 112 (factor -> PLUS cte .)
-    LESSER_EQUAL    reduce using rule 112 (factor -> PLUS cte .)
-    EQUAL           reduce using rule 112 (factor -> PLUS cte .)
-    NOT_EQUAL       reduce using rule 112 (factor -> PLUS cte .)
-    AND             reduce using rule 112 (factor -> PLUS cte .)
-    OR              reduce using rule 112 (factor -> PLUS cte .)
-    SEMICOLON       reduce using rule 112 (factor -> PLUS cte .)
-    COMMA           reduce using rule 112 (factor -> PLUS cte .)
-    C_PARENTHESIS   reduce using rule 112 (factor -> PLUS cte .)
-    C_ABRACKET      reduce using rule 112 (factor -> PLUS cte .)
-    O_CBRACKET      reduce using rule 112 (factor -> PLUS cte .)
-    TO              reduce using rule 112 (factor -> PLUS cte .)
+    C_ABRACKET      shift and go to state 187
 
 
 state 163
-
-    (113) factor -> MINUS cte .
-
-    TIMES           reduce using rule 113 (factor -> MINUS cte .)
-    DIVIDE          reduce using rule 113 (factor -> MINUS cte .)
-    MODULE          reduce using rule 113 (factor -> MINUS cte .)
-    PLUS            reduce using rule 113 (factor -> MINUS cte .)
-    MINUS           reduce using rule 113 (factor -> MINUS cte .)
-    GREATER         reduce using rule 113 (factor -> MINUS cte .)
-    LESSER          reduce using rule 113 (factor -> MINUS cte .)
-    GREATER_EQUAL   reduce using rule 113 (factor -> MINUS cte .)
-    LESSER_EQUAL    reduce using rule 113 (factor -> MINUS cte .)
-    EQUAL           reduce using rule 113 (factor -> MINUS cte .)
-    NOT_EQUAL       reduce using rule 113 (factor -> MINUS cte .)
-    AND             reduce using rule 113 (factor -> MINUS cte .)
-    OR              reduce using rule 113 (factor -> MINUS cte .)
-    SEMICOLON       reduce using rule 113 (factor -> MINUS cte .)
-    COMMA           reduce using rule 113 (factor -> MINUS cte .)
-    C_PARENTHESIS   reduce using rule 113 (factor -> MINUS cte .)
-    C_ABRACKET      reduce using rule 113 (factor -> MINUS cte .)
-    O_CBRACKET      reduce using rule 113 (factor -> MINUS cte .)
-    TO              reduce using rule 113 (factor -> MINUS cte .)
-
-
-state 164
 
     (53) llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .
 
@@ -2786,11 +2779,11 @@ state 164
     COMMA           reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
     C_PARENTHESIS   reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
     C_ABRACKET      reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
-    O_CBRACKET      reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
     TO              reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
+    O_CBRACKET      reduce using rule 53 (llamada -> function_id O_PARENTHESIS llamada_prime C_PARENTHESIS .)
 
 
-state 165
+state 164
 
     (56) llamada_prime -> llamada_exp llamada_comma . llamada_prime
     (55) llamada_prime -> . llamada_exp
@@ -2817,26 +2810,26 @@ state 165
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
     llamada_exp                    shift and go to state 121
-    llamada_prime                  shift and go to state 190
+    llamada_prime                  shift and go to state 188
     exp                            shift and go to state 122
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 166
+state 165
 
     (58) llamada_comma -> COMMA .
 
@@ -2848,21 +2841,128 @@ state 166
     CTE_FLOAT       reduce using rule 58 (llamada_comma -> COMMA .)
 
 
+state 166
+
+    (84) or -> and or_operador or .
+
+    SEMICOLON       reduce using rule 84 (or -> and or_operador or .)
+    C_PARENTHESIS   reduce using rule 84 (or -> and or_operador or .)
+    COMMA           reduce using rule 84 (or -> and or_operador or .)
+    TO              reduce using rule 84 (or -> and or_operador or .)
+
+
 state 167
 
-    (59) retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS .
+    (87) and -> equal and_operador and .
 
-    SEMICOLON       reduce using rule 59 (retorno -> RETURN O_PARENTHESIS expr C_PARENTHESIS .)
+    OR              reduce using rule 87 (and -> equal and_operador and .)
+    SEMICOLON       reduce using rule 87 (and -> equal and_operador and .)
+    C_PARENTHESIS   reduce using rule 87 (and -> equal and_operador and .)
+    COMMA           reduce using rule 87 (and -> equal and_operador and .)
+    TO              reduce using rule 87 (and -> equal and_operador and .)
 
 
 state 168
+
+    (90) equal -> compare equal_operador compare .
+
+    AND             reduce using rule 90 (equal -> compare equal_operador compare .)
+    OR              reduce using rule 90 (equal -> compare equal_operador compare .)
+    SEMICOLON       reduce using rule 90 (equal -> compare equal_operador compare .)
+    C_PARENTHESIS   reduce using rule 90 (equal -> compare equal_operador compare .)
+    COMMA           reduce using rule 90 (equal -> compare equal_operador compare .)
+    TO              reduce using rule 90 (equal -> compare equal_operador compare .)
+
+
+state 169
+
+    (94) compare -> exp compare_operador exp .
+
+    EQUAL           reduce using rule 94 (compare -> exp compare_operador exp .)
+    NOT_EQUAL       reduce using rule 94 (compare -> exp compare_operador exp .)
+    AND             reduce using rule 94 (compare -> exp compare_operador exp .)
+    OR              reduce using rule 94 (compare -> exp compare_operador exp .)
+    SEMICOLON       reduce using rule 94 (compare -> exp compare_operador exp .)
+    C_PARENTHESIS   reduce using rule 94 (compare -> exp compare_operador exp .)
+    COMMA           reduce using rule 94 (compare -> exp compare_operador exp .)
+    TO              reduce using rule 94 (compare -> exp compare_operador exp .)
+
+
+state 170
+
+    (100) exp -> termino exp_operador exp .
+
+    GREATER         reduce using rule 100 (exp -> termino exp_operador exp .)
+    LESSER          reduce using rule 100 (exp -> termino exp_operador exp .)
+    GREATER_EQUAL   reduce using rule 100 (exp -> termino exp_operador exp .)
+    LESSER_EQUAL    reduce using rule 100 (exp -> termino exp_operador exp .)
+    EQUAL           reduce using rule 100 (exp -> termino exp_operador exp .)
+    NOT_EQUAL       reduce using rule 100 (exp -> termino exp_operador exp .)
+    AND             reduce using rule 100 (exp -> termino exp_operador exp .)
+    OR              reduce using rule 100 (exp -> termino exp_operador exp .)
+    SEMICOLON       reduce using rule 100 (exp -> termino exp_operador exp .)
+    COMMA           reduce using rule 100 (exp -> termino exp_operador exp .)
+    C_PARENTHESIS   reduce using rule 100 (exp -> termino exp_operador exp .)
+    C_ABRACKET      reduce using rule 100 (exp -> termino exp_operador exp .)
+    TO              reduce using rule 100 (exp -> termino exp_operador exp .)
+    O_CBRACKET      reduce using rule 100 (exp -> termino exp_operador exp .)
+
+
+state 171
+
+    (104) termino -> factor termino_operador termino .
+
+    PLUS            reduce using rule 104 (termino -> factor termino_operador termino .)
+    MINUS           reduce using rule 104 (termino -> factor termino_operador termino .)
+    GREATER         reduce using rule 104 (termino -> factor termino_operador termino .)
+    LESSER          reduce using rule 104 (termino -> factor termino_operador termino .)
+    GREATER_EQUAL   reduce using rule 104 (termino -> factor termino_operador termino .)
+    LESSER_EQUAL    reduce using rule 104 (termino -> factor termino_operador termino .)
+    EQUAL           reduce using rule 104 (termino -> factor termino_operador termino .)
+    NOT_EQUAL       reduce using rule 104 (termino -> factor termino_operador termino .)
+    AND             reduce using rule 104 (termino -> factor termino_operador termino .)
+    OR              reduce using rule 104 (termino -> factor termino_operador termino .)
+    SEMICOLON       reduce using rule 104 (termino -> factor termino_operador termino .)
+    COMMA           reduce using rule 104 (termino -> factor termino_operador termino .)
+    C_PARENTHESIS   reduce using rule 104 (termino -> factor termino_operador termino .)
+    C_ABRACKET      reduce using rule 104 (termino -> factor termino_operador termino .)
+    TO              reduce using rule 104 (termino -> factor termino_operador termino .)
+    O_CBRACKET      reduce using rule 104 (termino -> factor termino_operador termino .)
+
+
+state 172
+
+    (109) factor -> O_PARENTHESIS expr C_PARENTHESIS .
+
+    TIMES           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    DIVIDE          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    MODULE          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    PLUS            reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    MINUS           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    GREATER         reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    LESSER          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    GREATER_EQUAL   reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    LESSER_EQUAL    reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    EQUAL           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    NOT_EQUAL       reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    AND             reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    OR              reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    SEMICOLON       reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    COMMA           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    C_PARENTHESIS   reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    C_ABRACKET      reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    TO              reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+    O_CBRACKET      reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
+
+
+state 173
 
     (60) lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS .
 
     SEMICOLON       reduce using rule 60 (lectura -> READ O_PARENTHESIS lectura_prime C_PARENTHESIS .)
 
 
-state 169
+state 174
 
     (62) lectura_prime -> variable COMMA . lectura_prime
     (61) lectura_prime -> . variable
@@ -2874,21 +2974,21 @@ state 169
     (39) var_array -> . arr_id O_ABRACKET exp arr_close_bracket
     (40) arr_id -> . ID
 
-    ID              shift and go to state 94
+    ID              shift and go to state 109
 
-    variable                       shift and go to state 125
-    lectura_prime                  shift and go to state 191
+    variable                       shift and go to state 146
+    lectura_prime                  shift and go to state 189
     var_array                      shift and go to state 64
     arr_id                         shift and go to state 67
 
-state 170
+state 175
 
     (63) escritura -> WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS .
 
     SEMICOLON       reduce using rule 63 (escritura -> WRITE O_PARENTHESIS escritura_prime C_PARENTHESIS .)
 
 
-state 171
+state 176
 
     (66) escritura_prime -> expr COMMA . escritura_prime
     (64) escritura_prime -> . expr
@@ -2926,32 +3026,32 @@ state 171
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    CTE_STRING      shift and go to state 129
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    CTE_STRING      shift and go to state 150
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    expr                           shift and go to state 127
-    escritura_prime                shift and go to state 192
-    escritura_string               shift and go to state 128
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    expr                           shift and go to state 148
+    escritura_prime                shift and go to state 190
+    escritura_string               shift and go to state 149
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 172
+state 177
 
     (67) escritura_prime -> escritura_string COMMA . escritura_prime
     (64) escritura_prime -> . expr
@@ -2989,78 +3089,78 @@ state 172
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    CTE_STRING      shift and go to state 129
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    CTE_STRING      shift and go to state 150
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
-    escritura_string               shift and go to state 128
-    escritura_prime                shift and go to state 193
-    expr                           shift and go to state 127
-    or                             shift and go to state 106
-    and                            shift and go to state 107
-    equal                          shift and go to state 108
-    compare                        shift and go to state 109
-    exp                            shift and go to state 110
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    escritura_string               shift and go to state 149
+    escritura_prime                shift and go to state 191
+    expr                           shift and go to state 148
+    or                             shift and go to state 87
+    and                            shift and go to state 88
+    equal                          shift and go to state 89
+    compare                        shift and go to state 90
+    exp                            shift and go to state 91
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
     arr_id                         shift and go to state 67
 
-state 173
+state 178
 
     (69) decision -> IF O_PARENTHESIS decision_expr C_PARENTHESIS . bloque else
     (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
 
     O_CBRACKET      shift and go to state 30
 
-    bloque                         shift and go to state 194
+    bloque                         shift and go to state 192
 
-state 174
+state 179
 
     (76) while_expr -> O_PARENTHESIS expr C_PARENTHESIS .
 
     O_CBRACKET      reduce using rule 76 (while_expr -> O_PARENTHESIS expr C_PARENTHESIS .)
 
 
-state 175
+state 180
 
     (77) for -> FOR for_asignacion for_to for_exp . bloque
     (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
 
     O_CBRACKET      shift and go to state 30
 
-    bloque                         shift and go to state 195
+    bloque                         shift and go to state 193
 
-state 176
+state 181
 
     (81) for_exp -> exp .
 
     O_CBRACKET      reduce using rule 81 (for_exp -> exp .)
 
 
-state 177
+state 182
 
     (78) for_asignacion -> variable ASSIGN for_asignacion_expr .
 
     TO              reduce using rule 78 (for_asignacion -> variable ASSIGN for_asignacion_expr .)
 
 
-state 178
+state 183
 
     (79) for_asignacion_expr -> expr .
 
     TO              reduce using rule 79 (for_asignacion_expr -> expr .)
 
 
-state 179
+state 184
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket . arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket
     (38) var_array -> arr_id O_ABRACKET exp arr_close_bracket . arr_open_bracket exp arr_close_bracket
@@ -3085,13 +3185,13 @@ state 179
     COMMA           reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
     C_PARENTHESIS   reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
     C_ABRACKET      reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
-    O_CBRACKET      reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
     TO              reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
-    O_ABRACKET      shift and go to state 196
+    O_CBRACKET      reduce using rule 39 (var_array -> arr_id O_ABRACKET exp arr_close_bracket .)
+    O_ABRACKET      shift and go to state 194
 
-    arr_open_bracket               shift and go to state 197
+    arr_open_bracket               shift and go to state 195
 
-state 180
+state 185
 
     (41) arr_close_bracket -> C_ABRACKET .
 
@@ -3114,11 +3214,11 @@ state 180
     COMMA           reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
     C_PARENTHESIS   reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
     C_ABRACKET      reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
-    O_CBRACKET      reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
     TO              reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
+    O_CBRACKET      reduce using rule 41 (arr_close_bracket -> C_ABRACKET .)
 
 
-state 181
+state 186
 
     (27) funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion bloque .
 
@@ -3126,159 +3226,45 @@ state 181
     MAIN            reduce using rule 27 (funcion_base -> FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion bloque .)
 
 
-state 182
+state 187
 
     (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET . O_ABRACKET CTE_INT C_ABRACKET
     (14) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET .
 
-    O_ABRACKET      shift and go to state 198
+    O_ABRACKET      shift and go to state 196
     COMMA           reduce using rule 14 (declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET .)
     COLON           reduce using rule 14 (declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET .)
 
 
-state 183
-
-    (84) or -> and or_operador or .
-
-    SEMICOLON       reduce using rule 84 (or -> and or_operador or .)
-    C_PARENTHESIS   reduce using rule 84 (or -> and or_operador or .)
-    COMMA           reduce using rule 84 (or -> and or_operador or .)
-    TO              reduce using rule 84 (or -> and or_operador or .)
-
-
-state 184
-
-    (87) and -> equal and_operador and .
-
-    OR              reduce using rule 87 (and -> equal and_operador and .)
-    SEMICOLON       reduce using rule 87 (and -> equal and_operador and .)
-    C_PARENTHESIS   reduce using rule 87 (and -> equal and_operador and .)
-    COMMA           reduce using rule 87 (and -> equal and_operador and .)
-    TO              reduce using rule 87 (and -> equal and_operador and .)
-
-
-state 185
-
-    (90) equal -> compare equal_operador compare .
-
-    AND             reduce using rule 90 (equal -> compare equal_operador compare .)
-    OR              reduce using rule 90 (equal -> compare equal_operador compare .)
-    SEMICOLON       reduce using rule 90 (equal -> compare equal_operador compare .)
-    C_PARENTHESIS   reduce using rule 90 (equal -> compare equal_operador compare .)
-    COMMA           reduce using rule 90 (equal -> compare equal_operador compare .)
-    TO              reduce using rule 90 (equal -> compare equal_operador compare .)
-
-
-state 186
-
-    (94) compare -> exp compare_operador exp .
-
-    EQUAL           reduce using rule 94 (compare -> exp compare_operador exp .)
-    NOT_EQUAL       reduce using rule 94 (compare -> exp compare_operador exp .)
-    AND             reduce using rule 94 (compare -> exp compare_operador exp .)
-    OR              reduce using rule 94 (compare -> exp compare_operador exp .)
-    SEMICOLON       reduce using rule 94 (compare -> exp compare_operador exp .)
-    C_PARENTHESIS   reduce using rule 94 (compare -> exp compare_operador exp .)
-    COMMA           reduce using rule 94 (compare -> exp compare_operador exp .)
-    TO              reduce using rule 94 (compare -> exp compare_operador exp .)
-
-
-state 187
-
-    (100) exp -> termino exp_operador exp .
-
-    GREATER         reduce using rule 100 (exp -> termino exp_operador exp .)
-    LESSER          reduce using rule 100 (exp -> termino exp_operador exp .)
-    GREATER_EQUAL   reduce using rule 100 (exp -> termino exp_operador exp .)
-    LESSER_EQUAL    reduce using rule 100 (exp -> termino exp_operador exp .)
-    EQUAL           reduce using rule 100 (exp -> termino exp_operador exp .)
-    NOT_EQUAL       reduce using rule 100 (exp -> termino exp_operador exp .)
-    AND             reduce using rule 100 (exp -> termino exp_operador exp .)
-    OR              reduce using rule 100 (exp -> termino exp_operador exp .)
-    SEMICOLON       reduce using rule 100 (exp -> termino exp_operador exp .)
-    COMMA           reduce using rule 100 (exp -> termino exp_operador exp .)
-    C_PARENTHESIS   reduce using rule 100 (exp -> termino exp_operador exp .)
-    C_ABRACKET      reduce using rule 100 (exp -> termino exp_operador exp .)
-    O_CBRACKET      reduce using rule 100 (exp -> termino exp_operador exp .)
-    TO              reduce using rule 100 (exp -> termino exp_operador exp .)
-
-
 state 188
-
-    (104) termino -> factor termino_operador termino .
-
-    PLUS            reduce using rule 104 (termino -> factor termino_operador termino .)
-    MINUS           reduce using rule 104 (termino -> factor termino_operador termino .)
-    GREATER         reduce using rule 104 (termino -> factor termino_operador termino .)
-    LESSER          reduce using rule 104 (termino -> factor termino_operador termino .)
-    GREATER_EQUAL   reduce using rule 104 (termino -> factor termino_operador termino .)
-    LESSER_EQUAL    reduce using rule 104 (termino -> factor termino_operador termino .)
-    EQUAL           reduce using rule 104 (termino -> factor termino_operador termino .)
-    NOT_EQUAL       reduce using rule 104 (termino -> factor termino_operador termino .)
-    AND             reduce using rule 104 (termino -> factor termino_operador termino .)
-    OR              reduce using rule 104 (termino -> factor termino_operador termino .)
-    SEMICOLON       reduce using rule 104 (termino -> factor termino_operador termino .)
-    COMMA           reduce using rule 104 (termino -> factor termino_operador termino .)
-    C_PARENTHESIS   reduce using rule 104 (termino -> factor termino_operador termino .)
-    C_ABRACKET      reduce using rule 104 (termino -> factor termino_operador termino .)
-    O_CBRACKET      reduce using rule 104 (termino -> factor termino_operador termino .)
-    TO              reduce using rule 104 (termino -> factor termino_operador termino .)
-
-
-state 189
-
-    (109) factor -> O_PARENTHESIS expr C_PARENTHESIS .
-
-    TIMES           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    DIVIDE          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    MODULE          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    PLUS            reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    MINUS           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    GREATER         reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    LESSER          reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    GREATER_EQUAL   reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    LESSER_EQUAL    reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    EQUAL           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    NOT_EQUAL       reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    AND             reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    OR              reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    SEMICOLON       reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    COMMA           reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    C_PARENTHESIS   reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    C_ABRACKET      reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    O_CBRACKET      reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-    TO              reduce using rule 109 (factor -> O_PARENTHESIS expr C_PARENTHESIS .)
-
-
-state 190
 
     (56) llamada_prime -> llamada_exp llamada_comma llamada_prime .
 
     C_PARENTHESIS   reduce using rule 56 (llamada_prime -> llamada_exp llamada_comma llamada_prime .)
 
 
-state 191
+state 189
 
     (62) lectura_prime -> variable COMMA lectura_prime .
 
     C_PARENTHESIS   reduce using rule 62 (lectura_prime -> variable COMMA lectura_prime .)
 
 
-state 192
+state 190
 
     (66) escritura_prime -> expr COMMA escritura_prime .
 
     C_PARENTHESIS   reduce using rule 66 (escritura_prime -> expr COMMA escritura_prime .)
 
 
-state 193
+state 191
 
     (67) escritura_prime -> escritura_string COMMA escritura_prime .
 
     C_PARENTHESIS   reduce using rule 67 (escritura_prime -> escritura_string COMMA escritura_prime .)
 
 
-state 194
+state 192
 
     (69) decision -> IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque . else
     (71) else -> . else_prime bloque
@@ -3286,7 +3272,7 @@ state 194
     (73) else_prime -> . ELSE
     (116) epsilon -> .
 
-    ELSE            shift and go to state 202
+    ELSE            shift and go to state 200
     RETURN          reduce using rule 116 (epsilon -> .)
     READ            reduce using rule 116 (epsilon -> .)
     WRITE           reduce using rule 116 (epsilon -> .)
@@ -3296,11 +3282,11 @@ state 194
     WHILE           reduce using rule 116 (epsilon -> .)
     C_CBRACKET      reduce using rule 116 (epsilon -> .)
 
-    else                           shift and go to state 199
-    else_prime                     shift and go to state 200
-    epsilon                        shift and go to state 201
+    else                           shift and go to state 197
+    else_prime                     shift and go to state 198
+    epsilon                        shift and go to state 199
 
-state 195
+state 193
 
     (77) for -> FOR for_asignacion for_to for_exp bloque .
 
@@ -3314,7 +3300,7 @@ state 195
     C_CBRACKET      reduce using rule 77 (for -> FOR for_asignacion for_to for_exp bloque .)
 
 
-state 196
+state 194
 
     (42) arr_open_bracket -> O_ABRACKET .
 
@@ -3326,7 +3312,7 @@ state 196
     CTE_FLOAT       reduce using rule 42 (arr_open_bracket -> O_ABRACKET .)
 
 
-state 197
+state 195
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket . exp arr_close_bracket arr_open_bracket exp arr_close_bracket
     (38) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket . exp arr_close_bracket
@@ -3351,31 +3337,31 @@ state 197
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
     arr_id                         shift and go to state 67
-    exp                            shift and go to state 203
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    exp                            shift and go to state 201
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
 
-state 198
+state 196
 
     (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET . CTE_INT C_ABRACKET
 
-    CTE_INT         shift and go to state 204
+    CTE_INT         shift and go to state 202
 
 
-state 199
+state 197
 
     (69) decision -> IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque else .
 
@@ -3389,16 +3375,16 @@ state 199
     C_CBRACKET      reduce using rule 69 (decision -> IF O_PARENTHESIS decision_expr C_PARENTHESIS bloque else .)
 
 
-state 200
+state 198
 
     (71) else -> else_prime . bloque
     (3) bloque -> . O_CBRACKET bloque_prime C_CBRACKET
 
     O_CBRACKET      shift and go to state 30
 
-    bloque                         shift and go to state 205
+    bloque                         shift and go to state 203
 
-state 201
+state 199
 
     (72) else -> epsilon .
 
@@ -3412,31 +3398,31 @@ state 201
     C_CBRACKET      reduce using rule 72 (else -> epsilon .)
 
 
-state 202
+state 200
 
     (73) else_prime -> ELSE .
 
     O_CBRACKET      reduce using rule 73 (else_prime -> ELSE .)
 
 
-state 203
+state 201
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp . arr_close_bracket arr_open_bracket exp arr_close_bracket
     (38) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp . arr_close_bracket
     (41) arr_close_bracket -> . C_ABRACKET
 
-    C_ABRACKET      shift and go to state 180
+    C_ABRACKET      shift and go to state 185
 
-    arr_close_bracket              shift and go to state 206
+    arr_close_bracket              shift and go to state 204
 
-state 204
+state 202
 
     (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT . C_ABRACKET
 
-    C_ABRACKET      shift and go to state 207
+    C_ABRACKET      shift and go to state 205
 
 
-state 205
+state 203
 
     (71) else -> else_prime bloque .
 
@@ -3450,7 +3436,7 @@ state 205
     C_CBRACKET      reduce using rule 71 (else -> else_prime bloque .)
 
 
-state 206
+state 204
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket . arr_open_bracket exp arr_close_bracket
     (38) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .
@@ -3474,13 +3460,13 @@ state 206
     COMMA           reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     C_PARENTHESIS   reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     C_ABRACKET      reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
-    O_CBRACKET      reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     TO              reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
-    O_ABRACKET      shift and go to state 196
+    O_CBRACKET      reduce using rule 38 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
+    O_ABRACKET      shift and go to state 194
 
-    arr_open_bracket               shift and go to state 208
+    arr_open_bracket               shift and go to state 206
 
-state 207
+state 205
 
     (13) declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET .
 
@@ -3488,7 +3474,7 @@ state 207
     COLON           reduce using rule 13 (declaracion_variable -> ID O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET O_ABRACKET CTE_INT C_ABRACKET .)
 
 
-state 208
+state 206
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket . exp arr_close_bracket
     (99) exp -> . termino
@@ -3512,33 +3498,33 @@ state 208
     (54) function_id -> . ID
     (40) arr_id -> . ID
 
-    O_PARENTHESIS   shift and go to state 113
-    PLUS            shift and go to state 116
-    MINUS           shift and go to state 117
+    O_PARENTHESIS   shift and go to state 95
+    PLUS            shift and go to state 98
+    MINUS           shift and go to state 99
     ID              shift and go to state 65
-    CTE_INT         shift and go to state 118
-    CTE_FLOAT       shift and go to state 119
+    CTE_INT         shift and go to state 100
+    CTE_FLOAT       shift and go to state 101
 
     arr_id                         shift and go to state 67
-    exp                            shift and go to state 209
-    termino                        shift and go to state 111
-    factor                         shift and go to state 112
-    variable                       shift and go to state 103
-    llamada                        shift and go to state 114
-    cte                            shift and go to state 115
+    exp                            shift and go to state 207
+    termino                        shift and go to state 92
+    factor                         shift and go to state 93
+    variable                       shift and go to state 94
+    llamada                        shift and go to state 96
+    cte                            shift and go to state 97
     var_array                      shift and go to state 64
     function_id                    shift and go to state 57
 
-state 209
+state 207
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp . arr_close_bracket
     (41) arr_close_bracket -> . C_ABRACKET
 
-    C_ABRACKET      shift and go to state 180
+    C_ABRACKET      shift and go to state 185
 
-    arr_close_bracket              shift and go to state 210
+    arr_close_bracket              shift and go to state 208
 
-state 210
+state 208
 
     (37) var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .
 
@@ -3560,6 +3546,6 @@ state 210
     COMMA           reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     C_PARENTHESIS   reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     C_ABRACKET      reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
-    O_CBRACKET      reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
     TO              reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
+    O_CBRACKET      reduce using rule 37 (var_array -> arr_id O_ABRACKET exp arr_close_bracket arr_open_bracket exp arr_close_bracket arr_open_bracket exp arr_close_bracket .)
 

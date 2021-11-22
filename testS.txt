@@ -9,8 +9,9 @@ let s: string;
 {
 	s = p + h;
 	x = 5;
+	return x;
 }
 
 main() {
-	fact(j * p, z[2][y], a);
+	x = fact(j * p, z[2][y], a);
 }

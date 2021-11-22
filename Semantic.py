@@ -326,11 +326,9 @@ def getVariable(varID, scope):
 		y = list(filter(lambda x: (x['variableID'] == varID), f))
 		if y == []:
 			y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
-		print("local", y)
 		return y[0]
 	else: #global
 		y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
-		print("global", y)
 		return y[0]
 
 def getFunction(funcID):

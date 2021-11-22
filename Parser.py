@@ -1,4 +1,5 @@
 import ntpath
+import re
 import sys
 import ply.yacc as yacc
 from Lexer import *
@@ -178,7 +179,27 @@ def p_funcion_ident(p):
 				  | CHAR ID
 				  | STRING ID
 	'''
+	global currFunc
+	currFunc = p[2]
 	addMethod(p[2], p[1], False)
+
+	if p[1] != "void":
+		retType = None
+		if p[1] == "int":
+			retType = int
+		elif p[1] == "float":
+			retType = float
+		else:
+			retType = str
+
+		globalVariables.append({
+			'variableID': p[2], 
+			'variableType': retType, 
+			'variableDimentions': None, 
+			'variableDimLL': None, 
+			'arrSize': None, 
+			'mem_direction': vm[-1].assignVirtualDirection("global", retType)
+		})
 	print("call funcion_ident")
 
 # Variable
@@ -292,7 +313,6 @@ def p_arr_close_bracket(p):
 		quadsID.append(('+', aux1ID, aux2ID, "t" + str(nTemps)))
 		pOperandsID.append("t" + str(nTemps))
 		nTemps += 1
-		print("=========Más de una==========")
 	print("call arr_close_bracket")
 
 def p_arr_open_bracket(p):
@@ -350,7 +370,8 @@ def p_llamada(p):
 	'''
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
-	print("Destruido")
+	# quads.append(())
+	
 	destroyEra()
 
 	#QuadsID
@@ -418,8 +439,24 @@ def p_llamada_comma(p):
 # Retorno
 def p_retorno(p):
 	'''
-	retorno : RETURN O_PARENTHESIS expr C_PARENTHESIS
+	retorno : RETURN expr
 	'''
+	global currFunc
+	ret = pOperands.pop()
+	result = getVariable(currFunc, True)["mem_direction"]
+	quads.append(("RETURN", ret, "", result))
+	quads.append(("ENDFUNC", "", "", ""))
+	# last = pOperands.pop()
+	pOperands.append(result)
+	# pOperands.append(last)
+
+	#QuadsID
+	retID = pOperandsID.pop()
+	quadsID.append(("RETURN", retID, "", currFunc))
+	quadsID.append(("ENDFUNC", "", "", ""))
+	# lastID = pOperandsID.pop()
+	pOperandsID.append(currFunc)
+	# pOperandsID.append(lastID)
 	print("call retorno")
 
 # Lectura
