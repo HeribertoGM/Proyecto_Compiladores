@@ -102,7 +102,7 @@ def p_declaracion_variable(p):
 			cte_index = i*3
 			dims.append(p[cte_index])
 
-		print(dims)
+		# print(dims)
 		addTypeTemp(p[1], dims)
 	else:
 		addTypeTemp(p[1], None)
@@ -283,7 +283,7 @@ def p_arr_close_bracket(p):
 	operandID = pOperandsID[-1]
 	quadsID.append(("verify", operandID, 0, variable["variableDimLL"][dim]["ls"]))
 
-	print("Dimension:", dim)
+	#print("Dimension:", dim)
 	if len(variable["variableDimLL"]) > dim + 1:
 		aux = pOperands.pop()
 		result = vm[-1].temporalAssign(int)
@@ -349,8 +349,6 @@ def p_asignacion_expr(p):
 	'''
 	asignacion_expr : expr
 	'''
-	global currScope
-	
 	lOperand = pOperands.pop()
 	result = pOperands.pop()
 
@@ -446,17 +444,11 @@ def p_retorno(p):
 	result = getVariable(currFunc, True)["mem_direction"]
 	quads.append(("RETURN", ret, "", result))
 	quads.append(("ENDFUNC", "", "", ""))
-	# last = pOperands.pop()
-	pOperands.append(result)
-	# pOperands.append(last)
 
 	#QuadsID
 	retID = pOperandsID.pop()
 	quadsID.append(("RETURN", retID, "", currFunc))
 	quadsID.append(("ENDFUNC", "", "", ""))
-	# lastID = pOperandsID.pop()
-	pOperandsID.append(currFunc)
-	# pOperandsID.append(lastID)
 	print("call retorno")
 
 # Lectura
@@ -969,13 +961,22 @@ def p_factor(p):
 	'''
 	factor : variable
 		   | O_PARENTHESIS expr C_PARENTHESIS
-		   | llamada
+		   | llamada retorno_llamada
 		   | cte
 		   | PLUS cte
 		   | MINUS cte
 	'''
 	# if p[1] == variable or p[1] == cte
 	print("call factor")
+
+def p_retorno_llamada(p):
+	'''
+	retorno_llamada : epsilon
+	'''
+	global currFunc
+	pOperands.append(getVariable(currFunc["functionID"], True)["mem_direction"])
+	pOperandsID.append(currFunc["functionID"])
+	print("call retorno_llamada")
 
 # CTE
 def p_cte(p):
@@ -1015,4 +1016,4 @@ except EOFError :
 # try:
 parser.parse(program)
 # except Exception as e:
-# 	print("ERR - ",e)
+	# print("ERR - ",e)

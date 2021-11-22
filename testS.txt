@@ -7,11 +7,11 @@ function int fact(int j, float k, string abc)
 let h: int;
 let s: string;
 {
-	s = p + h;
 	x = 5;
 	return x;
 }
 
 main() {
+	x = 1;
 	x = fact(j * p, z[2][y], a);
 }

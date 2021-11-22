@@ -30,7 +30,7 @@ def addGlobalVariables():
 # y borrar el acumulado de temporales
 def addLocalVariables():
 	global functionsTemp, variablesTemp, vm
-	print(vm)
+	# print(vm)
 	functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
 	# Agregar assignVirtualDirection locales
 
