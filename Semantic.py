@@ -1,5 +1,5 @@
 import pprint
-from VirtualMemory import *
+from intermediateCode import *
 
 programID = None
 globalVariables = []
@@ -10,26 +10,10 @@ currScope = None
 functionsTemp = []
 variablesTemp = []
 typeTemp = []
-vm = []
-
-pOperands = []
-pTypes = []
-pOper = []
-quads = [["GOTO", "", "", None]]
-pJumps = []
-pDim = []
-
-#QuadsID
-pOperandsID = []
-quadsID = [["GOTO", "", "", None]]
-nTemps = 1
-
-def createEra():
-	vm.append(VirtualMemory())
 
 # llamada para guardar las variables globales y borrar el acumulado de temporales
 def addGlobalVariables():
-	global globalVariables, variablesTemp
+	global globalVariables, variablesTemp, vm
 
 	for var in variablesTemp:
 		globalVariables.append(var)
@@ -45,7 +29,8 @@ def addGlobalVariables():
 # llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
 # y borrar el acumulado de temporales
 def addLocalVariables():
-	global functionsTemp, variablesTemp
+	global functionsTemp, variablesTemp, vm
+	print(vm)
 	functionsTemp[-1]["functionVariables"] = variablesTemp.copy()
 	# Agregar assignVirtualDirection locales
 
@@ -61,7 +46,7 @@ def addLocalVariables():
 # las variables acumuladas como locales al diccionario de funciones.
 # cuando es verdadero, se envian las variables que quedan como acumuladas a el arreglo global
 def addMethod(ID, Type, fromProgram):
-	global programID, functionDictionary
+	global programID, functionDictionary, quads
 	if(fromProgram):
 		# global
 		programID = ID
@@ -69,7 +54,7 @@ def addMethod(ID, Type, fromProgram):
 			functionDictionary.append(func)
 	else:
 		# funcion
-		obj = {"functionID": ID, "functionType": Type, "functionVariables": []}
+		obj = {"functionID": ID, "functionType": Type, "functionVariables": [], "parameterTable": [], "signature": [], "functionStart": len(quads)}
 		functionsTemp.append(obj.copy())
 	
 
@@ -112,6 +97,11 @@ def addVariableTemp(variableType):
 def addTypeTemp(variableID, dimensiones):
 	global typeTemp
 	typeTemp.append([variableID, dimensiones])
+
+def addParameter(paramType, paramID):
+	global functionsTemp
+	functionsTemp[-1]["signature"].append(paramType)
+	functionsTemp[-1]["parameterTable"].append(paramID)
 
 def createSemanticCube():
 	global semanticCube
@@ -328,20 +318,6 @@ def printVars():
 	pprint.pprint(functionDictionary)
 	print("______________________________________________")
 
-def printQuads():
-	global quads
-	print("______________________________________________")
-	print("Quads:")
-	for i in range(len(quads)):
-		print(i, quads[i])
-	
-	#QuadsID
-	global quadsID
-	print("______________________________________________")
-	print("QuadsID:")
-	for i in range(len(quadsID)):
-		print(i, quadsID[i])
-
 def getVariable(varID, scope):
 	global globalVariables, functionsTemp
 
@@ -350,12 +326,16 @@ def getVariable(varID, scope):
 		y = list(filter(lambda x: (x['variableID'] == varID), f))
 		if y == []:
 			y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
+		print("local", y)
 		return y[0]
 	else: #global
 		y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
+		print("global", y)
 		return y[0]
 
-#def 
+def getFunction(funcID):
+	global functionsTemp
+	func = list(filter(lambda x: (x['functionID'] == funcID), functionsTemp))
+	return func
 
 createSemanticCube()
-createEra()

@@ -1,14 +1,16 @@
 program Test1;
 let i, j, p, arreglo[10]: int;
 let x, y, z[5][32]: float;
+let a: string;
 
-function int fact(int j)
+function int fact(int j, float k, string abc)
 let h: int;
 let s: string;
 {
 	s = p + h;
+	x = 5;
 }
 
 main() {
-	read(j);
+	fact(j * p, z[2][y], a);
 }

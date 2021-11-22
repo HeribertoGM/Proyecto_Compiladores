@@ -125,14 +125,24 @@ def p_declaracion_tipo(p):
 	print("call declaracion_tipo")
 
 # Tipo
-def p_tipo(p):
+def p_param_tipo(p):
 	'''
-	tipo : INT
-		 | FLOAT
-		 | CHAR
-		 | STRING
+	param_tipo : INT ID
+		 	   | FLOAT ID
+		 	   | CHAR ID
+		 	   | STRING ID
 	'''
-	print("call tipo")
+	addTypeTemp(p[2], None)
+	if p[1] == 'int':
+		addVariableTemp(int)
+		addParameter(int, p[2])
+	elif p[1] == 'float':
+		addVariableTemp(float)
+		addParameter(float, p[2])
+	else:
+		addVariableTemp(str)
+		addParameter(str, p[2])
+	print("call param_tipo")
 
 # Funcion
 def p_funcion(p):
@@ -146,13 +156,18 @@ def p_funcion_base(p):
 	'''
 	funcion_base : FUNCTION funcion_ident O_PARENTHESIS funcion_prime C_PARENTHESIS declaracion_funcion bloque
 	'''
+	quads.append(("ENDFUNC", "", "", ""))
+
+	#QuadsID
+	quadsID.append(("ENDFUNC", "", "", ""))
 	print("call funcion_base")
 
 def p_funcion_prime(p):
 	'''
-	funcion_prime : tipo ID
-				  | tipo ID COMMA funcion_prime
+	funcion_prime : param_tipo
+				  | param_tipo COMMA funcion_prime
 	'''
+
 	print("call funcion_prime")
 
 def p_funcion_ident(p):
@@ -331,17 +346,74 @@ def p_asignacion_expr(p):
 # Llamada
 def p_llamada(p):
 	'''
-	llamada : ID O_PARENTHESIS llamada_prime C_PARENTHESIS
+	llamada : function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
 	'''
+	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
+
+	print("Destruido")
+	destroyEra()
+
+	#QuadsID
+	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 	print("call llamada")
+
+def p_function_id(p):
+	'''
+	function_id : ID
+	'''
+	global paramCounter, currFunc
+
+	func = getFunction(p[1])
+	if len(func) == 0:
+		print(f'Semantic error: function ({p[1]}) not defined' )
+		sys.exit()
+	else:
+		func = func[0]
+	createEra()
+	paramCounter = 0
+	currFunc = func
+
+	print("call function_id")
 
 def p_llamada_prime(p):
 	'''
-	llamada_prime : exp
-				  | exp COMMA llamada_prime
+	llamada_prime : llamada_exp
+				  | llamada_exp llamada_comma llamada_prime
 	'''
-	# Agregar nueva ERA
+	if paramCounter == len(currFunc["signature"]) and len(p) >= 2:
+		print(f'Semantic error: wrong number of parameters, expected ({len(currFunc["signature"])})' )
+		sys.exit()
+
 	print("call llamada_prime")
+
+def p_llamada_exp(p):
+	'''
+	llamada_exp : exp
+	'''
+	global currFunc, paramCounter
+	arg = pOperands.pop()
+	argType = pTypes.pop()
+	parType = currFunc["signature"][paramCounter]
+
+	if argType != parType:
+		print(f'Semantic error: incompatible type, expected as parameter ({parType}) received ({argType})' )
+		sys.exit()
+
+	mem_dir = getVariable(currFunc["parameterTable"][paramCounter], True)["mem_direction"]
+	
+	quads.append(("PARAM", arg, "", mem_dir))
+
+	#QuadsID
+	quadsID.append(("PARAM", pOperandsID.pop(), "", currFunc["parameterTable"][paramCounter]))
+	print("call llamada_exp")
+
+def p_llamada_comma(p):
+	'''
+	llamada_comma : COMMA
+	'''
+	global paramCounter
+	paramCounter += 1
+	print("call llamada_comma")
 
 # Retorno
 def p_retorno(p):
@@ -363,10 +435,10 @@ def p_lectura_prime(p):
 				  | variable COMMA lectura_prime
 	'''
 	pTypes.pop()
-	quads.append(("read", "", "", pOperands.pop()))
+	quads.append(("READ", "", "", pOperands.pop()))
 
 	#QuadsID
-	quadsID.append(("read", "", "", pOperandsID.pop()))
+	quadsID.append(("READ", "", "", pOperandsID.pop()))
 	print("call lectura_prime")
 
 # Escritura
@@ -384,10 +456,10 @@ def p_escritura_prime(p):
 					| escritura_string COMMA escritura_prime
 	'''
 	pTypes.pop()
-	quads.append(("write", "", "", pOperands.pop()))
+	quads.append(("WRITE", "", "", pOperands.pop()))
 
 	#QuadsID
-	quadsID.append(("write", "", "", pOperandsID.pop()))
+	quadsID.append(("WRITE", "", "", pOperandsID.pop()))
 	print("call escritura_prime")
 
 def p_escritura_string(p):
