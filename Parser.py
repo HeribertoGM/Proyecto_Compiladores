@@ -1,6 +1,5 @@
 import ntpath
 import re
-import sys
 import os.path
 import ply.yacc as yacc
 from Lexer import *
@@ -119,11 +118,11 @@ def p_declaracion_tipo(p):
 	'''
 	# addVariableTemp(p[1])
 	if p[1] == 'int':
-		addVariableTemp(int)
+		addVariableTempCheckRedef(int)
 	elif p[1] == 'float':
-		addVariableTemp(float)
+		addVariableTempCheckRedef(float)
 	else:
-		addVariableTemp(str)
+		addVariableTempCheckRedef(str)
 	print("call declaracion_tipo")
 
 # Tipo

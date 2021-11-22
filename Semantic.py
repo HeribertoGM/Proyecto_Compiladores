@@ -1,4 +1,5 @@
 import pprint
+import sys
 from intermediateCode import *
 
 programID = None
@@ -57,6 +58,19 @@ def addMethod(ID, Type, fromProgram):
 		obj = {"functionID": ID, "functionType": Type, "functionVariables": [], "parameterTable": [], "signature": [], "functionStart": len(quads)}
 		functionsTemp.append(obj.copy())
 	
+def addVariableTempCheckRedef(vType):
+	global variablesTemp, typeTemp
+	
+	elemIDsTT = list(map(lambda x: x[0], typeTemp))
+	elemIDsVT = list(map(lambda x: x["variableID"], variablesTemp))
+	
+	elemID = elemIDsTT+elemIDsVT
+	for i in elemID:
+		if elemID.count(i) > 1:
+			print("Semantic Error: redeclaration of variable - ", i)
+			sys.exit()
+
+	addVariableTemp(vType)
 
 # agrega tipo a las variables acumuladas en el arreglo temporal "typeTemp"
 # y lo pone en arreglo de variables acumuladas "variablesTemp"
