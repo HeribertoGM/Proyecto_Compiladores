@@ -1,0 +1,6 @@
+program testG;
+let a: int;
+
+main() {
+	twice(a);
+}

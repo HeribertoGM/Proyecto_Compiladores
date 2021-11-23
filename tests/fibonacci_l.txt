@@ -1,0 +1,22 @@
+program fibonacci;
+let f: int;
+let a[2][2][2], a2[2][2][2], a3[2][2][2]: int;
+
+function int fib(int n)
+let i, arr[100]: int;
+{
+	arr[0] = 0;
+	arr[1] = 1;
+
+	for i=1 to n {
+		arr[i+1] = arr[i-1] +arr[i];
+	}
+
+	return arr[i+1];
+}
+
+main() {
+	f = fib(5);
+	write(f);
+	a3 = a + a2;
+}

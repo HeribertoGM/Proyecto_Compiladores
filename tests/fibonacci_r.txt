@@ -1,0 +1,24 @@
+program fibonacci;
+let f: int;
+
+function int fib(int n)
+let r, f1, f2: int;
+{
+	r = 0;
+	if(n>0){
+		if(n<2){
+			r = 1;
+		} else {
+			f1 = fib(n-1);
+			f2 = fib(n-2);
+			r = f1 + f2 ;
+		}
+	}
+
+	return r;
+}
+
+main() {
+	f = fib(5);
+	write(f);
+}

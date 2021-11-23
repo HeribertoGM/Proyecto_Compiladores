@@ -1,6 +1,6 @@
 program Test1;
 let i, j, p, arreglo[10]: int;
-let x, y, z[s]: float;
+let x, y, z[3]: float;
 
 function int fact(int j)
 let h: int;

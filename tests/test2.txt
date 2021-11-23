@@ -1,6 +1,6 @@
 program Test2;
 let i, j, p, arreglo[10]: int;
-let valor: float;
+let valor, cubo[30][20][10]: float;
 
 function int fact(int j)
 let i: int;
@@ -21,7 +21,7 @@ let x: int;
     while (x < 11) {
         y = y * arreglo[182];
         x = x + 1;
-        write(arreglo[x][asd+u3][12+21]);
+        write(cubo[x][x+y][12+21]);
     }
     write("acumulado", y);
 }

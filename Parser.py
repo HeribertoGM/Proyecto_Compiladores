@@ -441,13 +441,21 @@ def p_retorno(p):
 	'''
 	global currFunc
 	ret = pOperands.pop()
-	result = getVariable(currFunc, True)["mem_direction"]
+	print(currFunc)
+	if(type(currFunc) == str):
+		result = getVariable(currFunc, True)["mem_direction"]
+	else:
+		result = getVariable(currFunc["functionID"], True)["mem_direction"]
 	quads.append(("RETURN", ret, "", result))
 	quads.append(("ENDFUNC", "", "", ""))
 
 	#QuadsID
 	retID = pOperandsID.pop()
-	quadsID.append(("RETURN", retID, "", currFunc))
+	if(type(currFunc) == str):
+		resultID = currFunc
+	else:
+		resultID = currFunc["functionID"]
+	quadsID.append(("RETURN", retID, "", resultID))
 	quadsID.append(("ENDFUNC", "", "", ""))
 	print("call retorno")
 
@@ -1007,7 +1015,7 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = "testS.txt"#str(input(">> "))
+	s = str(input(">> "))#"testS.txt"#"fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()
