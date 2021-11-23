@@ -1,5 +1,4 @@
-import ntpath
-import re
+import json
 import os.path
 import ply.yacc as yacc
 from Lexer import *
@@ -118,11 +117,11 @@ def p_declaracion_tipo(p):
 	'''
 	# addVariableTemp(p[1])
 	if p[1] == 'int':
-		addVariableTempCheckRedef(int)
+		addVariableTempCheckRedef("int")
 	elif p[1] == 'float':
-		addVariableTempCheckRedef(float)
+		addVariableTempCheckRedef("float")
 	else:
-		addVariableTempCheckRedef(str)
+		addVariableTempCheckRedef("str")
 	print("call declaracion_tipo")
 
 # Tipo
@@ -135,14 +134,14 @@ def p_param_tipo(p):
 	'''
 	addTypeTemp(p[2], None)
 	if p[1] == 'int':
-		addVariableTemp(int)
-		addParameter(int, p[2])
+		addVariableTemp("int")
+		addParameter("int", p[2])
 	elif p[1] == 'float':
-		addVariableTemp(float)
-		addParameter(float, p[2])
+		addVariableTemp("float")
+		addParameter("float", p[2])
 	else:
-		addVariableTemp(str)
-		addParameter(str, p[2])
+		addVariableTemp("str")
+		addParameter("str", p[2])
 	print("call param_tipo")
 
 # Funcion
@@ -186,11 +185,11 @@ def p_funcion_ident(p):
 	if p[1] != "void":
 		retType = None
 		if p[1] == "int":
-			retType = int
+			retType = "int"
 		elif p[1] == "float":
-			retType = float
+			retType = "float"
 		else:
-			retType = str
+			retType = "str"
 
 		globalVariables.append({
 			'variableID': p[2], 
@@ -1015,14 +1014,42 @@ parser = yacc.yacc()
 
 program = None
 try:
-	s = str(input(">> "))#"testS.txt"#"fibonacci_r2.txt"#
+	s = str(input(">> "))#"testS.txt""fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()
 except EOFError :
     print("Error reading code.")
 
-# try:
 parser.parse(program)
-# except Exception as e:
-	# print("ERR - ",e)
+
+# def convert(o):
+# 	print(o)
+# 	if o == int:
+# 		return "int"
+# 	elif o == float:
+# 		return "float"
+# 	elif o == str:
+# 		return "str"
+# 	elif isinstance(o, pd.core.indexes.numeric.Int64Index):
+# 		print(o[0])
+# 		return o[0]
+# 	else:
+# 		raise TypeError("AAAAAAAAAAAAHHHH!")
+
+try:
+	with open("out.txt", "w") as f:
+		wGVariables = json.dumps(globalVariables)#, default=convert)
+		f.write(wGVariables)
+		f.write("\n")
+		f.write("¿?¿?¿?")
+		f.write("\n")
+		wFunctions = json.dumps(functionDictionary)#, default=convert)
+		f.write(wFunctions)
+		f.write("\n")
+		f.write("¿?¿?¿?")
+		f.write("\n")
+		wQuads = json.dumps(quads)#, default=convert)
+		f.write(wQuads)
+except Exception as e:
+	print("ERR: compiler output error - ", e)

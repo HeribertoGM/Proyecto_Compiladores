@@ -24,132 +24,132 @@ class VirtualMemory(object):
     def cteAssign(self, value):
         vType = type(value)
 
-        if vType == int:
+        if vType == "int":
             index = self.cteInts.loc[self.cteInts.loc[pd.isnull(self.cteInts.mem_dir)].head(1).index, 'mem_dir'].index
             self.cteInts.loc[index] = value
-            return index
-        elif vType == float:
+            return int(int(index[0]))
+        elif vType == "float":
             index = self.cteFloats.loc[self.cteFloats.loc[pd.isnull(self.cteFloats.mem_dir)].head(1).index, 'mem_dir'].index
             self.cteFloats.loc[index] = value
-            return index
-        elif vType == str:
+            return int(index[0])
+        elif vType == "str":
             index = self.cteStrings.loc[self.cteStrings.loc[pd.isnull(self.cteStrings.mem_dir)].head(1).index, 'mem_dir'].index
             self.cteStrings.loc[index] = value
-            return index
+            return int(index[0])
         else:
             index = self.cteDirections.loc[self.cteDirections.loc[pd.isnull(self.cteDirections.mem_dir)].head(1).index, 'mem_dir'].index
             self.cteDirections.loc[index] = value
-            return index
+            return int(index[0])
 
     def temporalAssign(self, vType):
-        if vType == int:
+        if vType == "int":
             index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
             self.tempInts.loc[index] = "None"
-            return index
-        elif vType == float:
+            return int(index[0])
+        elif vType == "float":
             index = self.tempFloats.loc[self.tempFloats.loc[pd.isnull(self.tempFloats.mem_dir)].head(1).index, 'mem_dir'].index
             self.tempFloats.loc[index] = "None"
-            return index
-        elif vType == bool:
+            return int(index[0])
+        elif vType == "bool":
             index = self.tempBools.loc[self.tempBools.loc[pd.isnull(self.tempBools.mem_dir)].head(1).index, 'mem_dir'].index
             self.tempBools.loc[index] = "None"
-            return index
+            return int(index[0])
         else:
             index = self.tempStrings.loc[self.tempStrings.loc[pd.isnull(self.tempStrings.mem_dir)].head(1).index, 'mem_dir'].index
             self.tempStrings.loc[index] = "None"
-            return index
+            return int(index[0])
 
     def assignVirtualDirection(self, scope, vType):
         if scope == 'global':
-            if vType == int:
+            if vType == "int":
                 index = self.globalInts.loc[self.globalInts.loc[pd.isnull(self.globalInts.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalInts.loc[index] = "None"
-                return index
-            elif vType == float:
+                return int(index[0])
+            elif vType == "float":
                 index = self.globalFloats.loc[self.globalFloats.loc[pd.isnull(self.globalFloats.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalFloats.loc[index] = "None"
-                return index
+                return int(index[0])
             else:
                 index = self.globalStrings.loc[self.globalStrings.loc[pd.isnull(self.globalStrings.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalStrings.loc[index] = "None"
-                return index
+                return int(index[0])
         elif scope == 'local':
-            if vType == int:
+            if vType == "int":
                 index = self.localInts.loc[self.localInts.loc[pd.isnull(self.localInts.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localInts.loc[index] = "None"
-                return index
-            elif vType == float:
+                return int(index[0])
+            elif vType == "float":
                 index = self.localFloats.loc[self.localFloats.loc[pd.isnull(self.localFloats.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localFloats.loc[index] = "None"
-                return index
+                return int(index[0])
             else:
                 index = self.localStrings.loc[self.localStrings.loc[pd.isnull(self.localStrings.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localStrings.loc[index] = "None"
-                return index
+                return int(index[0])
 
     def assignMemoryArray(self, scope, vType, size):
         if scope == 'global':
-            if vType == int:
+            if vType == "int":
                 index = self.globalInts.loc[self.globalInts.loc[pd.isnull(self.globalInts.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalInts.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.globalInts.loc[self.globalInts.loc[pd.isnull(self.globalInts.mem_dir)].head(1).index, 'mem_dir'].index
                     self.globalInts.loc[index2] = "None"
-                return index
-            elif vType == float:
+                return int(index[0])
+            elif vType == "float":
                 index = self.globalFloats.loc[self.globalFloats.loc[pd.isnull(self.globalFloats.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalFloats.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.globalFloats.loc[self.globalFloats.loc[pd.isnull(self.globalFloats.mem_dir)].head(1).index, 'mem_dir'].index
                     self.globalFloats.loc[index2] = "None"
-                return index
+                return int(index[0])
             else:
                 index = self.globalStrings.loc[self.globalStrings.loc[pd.isnull(self.globalStrings.mem_dir)].head(1).index, 'mem_dir'].index
                 self.globalStrings.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.globalStrings.loc[self.globalStrings.loc[pd.isnull(self.globalStrings.mem_dir)].head(1).index, 'mem_dir'].index
                     self.globalStrings.loc[index2] = "None"
-                return index
+                return int(index[0])
         elif scope == 'local':
-            if vType == int:
+            if vType == "int":
                 index = self.localInts.loc[self.localInts.loc[pd.isnull(self.localInts.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localInts.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.localInts.loc[self.localInts.loc[pd.isnull(self.localInts.mem_dir)].head(1).index, 'mem_dir'].index
                     self.localInts.loc[index2] = "None"
-                return index
-            elif vType == float:
+                return int(index[0])
+            elif vType == "float":
                 index = self.localFloats.loc[self.localFloats.loc[pd.isnull(self.localFloats.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localFloats.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.localFloats.loc[self.localFloats.loc[pd.isnull(self.localFloats.mem_dir)].head(1).index, 'mem_dir'].index
                     self.localFloats.loc[index2] = "None"
-                return index
+                return int(index[0])
             else:
                 index = self.localStrings.loc[self.localStrings.loc[pd.isnull(self.localStrings.mem_dir)].head(1).index, 'mem_dir'].index
                 self.localStrings.loc[index] = "None"
                 for i in range(size - 1):
                     index2 = self.localStrings.loc[self.localStrings.loc[pd.isnull(self.localStrings.mem_dir)].head(1).index, 'mem_dir'].index
                     self.localStrings.loc[index2] = "None"
-                return index
+                return int(index[0])
 
     # def getValue(self, index, vType, scope):
     #     if scope: #global
-    #         if vType == int:
+    #         if vType == "int":
     #             index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
     #             self.tempInts.loc[index] = "None"
-    #             return index
-    #         elif vType == float:
+    #             return int(index[0])
+    #         elif vType == "float":
     #             index = self.tempFloats.loc[self.tempFloats.loc[pd.isnull(self.tempFloats.mem_dir)].head(1).index, 'mem_dir'].index
     #             self.tempFloats.loc[index] = "None"
-    #             return index
+    #             return int(index[0])
     #         elif vType == bool:
     #             index = self.tempBools.loc[self.tempBools.loc[pd.isnull(self.tempBools.mem_dir)].head(1).index, 'mem_dir'].index
     #             self.tempBools.loc[index] = "None"
-    #             return index
+    #             return int(index[0])
     #         else:
     #             index = self.tempStrings.loc[self.tempStrings.loc[pd.isnull(self.tempStrings.mem_dir)].head(1).index, 'mem_dir'].index
     #             self.tempStrings.loc[index] = "None"
-    #             return index
+    #             return int(index[0])
 
     #     else: #local
