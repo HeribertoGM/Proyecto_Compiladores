@@ -320,6 +320,7 @@ def deleteSemanticCube():
 	del semanticCube
 
 def printVars():
+	global programID, globalVariables, functionDictionary, vm
 	print("______________________________________________")
 	print("programID: ", programID)
 	print("______________________________________________")
@@ -331,6 +332,7 @@ def printVars():
 	print("functionDictionary: ")
 	pprint.pprint(functionDictionary)
 	print("______________________________________________")
+	print(vm[-1].localInts.loc[9001:9010])
 
 def getVariable(varID, scope):
 	global globalVariables, functionsTemp

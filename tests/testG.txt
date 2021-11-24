@@ -1,6 +1,18 @@
 program testG;
-let a: int;
+let i, j, p, a: int;
 
-main() {
-	twice(a);
+function int uno(int x, int y)
+{
+	x = 5;
+	return x;
+}
+
+function int dos(int x, int y)
+{
+	y = 7;
+	return y;
+}
+
+main(){
+	i = j*p*a;
 }

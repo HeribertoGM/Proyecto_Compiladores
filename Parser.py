@@ -1,4 +1,3 @@
-import json
 import os.path
 import ply.yacc as yacc
 from Lexer import *
@@ -50,6 +49,7 @@ def p_bloque_prime(p):
 def p_declaracion_funcion(p):
 	'''
 	declaracion_funcion : declaracion
+						| epsilon
 	'''
 	addLocalVariables()
 	global currScope
@@ -230,10 +230,10 @@ def p_var_array(p):
 			  | arr_id O_ABRACKET exp arr_close_bracket
 	'''
 	aux1 = pOperands.pop()
-	k = vm[-1].cteAssign(0)
-	result = vm[-1].temporalAssign(int)
+	k = vm[0].cteAssign(0)
+	result = vm[-1].temporalAssign("int")
 	quads.append(("+", aux1, k, result))
-	temp = vm[-1].temporalAssign(int)
+	temp = vm[-1].temporalAssign("int")
 	variable, dim = pDim.pop()
 	base_dir = vm[-1].cteAssign(variable["mem_direction"])
 	quads.append(("+", result, [base_dir], temp))
@@ -273,9 +273,9 @@ def p_arr_close_bracket(p):
 	arr_close_bracket : C_ABRACKET
 	'''
 	operand = pOperands[-1]
-	index = vm[-1].cteAssign(0)
+	index = vm[0].cteAssign(0)
 	variable, dim = pDim[-1]
-	ls = vm[-1].cteAssign(variable["variableDimLL"][dim]["ls"])
+	ls = vm[0].cteAssign(variable["variableDimLL"][dim]["ls"])
 	quads.append(("verify", operand, index, ls))
 
 	#QuadsID
@@ -285,8 +285,8 @@ def p_arr_close_bracket(p):
 	#print("Dimension:", dim)
 	if len(variable["variableDimLL"]) > dim + 1:
 		aux = pOperands.pop()
-		result = vm[-1].temporalAssign(int)
-		r = vm[-1].cteAssign(variable["variableDimLL"][dim]["R"])
+		result = vm[-1].temporalAssign("int")
+		r = vm[0].cteAssign(variable["variableDimLL"][dim]["R"])
 		quads.append(('*', aux, r, result))
 		pOperands.append(result)
 
@@ -302,7 +302,7 @@ def p_arr_close_bracket(p):
 	if dim >= 1:
 		aux2 = pOperands.pop()
 		aux1 = pOperands.pop()
-		result = vm[-1].temporalAssign(int)
+		result = vm[-1].temporalAssign("int")
 		quads.append(('+', aux1, aux2, result))
 		pOperands.append(result)
 
@@ -523,7 +523,7 @@ def p_decision_expr(p):
 	'''
 	result = pOperands.pop()
 	varType = pTypes.pop()
-	if varType == bool:
+	if varType == "bool":
 		quads.append(["GOTOF", result, "", None])
 		pJumps.append(len(quads) - 1)
 
@@ -585,7 +585,7 @@ def p_while_expr(p):
 	'''
 	result = pOperands.pop()
 	varType = pTypes.pop()
-	if varType == bool:
+	if varType == "bool":
 		quads.append(["GOTOF", result, "", None])
 		pJumps.append(len(quads) - 1)
 
@@ -601,9 +601,10 @@ def p_for(p):
 	'''
 	for : FOR for_asignacion for_to for_exp bloque
 	'''
+	print(pOperands)
 	operand = pOperands.pop()
 	index = vm[-1].cteAssign(1)
-	result = vm[-1].temporalAssign(int)
+	result = vm[-1].temporalAssign("int")
 	quads.append(('+', operand, index, result))
 	quads.append(('=', result, "", operand))
 
@@ -664,13 +665,14 @@ def p_for_exp(p):
 	rType = pTypes.pop()
 	lOperand = pOperands.pop()
 	lType = pTypes.pop()
+	print(lType, rType)
 	resultType = semanticCube['<'][(lType, rType)]
 	if resultType != 'error':
 		result = vm[-1].temporalAssign(resultType)
 		quads.append(('<', lOperand, rOperand, result))
-		pOperands.append(result)
-		pTypes.append(resultType)
-		quads.append(["GOTOF", "", "", None])
+		pOperands.append(lOperand)
+		pTypes.append(lType)
+		quads.append(["GOTOF", result, "", None])
 		pJumps.append(len(quads) - 1) #despues de comp
 		# If any operand were a temporal space, return it to AVAIL
 
@@ -679,9 +681,9 @@ def p_for_exp(p):
 		rOperandID = pOperandsID.pop()
 		lOperandID = pOperandsID.pop()
 		quadsID.append(('<', lOperandID, rOperandID, "t" + str(nTemps)))
-		pOperandsID.append("t" + str(nTemps))
+		pOperandsID.append(lOperandID)
+		quadsID.append(["GOTOF", "t" + str(nTemps), "", None])
 		nTemps += 1
-		quadsID.append(["GOTOF", "", "", None])
 	else:
 		print(f'Semantic error: type mismatch - ({lOperand}:{lType})<({rOperand}:{rType})' )
 		sys.exit()
@@ -992,9 +994,14 @@ def p_cte(p):
 		| CTE_FLOAT
 	'''
 	# Implementar assignVM cte
-	index = vm[-1].cteAssign(p[1])
+	index = vm[0].cteAssign(p[1])
 	pOperands.append(index)
-	pTypes.append(type(p[1]))
+	# print(str(type(p[1])))
+	# pTypes.append(str(type(p[1])))
+	if type(p[1]) == int:
+		pTypes.append("int")
+	else:
+		pTypes.append("float")
 
 	#QuadsID
 	pOperandsID.append(p[1])
@@ -1013,8 +1020,9 @@ def p_error(p):
 parser = yacc.yacc()
 
 program = None
+s = None
 try:
-	s = str(input(">> "))#"testS.txt""fibonacci_r2.txt"#
+	s = "testG.txt"#str(input(">> "))"fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()
@@ -1023,33 +1031,26 @@ except EOFError :
 
 parser.parse(program)
 
-# def convert(o):
-# 	print(o)
-# 	if o == int:
-# 		return "int"
-# 	elif o == float:
-# 		return "float"
-# 	elif o == str:
-# 		return "str"
-# 	elif isinstance(o, pd.core.indexes.numeric.Int64Index):
-# 		print(o[0])
-# 		return o[0]
-# 	else:
-# 		raise TypeError("AAAAAAAAAAAAHHHH!")
-
 try:
-	with open("out.txt", "w") as f:
-		wGVariables = json.dumps(globalVariables)#, default=convert)
+	path = os.path.join("output", s)
+	with open(path, "w") as f:
+		wGVariables = json.dumps(globalVariables)
 		f.write(wGVariables)
 		f.write("\n")
 		f.write("¿?¿?¿?")
 		f.write("\n")
-		wFunctions = json.dumps(functionDictionary)#, default=convert)
+		wFunctions = json.dumps(functionDictionary)
 		f.write(wFunctions)
 		f.write("\n")
 		f.write("¿?¿?¿?")
 		f.write("\n")
-		wQuads = json.dumps(quads)#, default=convert)
+		wQuads = json.dumps(quads)
 		f.write(wQuads)
+		f.write("\n")
+		f.write("¿?¿?¿?")
+		f.write("\n")
+		wVM = json.dumps(vm[-1].getFinalVM())
+		f.write(wVM)
+
 except Exception as e:
 	print("ERR: compiler output error - ", e)

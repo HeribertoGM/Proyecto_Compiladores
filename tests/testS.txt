@@ -1,5 +1,5 @@
-program Test1;
-let i, j, p, arreglo[10]: int;
+program TestS;
+let i, j, p, arreglo[10], i2: int;
 let x, y, z[5][32]: float;
 let a: string;
 
