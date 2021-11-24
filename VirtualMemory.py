@@ -39,7 +39,7 @@ class VirtualMemory(object):
 			return int(index[0])
 		else:
 			index = self.cteDirections.loc[self.cteDirections.loc[pd.isnull(self.cteDirections.mem_dir)].head(1).index, 'mem_dir'].index
-			self.cteDirections.loc[index] = value
+			self.cteDirections.loc[index] = value[0]
 			return int(index[0])
 
 	def temporalAssign(self, vType):
@@ -133,39 +133,9 @@ class VirtualMemory(object):
 					index2 = self.localStrings.loc[self.localStrings.loc[pd.isnull(self.localStrings.mem_dir)].head(1).index, 'mem_dir'].index
 					self.localStrings.loc[index2] = "None"
 				return int(index[0])
-
-	def getFinalVM(self):
-		finalVM = {}
-		finalVM["globalInts"] = self.globalInts.to_json()
-		finalVM["globalFloats"] = self.globalFloats.to_json()
-		finalVM["globalStrings"] = self.globalStrings.to_json()
-		finalVM["localInts"] = self.localInts.to_json()
-		finalVM["localFloats"] = self.localFloats.to_json()
-		finalVM["localStrings"] = self.localStrings.to_json()
-		finalVM["cteInts"] = self.cteInts.to_json()
-		finalVM["cteFloats"] = self.cteFloats.to_json()
-		finalVM["cteStrings"] = self.cteStrings.to_json()
-		finalVM["cteDirections"] = self.cteDirections.to_json()
-		finalVM["tempInts"] = self.tempInts.to_json()
-		finalVM["tempFloats"] = self.tempFloats.to_json()
-		finalVM["tempStrings"] = self.tempStrings.to_json()
-		finalVM["tempBools"] = self.tempBools.to_json()
-
-
-		return finalVM
 	
-	def restoreVM(self, data):
-		self.globalInts = json.loads(data["globalInts"])
-		self.globalFloats = json.loads(data["globalFloats"])
-		self.globalStrings = json.loads(data["globalStrings"])
-		self.localInts = json.loads(data["localInts"])
-		self.localFloats = json.loads(data["localFloats"])
-		self.localStrings = json.loads(data["localStrings"])
-		self.cteInts = json.loads(data["cteInts"])
-		self.cteFloats = json.loads(data["cteFloats"])
-		self.cteStrings = json.loads(data["cteStrings"])
-		self.cteDirections = json.loads(data["cteDirections"])
-		self.tempInts = json.loads(data["tempInts"])
-		self.tempFloats = json.loads(data["tempFloats"])
-		self.tempStrings = json.loads(data["tempStrings"])
-		self.tempBools = json.loads(data["tempBools"])
+	def getValueFromIndex(self, index):
+		pass
+
+	def setValueWithIndex(self, index, value):
+		pass
