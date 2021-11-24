@@ -371,11 +371,13 @@ def p_llamada(p):
 	'''
 	llamada : function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
 	'''
+	quads.append(("ERA", "", "", currFunc["functionID"]))
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
 	# quads.append(())
 
 	#QuadsID
+	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 	print("call llamada")
 
@@ -421,7 +423,10 @@ def p_llamada_exp(p):
 		print(f'Semantic error: incompatible type, expected as parameter ({parType}) received ({argType})' )
 		sys.exit()
 
-	mem_dir = getVariable(currFunc["parameterTable"][paramCounter], True)["mem_direction"]
+	f = currFunc['functionVariables']
+	y = list(filter(lambda x: (x['variableID'] == currFunc["parameterTable"][paramCounter]), f))
+	print(y)
+	mem_dir = y[0]["mem_direction"]
 	
 	quads.append(("PARAM", arg, "", mem_dir))
 

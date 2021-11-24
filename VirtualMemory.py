@@ -1,4 +1,5 @@
 import json
+import sys
 import pandas as pd
 import numpy as np
 
@@ -134,8 +135,84 @@ class VirtualMemory(object):
 					self.localStrings.loc[index2] = "None"
 				return int(index[0])
 	
-	def getValueFromIndex(self, index):
-		pass
+	def getValueWithIndex(self, index):
+		if index >= 0 and index <= 3000:
+			return self.globalInts.loc[index]["mem_dir"]
+		elif index >= 3001 and index <= 6000:
+			return self.globalFloats.loc[index]["mem_dir"]
+		elif index >= 6001 and index <= 9000:
+			return self.globalStrings.loc[index]["mem_dir"]
+		elif index >= 9001 and index <= 12000:
+			return self.localInts.loc[index]["mem_dir"]
+		elif index >= 12001 and index <= 15000:
+			return self.localFloats.loc[index]["mem_dir"]
+		elif index >= 15001 and index <= 18000:
+			return self.localStrings.loc[index]["mem_dir"]
+		elif index >= 18001 and index <= 21000:
+			return self.cteInts.loc[index]["mem_dir"]
+		elif index >= 21001 and index <= 24000:
+			return self.cteFloats.loc[index]["mem_dir"]
+		elif index >= 24001 and index <= 27000:
+			return self.cteStrings.loc[index]["mem_dir"]
+		elif index >= 27001 and index <= 30000:
+			return self.cteDirections.loc[index]["mem_dir"]
+		elif index >= 30001 and index <= 33000:
+			return self.tempInts.loc[index]["mem_dir"]
+		elif index >= 33001 and index <= 36000:
+			return self.tempFloats.loc[index]["mem_dir"]
+		elif index >= 36001 and index <= 39000:
+			return self.tempStrings.loc[index]["mem_dir"]
+		elif index >= 39001 and index <= 42000:
+			return self.tempBools.loc[index]["mem_dir"]
+		else:
+			print("Index Error - Index out of range")
+			sys.exit()
 
 	def setValueWithIndex(self, index, value):
-		pass
+		if index >= 0 and index <= 3000:
+			self.globalInts.loc[index] = value
+		elif index >= 3001 and index <= 6000:
+			self.globalFloats.loc[index] = value
+		elif index >= 6001 and index <= 9000:
+			self.globalStrings.loc[index] = value
+		elif index >= 9001 and index <= 12000:
+			self.localInts.loc[index] = value
+		elif index >= 12001 and index <= 15000:
+			self.localFloats.loc[index] = value
+		elif index >= 15001 and index <= 18000:
+			self.localStrings.loc[index] = value
+		elif index >= 18001 and index <= 21000:
+			self.cteInts.loc[index] = value
+		elif index >= 21001 and index <= 24000:
+			self.cteFloats.loc[index] = value
+		elif index >= 24001 and index <= 27000:
+			self.cteStrings.loc[index] = value
+		elif index >= 27001 and index <= 30000:
+			self.cteDirections.loc[index] = value
+		elif index >= 30001 and index <= 33000:
+			self.tempInts.loc[index] = value
+		elif index >= 33001 and index <= 36000:
+			self.tempFloats.loc[index] = value
+		elif index >= 36001 and index <= 39000:
+			self.tempStrings.loc[index] = value
+		elif index >= 39001 and index <= 42000:
+			self.tempBools.loc[index] = value
+		else:
+			print("Index Error - Index out of range")
+			sys.exit()
+
+	def printTables(self):
+			print(self.globalInts.loc[0:10])
+			print(self.globalFloats.loc[3001:3010])
+			print(self.globalStrings.loc[6001:6010])
+			print(self.localInts.loc[9001:9010])
+			print(self.localFloats.loc[12001:12010])
+			print(self.localStrings.loc[15001:15010])
+			print(self.cteInts.loc[18001:18010])
+			print(self.cteFloats.loc[21001:21010])
+			print(self.cteStrings.loc[24001:24010])
+			print(self.cteDirections.loc[27001:27010])
+			print(self.tempInts.loc[30001:30010])
+			print(self.tempFloats.loc[33001:33010])
+			print(self.tempStrings.loc[36001:36010])
+			print(self.tempBools.loc[39001:39010])
