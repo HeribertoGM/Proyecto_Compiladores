@@ -1,15 +1,18 @@
 program testG;
 let i, j, p, a: int;
 
-function int uno(int x, int y)
+function int uno(int x)
 {
-	x = 5;
+	j = 32;
+	x = 5+1;
 	return x;
 }
 
-function int dos(int x, int y)
+function int dos(int y)
+let i: int;
 {
-	y = 7;
+	i = 4;
+	y = 7+1;
 	return y;
 }
 

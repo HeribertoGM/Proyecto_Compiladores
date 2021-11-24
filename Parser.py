@@ -158,6 +158,8 @@ def p_funcion_base(p):
 	'''
 	quads.append(("ENDFUNC", "", "", ""))
 
+	destroyEra()
+
 	#QuadsID
 	quadsID.append(("ENDFUNC", "", "", ""))
 	print("call funcion_base")
@@ -199,6 +201,8 @@ def p_funcion_ident(p):
 			'arrSize': None, 
 			'mem_direction': vm[-1].assignVirtualDirection("global", retType)
 		})
+	
+	createEra()
 	print("call funcion_ident")
 
 # Variable
@@ -230,7 +234,7 @@ def p_var_array(p):
 			  | arr_id O_ABRACKET exp arr_close_bracket
 	'''
 	aux1 = pOperands.pop()
-	k = vm[0].cteAssign(0)
+	k = vm[-1].cteAssign(0)
 	result = vm[-1].temporalAssign("int")
 	quads.append(("+", aux1, k, result))
 	temp = vm[-1].temporalAssign("int")
@@ -273,9 +277,9 @@ def p_arr_close_bracket(p):
 	arr_close_bracket : C_ABRACKET
 	'''
 	operand = pOperands[-1]
-	index = vm[0].cteAssign(0)
+	index = vm[-1].cteAssign(0)
 	variable, dim = pDim[-1]
-	ls = vm[0].cteAssign(variable["variableDimLL"][dim]["ls"])
+	ls = vm[-1].cteAssign(variable["variableDimLL"][dim]["ls"])
 	quads.append(("verify", operand, index, ls))
 
 	#QuadsID
@@ -286,7 +290,7 @@ def p_arr_close_bracket(p):
 	if len(variable["variableDimLL"]) > dim + 1:
 		aux = pOperands.pop()
 		result = vm[-1].temporalAssign("int")
-		r = vm[0].cteAssign(variable["variableDimLL"][dim]["R"])
+		r = vm[-1].cteAssign(variable["variableDimLL"][dim]["R"])
 		quads.append(('*', aux, r, result))
 		pOperands.append(result)
 
@@ -368,8 +372,6 @@ def p_llamada(p):
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
 	# quads.append(())
-	
-	destroyEra()
 
 	#QuadsID
 	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
@@ -387,7 +389,7 @@ def p_function_id(p):
 		sys.exit()
 	else:
 		func = func[0]
-	createEra()
+
 	paramCounter = 0
 	currFunc = func
 
@@ -994,7 +996,7 @@ def p_cte(p):
 		| CTE_FLOAT
 	'''
 	# Implementar assignVM cte
-	index = vm[0].cteAssign(p[1])
+	index = vm[-1].cteAssign(p[1])
 	pOperands.append(index)
 	# print(str(type(p[1])))
 	# pTypes.append(str(type(p[1])))
@@ -1022,7 +1024,7 @@ parser = yacc.yacc()
 program = None
 s = None
 try:
-	s = "testG.txt"#str(input(">> "))"fibonacci_r2.txt"#
+	s = "test3.txt"#str(input(">> "))"fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()
@@ -1046,11 +1048,11 @@ try:
 		f.write("\n")
 		wQuads = json.dumps(quads)
 		f.write(wQuads)
-		f.write("\n")
-		f.write("¿?¿?¿?")
-		f.write("\n")
-		wVM = json.dumps(vm[-1].getFinalVM())
-		f.write(wVM)
+		# f.write("\n")
+		# f.write("¿?¿?¿?")
+		# f.write("\n")
+		# wVM = json.dumps(vm[-1].getFinalVM())
+		# f.write(wVM)
 
 except Exception as e:
 	print("ERR: compiler output error - ", e)
