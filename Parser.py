@@ -371,13 +371,11 @@ def p_llamada(p):
 	'''
 	llamada : function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
 	'''
-	quads.append(("ERA", "", "", currFunc["functionID"]))
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
 	# quads.append(())
 
 	#QuadsID
-	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 	print("call llamada")
 
@@ -397,6 +395,11 @@ def p_function_id(p):
 	paramCounter = 0
 	currFunc = func
 
+
+	quads.append(("ERA", "", "", currFunc["functionID"]))
+
+	#QuadsID
+	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	print("call function_id")
 
 def p_llamada_prime(p):
@@ -1030,7 +1033,7 @@ parser = yacc.yacc()
 program = None
 s = None
 try:
-	s = "testG.txt"#str(input(">> "))"fibonacci_r2.txt"#
+	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()

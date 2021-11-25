@@ -165,6 +165,7 @@ class VirtualMemory(object):
 		elif index >= 39001 and index <= 42000:
 			return self.tempBools.loc[index]["mem_dir"]
 		else:
+			print(index)
 			print("Index Error - Index out of range")
 			sys.exit()
 
@@ -198,6 +199,7 @@ class VirtualMemory(object):
 		elif index >= 39001 and index <= 42000:
 			self.tempBools.loc[index] = value
 		else:
+			print(index)
 			print("Index Error - Index out of range")
 			sys.exit()
 

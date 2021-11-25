@@ -1,0 +1,20 @@
+program factorial;
+let f: int;
+
+function int fact(int n)
+let i, count, num: int;
+{
+	count = 1;
+	num = n + 1;
+
+	for i=1 to num {
+		count = count * i;
+	}
+
+	return count;
+}
+
+main() {
+	f = fact(6);
+	write(f);
+}

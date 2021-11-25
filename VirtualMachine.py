@@ -22,13 +22,43 @@ def setup(data):
 
 	vm.append(VirtualMemory())
 
-# funcion que inicializa los espacios de memoria 
-# de la memoria virtual a partir de las variables 
-# globales inicializadas
-# obtiene: variables globales inicializadas
-# retorna: memoria virtual inicializada
-def initializeVM():
-	pass
+# funcion que hace el movimiento de variables 
+# de un contexto de memoria virtual pasiva a activa
+# obtiene: direccion que guarda el valor a pasar a la funcion
+# obtine: direccion local que tiene el parametro dentro de la funcion
+# retorna: direccion inicializada con el valor de la dirPasiva
+def passParam(dirPasiva, dirActiva):
+	val = None
+	if type(dirPasiva) == int:
+		val = vm[-2].getValueWithIndex(dirPasiva)
+	else:
+		if dirPasiva[0] == 'pointer':
+			if type(dirPasiva[0][1]) == int:
+				vm[-2].getValueWithIndex(vm[-2].getValueWithIndex(dirPasiva[1]))
+			else: # cte
+				vm[-2].setValueWithIndex(dirPasiva[1][1], dirPasiva[1][2])
+			val = vm[-2].getValueWithIndex(dirPasiva[1][1])
+		else: # cte
+			vm[-2].setValueWithIndex(dirPasiva[1], dirPasiva[2])
+			val = vm[-2].getValueWithIndex(dirPasiva[1])
+
+	# print("param: ", val)
+	adminVariable(False, dirActiva, val)
+
+# funcion que hace el movimiento de variables 
+# de un contexto de memoria virtual activa a pasiva
+# obtine: direccion local que tiene el parametro dentro de la funcion
+# obtiene: direccion que guarda el valor a pasar a la funcion
+# retorna: direccion actualizada con el valor de la dirActiva
+def passReturn(dirActiva, dirPasiva):
+	val = adminVariable(True, dirActiva, None)
+	# print("dirActiva:",dirActiva)
+	# print("val:", val)
+	# print("dirPasiva:",dirPasiva)
+	# print(len(vm))
+	# vm[-1].printTables()
+	
+	vm[-2].setValueWithIndex(dirPasiva, val)
 
 # funcion que imprime en pantalla todas las estructuras globales
 # obtiene: null
@@ -81,16 +111,6 @@ def adminVariable(getSet, var, val):
 # retorna: null
 def execute(instruction):
 	global globalVariables, functionDictionary, quads
-
-
-		# print("=============")
-		# print(instruction[1])
-		# print(lOperand)
-		# print("=============")
-		# print(instruction[2])
-		# print(rOperand)
-		# print("=============")
-
 	if instruction[0] == '+':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
@@ -167,11 +187,12 @@ def execute(instruction):
 # obtiene: variables globales inicializadas
 # retorna: null
 def run():
-	global globalVariables, functionDictionary, quads
+	global globalVariables, functionDictionary, quads, vm
 	ip = 0
+	returnFromFunc = None
 
 	while quads[ip][0] != 'END':
-		# print(str(ip) + " - " + str(quads[ip]))
+		print(str(ip) + " - " + str(quads[ip]))
 		if quads[ip][0] == '+':
 			execute(quads[ip])
 		elif quads[ip][0] == '-':
@@ -208,33 +229,43 @@ def run():
 			ip = quads[ip][3]
 			continue
 		elif quads[ip][0] == 'GOTOF':
-			pass
+			lOperand = adminVariable(True, quads[ip][1], None)
+			if not lOperand:
+				ip = quads[ip][3]
+				continue
 		elif quads[ip][0] == 'VERIFY':
-			pass
+			val = adminVariable(True, quads[ip][1], None)
+			limI = adminVariable(True, quads[ip][2], None)
+			limS = adminVariable(True, quads[ip][3], None)
+			if not (val >= limI and val <= limS):
+				print(f'ERR - Val not in range {limI}-{limS} - '+str(quads[ip]))
+				sys.exit()
 		elif quads[ip][0] == 'ENDFUNC':
-			pass
+			ip = returnFromFunc
+			vm.pop()
+			continue
 		elif quads[ip][0] == 'RETURN':
+			passReturn(quads[ip][1], quads[ip][3])
 			pass
 		elif quads[ip][0] == 'GOSUB':
-			pass
+			returnFromFunc = ip + 1
+			ip = quads[ip][3]
+			continue
 		elif quads[ip][0] == 'PARAM':
-			pass
+			passParam(quads[ip][1], quads[ip][3])
 		elif quads[ip][0] == 'ERA':
-			pass
+			vm.append(VirtualMemory())
 		else:
 			print("ERR - Instruction not identified - "+str(quads[ip]))
 			sys.exit()
 
 
 		ip += 1
-	
-	# print(str(ip) + " - " + str(quads[ip]))
-	vm[-1].printTables()
 	print("Completado sin errores")
 
 data = None
 try:
-	s = "testG.txt"#str(input(">> "))"fibonacci_r2.txt"#
+	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
 	path = os.path.join("output", s)
 	with open(path, "r") as f:
 		data = f.read()
