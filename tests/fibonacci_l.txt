@@ -1,6 +1,5 @@
 program fibonacci;
 let f: int;
-let a[2][2][2], a2[2][2][2], a3[2][2][2]: int;
 
 function int fib(int n)
 let i, arr[100]: int;
@@ -12,11 +11,10 @@ let i, arr[100]: int;
 		arr[i+1] = arr[i-1] +arr[i];
 	}
 
-	return arr[i+1];
+	return arr[i];
 }
 
 main() {
-	f = fib(5);
+	f = fib(6);
 	write(f);
-	a3 = a + a2;
 }

@@ -1,18 +1,33 @@
 program testG;
-let i, j, p, a: int;
+let i, j, p, a[5]: int;
 
-function int uno(int x, int y)
+function int uno(int x)
 {
-	x = 5;
+	j = 32;
+	i = p;
+	x = x+1;
+	write(j);
+	write(i);
+	write(x);
 	return x;
 }
 
-function int dos(int x, int y)
+function int dos(int y)
+let i: int;
 {
-	y = 7;
+	i = 4;
+	y = y+i;
 	return y;
 }
 
 main(){
-	i = j*p*a;
+	j = 2+3;
+	p = 1;
+	a[2] = 5;
+	if(j+3 == a[p+p]+p*3 && (1!=1 || p == j)){
+		i = j*p*a[2];
+	} else {
+		a[1] = dos(p);
+		write(a[1]);
+	}
 }

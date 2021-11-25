@@ -1,17 +1,21 @@
 program TestS;
-let i, j, p, arreglo[10], i2: int;
-let x, y, z[5][32]: float;
-let a: string;
+let i, j, p, arreglo[10]: int;
+let x, y, z[5][32], i2: float;
 
-function int fact(int j, float k, string abc)
+function int fact(int j, float k)
 let h: int;
-let s: string;
 {
-	x = 5;
-	return x;
+	h = j + k;
+	return h;
 }
 
 main() {
-	x = 1;
-	x = fact(j * p, z[2][y], a);
+	z[2][3] = 3.434;
+	y = 3;
+	j = 2;
+	p = 2;
+	i = j * p;
+	i2 = z[2][y];
+	x = fact(i, i2);
+	write(x);
 }

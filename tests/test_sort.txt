@@ -26,4 +26,15 @@ main() {
 		a[x] = a[i];
 		a[i] = min;
 	}
+
+	write(a[0]);
+	write(a[1]);
+	write(a[2]);
+	write(a[3]);
+	write(a[4]);
+	write(a[5]);
+	write(a[6]);
+	write(a[7]);
+	write(a[8]);
+	write(a[9]);
 }

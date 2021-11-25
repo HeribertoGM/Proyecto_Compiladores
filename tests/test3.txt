@@ -6,10 +6,10 @@ main() {
     read(j);
 	write("Hola mundo");
 
-    for i = 0 to 10 {
-        i = 4;
-        x = 2;
+	x = 0;
+    for i = 0 to j {
+        x = x + i;
     }
 
-    j = 3 + 4;
+	write(x);
 }

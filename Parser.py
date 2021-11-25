@@ -158,6 +158,8 @@ def p_funcion_base(p):
 	'''
 	quads.append(("ENDFUNC", "", "", ""))
 
+	destroyEra()
+
 	#QuadsID
 	quadsID.append(("ENDFUNC", "", "", ""))
 	print("call funcion_base")
@@ -199,6 +201,8 @@ def p_funcion_ident(p):
 			'arrSize': None, 
 			'mem_direction': vm[-1].assignVirtualDirection("global", retType)
 		})
+	
+	createEra()
 	print("call funcion_ident")
 
 # Variable
@@ -230,14 +234,14 @@ def p_var_array(p):
 			  | arr_id O_ABRACKET exp arr_close_bracket
 	'''
 	aux1 = pOperands.pop()
-	k = vm[0].cteAssign(0)
+	k = vm[-1].cteAssign(0)
 	result = vm[-1].temporalAssign("int")
-	quads.append(("+", aux1, k, result))
+	quads.append(("+", aux1, ('cte',k,0), result))
 	temp = vm[-1].temporalAssign("int")
 	variable, dim = pDim.pop()
-	base_dir = vm[-1].cteAssign(variable["mem_direction"])
-	quads.append(("+", result, [base_dir], temp))
-	pOperands.append([temp])
+	base_dir = vm[-1].cteAssign([variable["mem_direction"]])
+	quads.append(("+", result, ('pointer',('cte',base_dir,variable["mem_direction"])), temp))
+	pOperands.append(('pointer',temp))
 	pOper.pop()
 
 	#QuadsID
@@ -273,21 +277,23 @@ def p_arr_close_bracket(p):
 	arr_close_bracket : C_ABRACKET
 	'''
 	operand = pOperands[-1]
-	index = vm[0].cteAssign(0)
+	index = vm[-1].cteAssign(0)
 	variable, dim = pDim[-1]
-	ls = vm[0].cteAssign(variable["variableDimLL"][dim]["ls"])
-	quads.append(("verify", operand, index, ls))
+	ls = variable["variableDimLL"][dim]["ls"]
+	lsIndex = vm[-1].cteAssign(ls)
+	quads.append(("VERIFY", operand, ('cte',index,0), ('cte',lsIndex,ls)))
 
 	#QuadsID
 	operandID = pOperandsID[-1]
-	quadsID.append(("verify", operandID, 0, variable["variableDimLL"][dim]["ls"]))
+	quadsID.append(("VERIFY", operandID, 0, variable["variableDimLL"][dim]["ls"]))
 
 	#print("Dimension:", dim)
 	if len(variable["variableDimLL"]) > dim + 1:
 		aux = pOperands.pop()
 		result = vm[-1].temporalAssign("int")
-		r = vm[0].cteAssign(variable["variableDimLL"][dim]["R"])
-		quads.append(('*', aux, r, result))
+		r = variable["variableDimLL"][dim]["R"]
+		rIndex = vm[-1].cteAssign(r)
+		quads.append(('*', aux, ('cte',rIndex,r), result))
 		pOperands.append(result)
 
 		#QuadsID
@@ -368,8 +374,6 @@ def p_llamada(p):
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
 	# quads.append(())
-	
-	destroyEra()
 
 	#QuadsID
 	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
@@ -387,10 +391,15 @@ def p_function_id(p):
 		sys.exit()
 	else:
 		func = func[0]
-	createEra()
+
 	paramCounter = 0
 	currFunc = func
 
+
+	quads.append(("ERA", "", "", currFunc["functionID"]))
+
+	#QuadsID
+	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	print("call function_id")
 
 def p_llamada_prime(p):
@@ -417,7 +426,10 @@ def p_llamada_exp(p):
 		print(f'Semantic error: incompatible type, expected as parameter ({parType}) received ({argType})' )
 		sys.exit()
 
-	mem_dir = getVariable(currFunc["parameterTable"][paramCounter], True)["mem_direction"]
+	f = currFunc['functionVariables']
+	y = list(filter(lambda x: (x['variableID'] == currFunc["parameterTable"][paramCounter]), f))
+	print(y)
+	mem_dir = y[0]["mem_direction"]
 	
 	quads.append(("PARAM", arg, "", mem_dir))
 
@@ -503,7 +515,7 @@ def p_escritura_string(p):
 	escritura_string : CTE_STRING
 	'''
 	index = vm[-1].cteAssign(p[1])
-	pOperands.append(index)
+	pOperands.append(('cte',index,p[1]))
 	pTypes.append("TypeDummie")
 
 	#QuadsID
@@ -601,11 +613,10 @@ def p_for(p):
 	'''
 	for : FOR for_asignacion for_to for_exp bloque
 	'''
-	print(pOperands)
 	operand = pOperands.pop()
 	index = vm[-1].cteAssign(1)
 	result = vm[-1].temporalAssign("int")
-	quads.append(('+', operand, index, result))
+	quads.append(('+', operand, ('cte',index,1), result))
 	quads.append(('=', result, "", operand))
 
 	despues = pJumps.pop()
@@ -994,8 +1005,8 @@ def p_cte(p):
 		| CTE_FLOAT
 	'''
 	# Implementar assignVM cte
-	index = vm[0].cteAssign(p[1])
-	pOperands.append(index)
+	index = vm[-1].cteAssign(p[1])
+	pOperands.append(('cte',index,p[1]))
 	# print(str(type(p[1])))
 	# pTypes.append(str(type(p[1])))
 	if type(p[1]) == int:
@@ -1022,7 +1033,7 @@ parser = yacc.yacc()
 program = None
 s = None
 try:
-	s = "testG.txt"#str(input(">> "))"fibonacci_r2.txt"#
+	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
 	path = os.path.join("tests", s)
 	with open(path, "r") as f:
 		program = f.read()
@@ -1046,11 +1057,11 @@ try:
 		f.write("\n")
 		wQuads = json.dumps(quads)
 		f.write(wQuads)
-		f.write("\n")
-		f.write("¿?¿?¿?")
-		f.write("\n")
-		wVM = json.dumps(vm[-1].getFinalVM())
-		f.write(wVM)
+		# f.write("\n")
+		# f.write("¿?¿?¿?")
+		# f.write("\n")
+		# wVM = json.dumps(vm[-1].getFinalVM())
+		# f.write(wVM)
 
 except Exception as e:
 	print("ERR: compiler output error - ", e)
