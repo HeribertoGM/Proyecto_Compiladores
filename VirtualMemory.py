@@ -1,8 +1,20 @@
-import json
 import sys
 import pandas as pd
 import numpy as np
 
+#################################################
+################# VirtualMemory #################
+#################################################
+# Archivo que contiene implementacion de clase memoria 
+# virtual, instanciada en ambas, fase de compilacion 
+# y ejecucion
+
+
+
+# clase de memoria virtual, se instancia en 
+# compilacion y ejecucion para manejar variables
+# obtiene: null
+# retorna: Memoria virtual con espacios asignados
 class VirtualMemory(object):
 	def __init__(self):
 		self.globalInts = pd.DataFrame(data = np.nan, index = np.arange(0, 3000), columns = ['mem_dir'])
@@ -23,6 +35,10 @@ class VirtualMemory(object):
 		self.tempStrings = pd.DataFrame(data = np.nan, index = np.arange(36001, 39000), columns = ['mem_dir'])
 		self.tempBools = pd.DataFrame(data = np.nan, index = np.arange(39001, 42000), columns = ['mem_dir'])
 
+	# funcion que asigna un espacio de memoria 
+	# virtual a una constante
+	# obtiene: valor de constante
+	# retorna: index de memoria
 	def cteAssign(self, value):
 		vType = type(value)
 
@@ -43,6 +59,10 @@ class VirtualMemory(object):
 			self.cteDirections.loc[index] = value[0]
 			return int(index[0])
 
+	# funcion que asigna un espacio de memoria 
+	# virtual a una variable temporal
+	# obtiene: tipo de variable
+	# retorna: index de memoria
 	def temporalAssign(self, vType):
 		if vType == "int":
 			index = self.tempInts.loc[self.tempInts.loc[pd.isnull(self.tempInts.mem_dir)].head(1).index, 'mem_dir'].index
@@ -61,6 +81,11 @@ class VirtualMemory(object):
 			self.tempStrings.loc[index] = "None"
 			return int(index[0])
 
+	# funcion que asigna un espacio de memoria 
+	# virtual a una variable declarada
+	# obtiene: tipo de variable
+	# obtiene: scope donde se encuentra global/local
+	# retorna: index de memoria
 	def assignVirtualDirection(self, scope, vType):
 		if scope == 'global':
 			if vType == "int":
@@ -89,6 +114,12 @@ class VirtualMemory(object):
 				self.localStrings.loc[index] = "None"
 				return int(index[0])
 
+	# funcion que asigna multiples espacios de memoria 
+	# virtual a una variable dimensionada
+	# obtiene: scope donde se encuentra global/local
+	# obtiene: tipo de variable
+	# obtiene: tamaño del arreglo
+	# retorna: index de memoria
 	def assignMemoryArray(self, scope, vType, size):
 		if scope == 'global':
 			if vType == "int":
@@ -135,6 +166,10 @@ class VirtualMemory(object):
 					self.localStrings.loc[index2] = "None"
 				return int(index[0])
 	
+	# funcion que obtiene el valor alojado en 
+	# un determinado espacio de memoria
+	# obtiene: index de memoria
+	# retorna: valor alojado en memoria
 	def getValueWithIndex(self, index):
 		if index >= 0 and index <= 3000:
 			return self.globalInts.loc[index]["mem_dir"]
@@ -169,6 +204,11 @@ class VirtualMemory(object):
 			print("Index Error - Index out of range")
 			sys.exit()
 
+	# funcion que coloca un determinado 
+	# valor en un espacio de memoria determinado
+	# obtiene: index de memoria
+	# obtiene: valor a alojar
+	# retorna: null
 	def setValueWithIndex(self, index, value):
 		if index >= 0 and index <= 3000:
 			self.globalInts.loc[index] = value
@@ -203,6 +243,10 @@ class VirtualMemory(object):
 			print("Index Error - Index out of range")
 			sys.exit()
 
+	# funcion que imprime los contenidos de 
+	# todos las tablas desde index 1 a 10
+	# obtiene: null
+	# retorna: imprime en pantalla
 	def printTables(self):
 			print(self.globalInts.loc[0:10])
 			print(self.globalFloats.loc[3001:3010])

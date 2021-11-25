@@ -3,6 +3,12 @@ import ply.yacc as yacc
 from Lexer import *
 from Semantic import *
 
+##########################################
+################# Parser #################
+##########################################
+# Archivo que contiene todo lo relacionado con el parser de la gramatica
+# aqui se implementan los puntos neuralgicos para la creacion de codigo intermedio
+
 # Programa
 def p_programa(p):
 	'''
