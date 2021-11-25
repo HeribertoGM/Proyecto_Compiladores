@@ -1,8 +1,10 @@
 import ply.lex as lex
 
-# -----------------------
-# Lexer
-# -----------------------
+#########################################
+################# Lexer #################
+#########################################
+# Archivo que contiene todas las definiciones de
+# los tokens permitidos en nuestro lenguaje
 
 tokens = [
 	# palabras reservadas

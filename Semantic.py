@@ -2,6 +2,14 @@ import pprint
 import sys
 from intermediateCode import *
 
+############################################
+################# Semantic #################
+############################################
+# Archivo que contiene funciones auxiliares para 
+# la creacion de las estructuras de datos 
+# utilizados para fase de semantica
+
+# variables globales
 programID = None
 globalVariables = []
 functionDictionary = []
@@ -12,7 +20,10 @@ functionsTemp = []
 variablesTemp = []
 typeTemp = []
 
-# llamada para guardar las variables globales y borrar el acumulado de temporales
+# funcion que  guarda las variables globales 
+# y borrar el acumulado de temporales
+# obtiene: null
+# retorna: null
 def addGlobalVariables():
 	global globalVariables, variablesTemp, vm
 
@@ -27,8 +38,11 @@ def addGlobalVariables():
 
 	variablesTemp.clear()
 
-# llamada para guardar variables locales en la tabla de variables de la ultima funcion agregada
+# funcion que llamada para guardar variables locales en 
+# la tabla de variables de la ultima funcion agregada
 # y borrar el acumulado de temporales
+# obtiene: null
+# retorna: null
 def addLocalVariables():
 	global functionsTemp, variablesTemp, vm
 	# print(vm)
@@ -43,9 +57,13 @@ def addLocalVariables():
 	
 	variablesTemp.clear()
 
-# cuando fromProgram es falso se agrega una funcion con 
+# funcion que cuando fromProgram es falso se agrega una funcion con 
 # las variables acumuladas como locales al diccionario de funciones.
 # cuando es verdadero, se envian las variables que quedan como acumuladas a el arreglo global
+# obtiene: id de funcion
+# obtiene: tipo de retorno de la funcion
+# obtiene: scope
+# retorna: null
 def addMethod(ID, Type, fromProgram):
 	global programID, functionDictionary, quads
 	if(fromProgram):
@@ -72,8 +90,11 @@ def addVariableTempCheckRedef(vType):
 
 	addVariableTemp(vType)
 
-# agrega tipo a las variables acumuladas en el arreglo temporal "typeTemp"
+# funcion que agrega tipo a las variables 
+# acumuladas en el arreglo temporal "typeTemp"
 # y lo pone en arreglo de variables acumuladas "variablesTemp"
+# obtiene: tipo de variable
+# retorna: null
 def addVariableTemp(variableType):
 	global variablesTemp
 	global typeTemp
@@ -107,181 +128,235 @@ def addVariableTemp(variableType):
 
 	typeTemp.clear()
 
-# agrega id con dimensiones a arreglo acumulador temporal "typeTemp"
+# funcion que agrega id con dimensiones a 
+# arreglo acumulador temporal "typeTemp"
+# obtiene: id de la variable
+# obtiene: dimensiones/ null si no es dimensionada
+# retorna: null
 def addTypeTemp(variableID, dimensiones):
 	global typeTemp
 	typeTemp.append([variableID, dimensiones])
 
+# funcion que procesa los parametros de las 
+# funciones y las coloca en signature y parameterTable
+# obtiene: id de la variable
+# obtiene: tipo de la variable
+# retorna: null
 def addParameter(paramType, paramID):
 	global functionsTemp
 	functionsTemp[-1]["signature"].append(paramType)
 	functionsTemp[-1]["parameterTable"].append(paramID)
 
+# funcion que inicializa el cubo semantico
+# obtiene: id de la variable
+# obtiene: dimensiones/ null si no es dimensionada
+# retorna: null
 def createSemanticCube():
 	global semanticCube
 	semanticCube = {
 		'+': {
-			("int", "int"): "int",
-			("float", "float"): "float",
-			("str", "str"): "str",
+			("int", "int"): 'int',
+			("float", "float"): 'float',
+			("str", "str"): 'str',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "float",
+			("int", "float"): 'float',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "float",
+			("float", "int"): 'float',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
-
-			},
+			("str", "bool"): 'error'
+		},
 		'-': {
-			("int", "int"): "int",
-			("float", "float"): "float",
+			("int", "int"): 'int',
+			("float", "float"): 'float',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "float",
+			("int", "float"): 'float',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "float",
+			("float", "int"): 'float',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
-
+			("str", "bool"): 'error'
 		},
 		'*': {
-			("int", "int"): "int",
-			("float", "float"): "float",
+			("int", "int"): 'int',
+			("float", "float"): 'float',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "float",
+			("int", "float"): 'float',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "float",
+			("float", "int"): 'float',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'/': {
-			("int", "int"): "int",
-			("float", "float"): "float",
+			("int", "int"): 'int',
+			("float", "float"): 'float',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "float",
+			("int", "float"): 'float',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "float",
+			("float", "int"): 'float',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'%': {
-			("int", "int"): "int",
-			("float", "float"): "float",
+			("int", "int"): 'int',
+			("float", "float"): 'float',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "float",
+			("int", "float"): 'float',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "float",
+			("float", "int"): 'float',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'>': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'<': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'>=': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'<=': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
 			("str", "str"): 'error',
+			("bool", "bool"): 'error',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'==': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
-			("str", "str"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
+			("str", "str"): 'bool',
+			("bool", "bool"): 'bool',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
-
+			("str", "bool"): 'error'
 		},
 		'!=': {
-			("int", "int"): "bool",
-			("float", "float"): "bool",
-			("str", "str"): "bool",
+			("int", "int"): 'bool',
+			("float", "float"): 'bool',
+			("str", "str"): 'bool',
+			("bool", "bool"): 'bool',
 
-			("int", "float"): "bool",
+			("int", "float"): 'bool',
 			("int", "str"): 'error',
+			("int", "bool"): 'error',
 
-			("float", "int"): "bool",
+			("float", "int"): 'bool',
 			("float", "str"): 'error',
+			("float", "bool"): 'error',
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
+			("str", "bool"): 'error'
 		},
 		'&&': {
 			("int", "int"): 'error',
 			("float", "float"): 'error',
 			("str", "str"): 'error',
-			("bool", "bool"): "bool",
+			("bool", "bool"): 'bool',
 
 			("int", "float"): 'error',
 			("int", "str"): 'error',
@@ -293,13 +368,13 @@ def createSemanticCube():
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
-			("str", "bool"): 'error',
+			("str", "bool"): 'error'
 		},
 		'||': {
 			("int", "int"): 'error',
 			("float", "float"): 'error',
 			("str", "str"): 'error',
-			("bool", "bool"): "bool",
+			("bool", "bool"): 'bool',
 
 			("int", "float"): 'error',
 			("int", "str"): 'error',
@@ -311,14 +386,21 @@ def createSemanticCube():
 
 			("str", "int"): 'error',
 			("str", "float"): 'error',
-			("str", "bool"): 'error',
-		},
+			("str", "bool"): 'error'
+		}
 	}
 
+# funcion que borra el cubo semantico
+# obtiene: null
+# retorna: null
 def deleteSemanticCube():
 	global semanticCube
 	del semanticCube
 
+# funcion que imprime la tabla de variables globales, 
+# la memoria virtual, el diccionario de funciones y el programID
+# obtiene: null
+# retorna: null
 def printVars():
 	global programID, globalVariables, functionDictionary, vm
 	print("______________________________________________")
@@ -334,6 +416,11 @@ def printVars():
 	print("______________________________________________")
 	# print(vm[-1].localInts.loc[9001:9010])
 
+# funcion que busca un id en la tabla de variables de 
+# la funcion actual y en la tabla de variables global
+# obtiene: id de la variable
+# obtiene: scope
+# retorna: objeto variable
 def getVariable(varID, scope):
 	global globalVariables, functionsTemp
 
@@ -347,6 +434,11 @@ def getVariable(varID, scope):
 		y = list(filter(lambda x: (x['variableID'] == varID), globalVariables))
 		return y[0]
 
+# funcion que retorna una entrada del 
+# directorio de funciones de acuerdo 
+# a un id de funcion
+# obtiene: id de la funcion
+# retorna: entrada del directorio de funciones
 def getFunction(funcID):
 	global functionsTemp
 	func = list(filter(lambda x: (x['functionID'] == funcID), functionsTemp))

@@ -4,6 +4,12 @@ import sys
 import pprint
 from VirtualMemory import *
 
+##################################################
+################# VirtualMachine #################
+##################################################
+# Archivo que contiene la logica de la maquina virtual, 
+# utiliza el archivo de salida del compilador para la ejecucion de codigo
+
 vm = []
 quads = []
 functionDictionary = []
@@ -52,12 +58,6 @@ def passParam(dirPasiva, dirActiva):
 # retorna: direccion actualizada con el valor de la dirActiva
 def passReturn(dirActiva, dirPasiva):
 	val = adminVariable(True, dirActiva, None)
-	# print("dirActiva:",dirActiva)
-	# print("val:", val)
-	# print("dirPasiva:",dirPasiva)
-	# print(len(vm))
-	# vm[-1].printTables()
-	
 	vm[-2].setValueWithIndex(dirPasiva, val)
 
 # funcion que imprime en pantalla todas las estructuras globales
@@ -92,10 +92,6 @@ def adminVariable(getSet, var, val):
 			else:
 				vm[-1].setValueWithIndex(vm[-1].getValueWithIndex(var[1]), val)
 		else:
-			# if(var[1][0] == "pointer"):
-			# 	print("entra pointer-pointer")
-			# 	return adminVariable(True, var[1], None)
-			# elif(var[1][0] == "cte"):
 			return adminVariable(True, var[1], None)
 	elif type(var) == list and var[0] == "cte":
 		vm[-1].setValueWithIndex(var[1], var[2])
@@ -263,6 +259,8 @@ def run():
 		ip += 1
 	print("Completado sin errores")
 
+# ==================== Main ====================
+
 data = None
 try:
 	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
@@ -272,7 +270,6 @@ try:
 except EOFError:
     print("Error reading code.")
 
-# os.system("python3 ./Parser.py")
 setup(data)
 # printAll()
 run()
