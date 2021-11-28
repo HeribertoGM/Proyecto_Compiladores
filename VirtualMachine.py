@@ -2,6 +2,10 @@ import os
 import os.path
 import sys
 import pprint
+import json
+
+from numpy import right_shift
+from Parser import parseProgram
 from VirtualMemory import *
 
 ##################################################
@@ -14,6 +18,7 @@ vm = []
 quads = []
 functionDictionary = []
 globalVariables = []
+params = []
 
 # funcion que formatea los datos del archivo de codigo intermedio y los coloca en el entorno global
 # obtiene: data del archivo de codigo intermedio
@@ -106,7 +111,7 @@ def adminVariable(getSet, var, val):
 # obtiene: quadruplo con instruccion
 # retorna: null
 def execute(instruction):
-	global globalVariables, functionDictionary, quads
+	global globalVariables, functionDictionary, quads, vm
 	if instruction[0] == '+':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
@@ -118,6 +123,7 @@ def execute(instruction):
 	elif instruction[0] == '*':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
+		# print(lOperand, '*', rOperand)
 		adminVariable(False, instruction[3], lOperand * rOperand)
 	elif instruction[0] == '/':
 		lOperand = adminVariable(True, instruction[1], None)
@@ -138,6 +144,7 @@ def execute(instruction):
 	elif instruction[0] == '<':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
+		# print(lOperand, '*', rOperand)
 		adminVariable(False, instruction[3], lOperand < rOperand)
 	elif instruction[0] == '>':
 		lOperand = adminVariable(True, instruction[1], None)
@@ -185,10 +192,10 @@ def execute(instruction):
 def run():
 	global globalVariables, functionDictionary, quads, vm
 	ip = 0
-	returnFromFunc = None
+	returnFromFunc = []
 
 	while quads[ip][0] != 'END':
-		print(str(ip) + " - " + str(quads[ip]))
+		# print(str(ip) + " - " + str(quads[ip]))
 		if quads[ip][0] == '+':
 			execute(quads[ip])
 		elif quads[ip][0] == '-':
@@ -237,20 +244,26 @@ def run():
 				print(f'ERR - Val not in range {limI}-{limS} - '+str(quads[ip]))
 				sys.exit()
 		elif quads[ip][0] == 'ENDFUNC':
-			ip = returnFromFunc
+			# print("Destruye Era")
+			ip = returnFromFunc.pop()
 			vm.pop()
 			continue
 		elif quads[ip][0] == 'RETURN':
 			passReturn(quads[ip][1], quads[ip][3])
 			pass
 		elif quads[ip][0] == 'GOSUB':
-			returnFromFunc = ip + 1
+			returnFromFunc.append(ip + 1)
 			ip = quads[ip][3]
 			continue
 		elif quads[ip][0] == 'PARAM':
-			passParam(quads[ip][1], quads[ip][3])
+			params.append((quads[ip][1], quads[ip][3]))
+			# passParam(quads[ip][1], quads[ip][3])
 		elif quads[ip][0] == 'ERA':
+			# print("Crea Era")
 			vm.append(VirtualMemory())
+			for i in range(0, len(params)):
+				dPasiva, dActiva = params.pop()
+				passParam(dPasiva, dActiva)
 		else:
 			print("ERR - Instruction not identified - "+str(quads[ip]))
 			sys.exit()
@@ -264,6 +277,11 @@ def run():
 data = None
 try:
 	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
+	# path = os.path.join("tests", s)
+	# with open(path, "r") as f:
+	# 	program = f.read()
+	parseProgram(s)
+
 	path = os.path.join("output", s)
 	with open(path, "r") as f:
 		data = f.read()

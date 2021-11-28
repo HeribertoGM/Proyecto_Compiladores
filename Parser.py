@@ -1,7 +1,9 @@
 import os.path
+import re
 import ply.yacc as yacc
 from Lexer import *
 from Semantic import *
+import json
 
 ##########################################
 ################# Parser #################
@@ -377,11 +379,13 @@ def p_llamada(p):
 	'''
 	llamada : function_id O_PARENTHESIS llamada_prime C_PARENTHESIS
 	'''
+	quads.append(("ERA", "", "", currFunc["functionID"]))
 	quads.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 
 	# quads.append(())
 
 	#QuadsID
+	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	quadsID.append(("GOSUB", currFunc["functionID"], "", currFunc["functionStart"]))
 	print("call llamada")
 
@@ -399,13 +403,9 @@ def p_function_id(p):
 		func = func[0]
 
 	paramCounter = 0
+	lastFunc.append(currFunc)
 	currFunc = func
 
-
-	quads.append(("ERA", "", "", currFunc["functionID"]))
-
-	#QuadsID
-	quadsID.append(("ERA", "", "", currFunc["functionID"]))
 	print("call function_id")
 
 def p_llamada_prime(p):
@@ -458,13 +458,15 @@ def p_retorno(p):
 	'''
 	global currFunc
 	ret = pOperands.pop()
-	print(currFunc)
+	print("________________________________________________________________________________")
 	if(type(currFunc) == str):
-		result = getVariable(currFunc, True)["mem_direction"]
+		result = getVariable(currFunc, False)["mem_direction"]
 	else:
-		result = getVariable(currFunc["functionID"], True)["mem_direction"]
+		result = getVariable(currFunc["functionID"], False)["mem_direction"]
+		print(result)
 	quads.append(("RETURN", ret, "", result))
 	quads.append(("ENDFUNC", "", "", ""))
+	pOperands.append(result)
 
 	#QuadsID
 	retID = pOperandsID.pop()
@@ -474,6 +476,7 @@ def p_retorno(p):
 		resultID = currFunc["functionID"]
 	quadsID.append(("RETURN", retID, "", resultID))
 	quadsID.append(("ENDFUNC", "", "", ""))
+	pOperandsID.append(resultID)
 	print("call retorno")
 
 # Lectura
@@ -1000,8 +1003,9 @@ def p_retorno_llamada(p):
 	retorno_llamada : epsilon
 	'''
 	global currFunc
-	pOperands.append(getVariable(currFunc["functionID"], True)["mem_direction"])
+	pOperands.append(getVariable(currFunc["functionID"], False)["mem_direction"])
 	pOperandsID.append(currFunc["functionID"])
+	currFunc = lastFunc.pop()
 	print("call retorno_llamada")
 
 # CTE
@@ -1038,36 +1042,38 @@ parser = yacc.yacc()
 
 program = None
 s = None
-try:
-	s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
-	path = os.path.join("tests", s)
-	with open(path, "r") as f:
-		program = f.read()
-except EOFError :
-    print("Error reading code.")
 
-parser.parse(program)
+def parseProgram(s):
+	try:
+		# s = str(input(">> "))#"fibonacci_r2.txt""fibonacci_r2.txt"#
+		path = os.path.join("tests", s)
+		with open(path, "r") as f:
+			program = f.read()
+	except EOFError :
+		print("Error reading code.")
 
-try:
-	path = os.path.join("output", s)
-	with open(path, "w") as f:
-		wGVariables = json.dumps(globalVariables)
-		f.write(wGVariables)
-		f.write("\n")
-		f.write("¿?¿?¿?")
-		f.write("\n")
-		wFunctions = json.dumps(functionDictionary)
-		f.write(wFunctions)
-		f.write("\n")
-		f.write("¿?¿?¿?")
-		f.write("\n")
-		wQuads = json.dumps(quads)
-		f.write(wQuads)
-		# f.write("\n")
-		# f.write("¿?¿?¿?")
-		# f.write("\n")
-		# wVM = json.dumps(vm[-1].getFinalVM())
-		# f.write(wVM)
+	parser.parse(program)
 
-except Exception as e:
-	print("ERR: compiler output error - ", e)
+	try:
+		path = os.path.join("output", s)
+		with open(path, "w") as f:
+			wGVariables = json.dumps(globalVariables)
+			f.write(wGVariables)
+			f.write("\n")
+			f.write("¿?¿?¿?")
+			f.write("\n")
+			wFunctions = json.dumps(functionDictionary)
+			f.write(wFunctions)
+			f.write("\n")
+			f.write("¿?¿?¿?")
+			f.write("\n")
+			wQuads = json.dumps(quads)
+			f.write(wQuads)
+			# f.write("\n")
+			# f.write("¿?¿?¿?")
+			# f.write("\n")
+			# wVM = json.dumps(vm[-1].getFinalVM())
+			# f.write(wVM)
+
+	except Exception as e:
+		print("ERR: compiler output error - ", e)

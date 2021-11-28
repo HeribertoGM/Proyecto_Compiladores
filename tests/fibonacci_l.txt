@@ -1,5 +1,5 @@
 program fibonacci;
-let f: int;
+let f, z: int;
 
 function int fib(int n)
 let i, arr[100]: int;
@@ -15,6 +15,7 @@ let i, arr[100]: int;
 }
 
 main() {
-	f = fib(6);
+	read(z);
+	f = fib(z);
 	write(f);
 }

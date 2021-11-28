@@ -1,20 +1,29 @@
 program factorial;
-let f: int;
+let f, x: int;
 
 function int fact(int n)
 let i, count, num: int;
 {
 	count = 1;
+	write(n);
 	num = n + 1;
 
 	for i=1 to num {
 		count = count * i;
 	}
+	write(count);
 
 	return count;
 }
 
+function int patito(int y) 
+let z: int;
+{
+	return fact(y * 2) * 2;
+}
+
 main() {
-	f = fact(6);
+	read(x);
+	f = patito(x);
 	write(f);
 }

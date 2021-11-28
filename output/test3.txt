@@ -1,5 +1,5 @@
 [{"variableID": "i", "variableType": "int", "variableDimentions": null, "variableDimLL": null, "arrSize": null, "mem_direction": 0}, {"variableID": "j", "variableType": "int", "variableDimentions": null, "variableDimLL": null, "arrSize": null, "mem_direction": 1}, {"variableID": "p", "variableType": "int", "variableDimentions": null, "variableDimLL": null, "arrSize": null, "mem_direction": 2}, {"variableID": "arreglo", "variableType": "int", "variableDimentions": [10], "variableDimLL": [{"li": 0, "ls": 9, "R": -0.0}], "arrSize": 10, "mem_direction": 3}, {"variableID": "x", "variableType": "float", "variableDimentions": null, "variableDimLL": null, "arrSize": null, "mem_direction": 3001}, {"variableID": "y", "variableType": "float", "variableDimentions": null, "variableDimLL": null, "arrSize": null, "mem_direction": 3002}, {"variableID": "z", "variableType": "float", "variableDimentions": [5, 32], "variableDimLL": [{"li": 0, "ls": 4, "R": 32.0}, {"li": 0, "ls": 31, "R": -0.0}], "arrSize": 160, "mem_direction": 3003}]
-Â¿?Â¿?Â¿?
+¿?¿?¿?
 []
-Â¿?Â¿?Â¿?
+¿?¿?¿?
 [["GOTO", "", "", 1], ["READ", "", "", 1], ["WRITE", "", "", ["cte", 24001, "\"Hola mundo\""]], ["=", ["cte", 18001, 0], " ", 3001], ["=", ["cte", 18002, 0], " ", 0], ["<", 0, 1, 39001], ["GOTOF", 39001, "", 12], ["+", 3001, 0, 33001], ["=", 33001, " ", 3001], ["+", 0, ["cte", 18003, 1], 30001], ["=", 30001, "", 0], ["GOTO", "", "", 5], ["WRITE", "", "", 3001], ["END", "", "", ""]]

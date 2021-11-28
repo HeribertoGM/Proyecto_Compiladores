@@ -1,5 +1,5 @@
 program factorial;
-let f: int;
+let f, x: int;
 
 function int fact(int n)
 let i, count, num: int;
@@ -14,7 +14,14 @@ let i, count, num: int;
 	}
 }
 
+function int patito(int y) 
+let z: int;
+{
+	return fact(y) * 2;
+}
+
 main() {
-	f = fact(6);
+	read(x);
+	f = patito(x);
 	write(f);
 }

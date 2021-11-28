@@ -18,6 +18,7 @@ pJumps = []
 pDim = []
 
 currFunc = None
+lastFunc = []
 paramCounter = 0
 
 #QuadsID
@@ -35,12 +36,12 @@ def printQuads():
 	for i in range(len(quads)):
 		print(i, quads[i])
 	
-	#QuadsID
-	# global quadsID
-	# print("______________________________________________")
-	# print("QuadsID:")
-	# for i in range(len(quadsID)):
-	# 	print(i, quadsID[i])
+	# QuadsID
+	global quadsID
+	print("______________________________________________")
+	print("QuadsID:")
+	for i in range(len(quadsID)):
+		print(i, quadsID[i])
 
 # funcion que crea una nueva instancia de la 
 # memoria virtual y la agrega al stack de memorias
