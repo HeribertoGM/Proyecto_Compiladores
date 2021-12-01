@@ -123,7 +123,6 @@ def execute(instruction):
 	elif instruction[0] == '*':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
-		# print(lOperand, '*', rOperand)
 		adminVariable(False, instruction[3], lOperand * rOperand)
 	elif instruction[0] == '/':
 		lOperand = adminVariable(True, instruction[1], None)
@@ -144,7 +143,6 @@ def execute(instruction):
 	elif instruction[0] == '<':
 		lOperand = adminVariable(True, instruction[1], None)
 		rOperand = adminVariable(True, instruction[2], None)
-		# print(lOperand, '*', rOperand)
 		adminVariable(False, instruction[3], lOperand < rOperand)
 	elif instruction[0] == '>':
 		lOperand = adminVariable(True, instruction[1], None)
@@ -244,7 +242,6 @@ def run():
 				print(f'ERR - Val not in range {limI}-{limS} - '+str(quads[ip]))
 				sys.exit()
 		elif quads[ip][0] == 'ENDFUNC':
-			# print("Destruye Era")
 			ip = returnFromFunc.pop()
 			vm.pop()
 			continue
@@ -259,7 +256,6 @@ def run():
 			params.append((quads[ip][1], quads[ip][3]))
 			# passParam(quads[ip][1], quads[ip][3])
 		elif quads[ip][0] == 'ERA':
-			# print("Crea Era")
 			vm.append(VirtualMemory())
 			for i in range(0, len(params)):
 				dPasiva, dActiva = params.pop()
